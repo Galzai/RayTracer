@@ -1,4 +1,4 @@
-package math;
+package RayTracer.math;
 
 /**
  * Represents a mathematical vector with T dimensions
@@ -13,9 +13,9 @@ public interface IVector<T extends Number> {
     public Integer dimension();
 
     /**
-     * Returns the eucledianNorm of the vector
+     * Returns the euclideanNorm of the vector
      */
-    public T eucledianNorm();
+    public T euclideanNorm();
 
     /**
      * Return the member of the vector at index

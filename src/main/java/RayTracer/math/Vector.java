@@ -1,4 +1,4 @@
-package math;
+package RayTracer.math;
 
 import java.util.ArrayList;
 
@@ -7,31 +7,31 @@ import java.util.ArrayList;
  */
 public class Vector implements IVector<Double>{
 
-    protected ArrayList<Double> m_members;
-    private Double m_norm;
+    protected ArrayList<Double> members;
+    private Double norm;
 
     /**
-     * Calculates the eucledian norm of the vector and returns it
+     * Calculates the euclidean norm of the vector and returns it
      * @return the norm of the vector
      */
-    private Double calculateEucledianNorm()
+    private Double calculateEuclideanNorm()
     {
         Double norm = 0.0;
-        for(Double val : m_members){
+        for(Double val : this.members){
             norm += val * val;
         }
-        return norm;
+        return Math.sqrt(norm);
     }
 
     /**
      * Constructor for our vector, members are set as members of the vector
-     * Also initializes the eucledian norm
+     * Also initializes the euclidean norm
      * @param members
      */
     public Vector(ArrayList<Double> members)
     {
-        m_members = members;
-        m_norm = calculateEucledianNorm();
+        this.members = members;
+        this.norm = calculateEuclideanNorm();
     }
 
     /**
@@ -46,14 +46,14 @@ public class Vector implements IVector<Double>{
         Double dotProduct = 0.0;
         // Calculate the dot product
         for(int index = 0; index < dimension(); ++index){
-            dotProduct += m_members.get(index) * otherVector.m_members.get(index);
+            dotProduct += this.members.get(index) * otherVector.members.get(index);
         }
         return dotProduct;
     }
 
     @Override
-    public Double eucledianNorm() {
-        return m_norm;
+    public Double euclideanNorm() {
+        return this.norm;
     }
 
     /**
@@ -68,7 +68,7 @@ public class Vector implements IVector<Double>{
         ArrayList<Double> newMembers = new ArrayList<Double>();
         // Calculate the new vector product
         for(int index = 0; index < dimension(); ++index){
-            newMembers.add(m_members.get(index) + otherVector.m_members.get(index));
+            newMembers.add(this.members.get(index) + otherVector.members.get(index));
         }
         return new Vector(newMembers);
     }
@@ -85,7 +85,7 @@ public class Vector implements IVector<Double>{
         ArrayList<Double> newMembers = new ArrayList<Double>();
         // Calculate the new vector product
         for(int index = 0; index < dimension(); ++index){
-            newMembers.add(m_members.get(index) - otherVector.m_members.get(index));
+            newMembers.add(this.members.get(index) - otherVector.members.get(index));
         }
         return new Vector(newMembers);
     }
@@ -98,7 +98,7 @@ public class Vector implements IVector<Double>{
         ArrayList<Double> newMembers = new ArrayList<Double>();
         // Calculate the new vector
         for(int index = 0; index < dimension(); ++index){
-            newMembers.add(m_members.get(index) / eucledianNorm());
+            newMembers.add(this.members.get(index) / euclideanNorm());
         }
         return new Vector(newMembers);
     }
@@ -112,7 +112,7 @@ public class Vector implements IVector<Double>{
         ArrayList<Double> newMembers = new ArrayList<Double>();
         // Calculate the new vector
         for(int index = 0; index < dimension(); ++index){
-            newMembers.add(m_members.get(index) * scalar);
+            newMembers.add(this.members.get(index) * scalar);
         }
         return new Vector(newMembers);
 
@@ -123,14 +123,14 @@ public class Vector implements IVector<Double>{
      */
     @Override
     public Integer dimension() {
-        return m_members.size();
+        return this.members.size();
     }
 
     @Override
     public Double get(int index) throws IllegalArgumentException {
         if(dimension() <= index)
             throw new IllegalArgumentException("Index out of bounds");
-        return m_members.get(index);
+        return this.members.get(index);
     }
 
 }
