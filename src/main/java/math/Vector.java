@@ -1,4 +1,4 @@
-package main.math;
+package main.java.math;
 
 import java.util.ArrayList;
 
@@ -28,7 +28,7 @@ public class Vector implements IVector<Double>{
      * Also initializes the eucledian norm
      * @param members
      */
-    Vector(ArrayList<Double> members)
+    public Vector(ArrayList<Double> members)
     {
         m_members = members;
         m_norm = calculateEucledianNorm();
@@ -62,7 +62,7 @@ public class Vector implements IVector<Double>{
      * @return new Vector which is the addition of the two vectors
      * @throws IllegalArgumentException
      */
-    public IVector<Double> add(Vector otherVector) throws IllegalArgumentException{
+    public Vector add(Vector otherVector) throws IllegalArgumentException{
         if(otherVector.dimension() != dimension())
             throw new IllegalArgumentException("Vector dimensions must match");
         ArrayList<Double> newMembers = new ArrayList<Double>();
@@ -79,6 +79,13 @@ public class Vector implements IVector<Double>{
     @Override
     public Integer dimension() {
         return m_members.size();
+    }
+
+    @Override
+    public Double get(int index) throws IllegalArgumentException {
+        if(dimension() <= index)
+            throw new IllegalArgumentException("Index out of bounds");
+        return m_members.get(index);
     }
 
 }
