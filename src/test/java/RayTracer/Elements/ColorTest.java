@@ -39,16 +39,4 @@ public class ColorTest {
         java.awt.Color color1 = new java.awt.Color(1,2,3);
 
     }
-
-//    @Test
-//    public void imageTest() {
-//        // Create a graphics context on the buffered image
-//        BufferedImage bimage = new
-//        Graphics2D g2d = bimage.createGraphics();
-//
-//// Draw on the buffered image
-//        g2d.setColor(Color.red);
-//        g2d.fill(new Ellipse2D.Float(0, 0, 200, 100));
-//        g2d.dispose();
-//    }
 }
