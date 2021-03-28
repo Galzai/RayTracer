@@ -1,4 +1,4 @@
-package main.java.math;
+package math;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,6 +47,22 @@ public class Vector3D extends Vector {
     public Vector3D add(Vector otherVector) throws IllegalArgumentException{
         Vector result = super.add(otherVector);
         return new Vector3D(result);
+    }
+
+    @Override
+    public Vector3D subtract(Vector otherVector) throws IllegalArgumentException{
+        Vector result = super.subtract(otherVector);
+        return new Vector3D(result);
+    }
+
+    @Override
+    public Vector3D normalize(){
+        return new Vector3D(super.normalize());
+    }
+
+    @Override
+    public Vector3D scalarMult(Double scalar){
+        return new Vector3D(super.scalarMult(scalar));
     }
 }
     
