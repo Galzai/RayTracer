@@ -11,5 +11,4 @@ public class Tester {
         System.out.println(resultVec.get(1));
         System.out.println(testVec1.dotProduct(testVec2));
     }
-
 }

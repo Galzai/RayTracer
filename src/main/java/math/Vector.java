@@ -74,6 +74,51 @@ public class Vector implements IVector<Double>{
     }
 
     /**
+     * Member wise subtraction of this vector and othervector
+     * @param otherVector second vector
+     * @return new Vector which is the subtraction of the other vector from this vector
+     * @throws IllegalArgumentException
+     */
+    public Vector subtract(Vector otherVector) throws IllegalArgumentException{
+        if(otherVector.dimension() != dimension())
+            throw new IllegalArgumentException("Vector dimensions must match");
+        ArrayList<Double> newMembers = new ArrayList<Double>();
+        // Calculate the new vector product
+        for(int index = 0; index < dimension(); ++index){
+            newMembers.add(m_members.get(index) - otherVector.m_members.get(index));
+        }
+        return new Vector(newMembers);
+    }
+
+    /**
+     * Returns this vector but normalized
+     * @return normalized vector
+     */
+    public Vector normalize(){
+        ArrayList<Double> newMembers = new ArrayList<Double>();
+        // Calculate the new vector
+        for(int index = 0; index < dimension(); ++index){
+            newMembers.add(m_members.get(index) / eucledianNorm());
+        }
+        return new Vector(newMembers);
+    }
+
+    /**
+     * Multplies the vector by a scalar
+     * @param scalar
+     * @return result of scalar multiplication
+     */
+    public Vector scalarMult(Double scalar){
+        ArrayList<Double> newMembers = new ArrayList<Double>();
+        // Calculate the new vector
+        for(int index = 0; index < dimension(); ++index){
+            newMembers.add(m_members.get(index) * scalar);
+        }
+        return new Vector(newMembers);
+
+    }
+
+    /**
      * Returns the dimension of the vector
      */
     @Override

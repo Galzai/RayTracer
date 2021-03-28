@@ -48,5 +48,21 @@ public class Vector3D extends Vector {
         Vector result = super.add(otherVector);
         return new Vector3D(result);
     }
+
+    @Override
+    public Vector3D subtract(Vector otherVector) throws IllegalArgumentException{
+        Vector result = super.subtract(otherVector);
+        return new Vector3D(result);
+    }
+
+    @Override
+    public Vector3D normalize(){
+        return new Vector3D(super.normalize());
+    }
+
+    @Override
+    public Vector3D scalarMult(Double scalar){
+        return new Vector3D(super.scalarMult(scalar));
+    }
 }
     
