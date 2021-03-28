@@ -1,4 +1,5 @@
-package world;
+package RayTracer.Elements;
+import java.awt.Color;
 
 public class Material {
     private Color diffuseColor;
@@ -15,9 +16,21 @@ public class Material {
         this.transparency = transparency;
     }
 
-//    public main.Color getOutputColor(main.Color backgroundColor) {
-////        int red = backgroundColor.getRed() * transparency
-//    }
+    /**
+     *
+     * @param backgroundColor The background color of the scene
+     * @return The output color according to the formula:
+     *              output = (background * transparency) + (diffuse + specular) * (1 - transparency) + reflection
+     *
+     * TODO: implement with vector calculations!
+     */
+    public Color getOutputColor(Color backgroundColor) {
+//        Color outputColor = Color.multiplyByFraction(Color.sumColors(diffuseColor, specularColor), 1 - transparency);
+//        outputColor = Color.sumColors(outputColor, Color.multiplyByFraction(backgroundColor, transparency));
+//        outputColor = Color.sumColors(outputColor, reflectionColor);
+//        return outputColor;
+        return new Color(1,2,3);
+    }
 
 
     public Color getDiffuseColor() {
