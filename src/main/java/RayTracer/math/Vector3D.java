@@ -1,4 +1,4 @@
-package math;
+package RayTracer.math;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,7 +24,7 @@ public class Vector3D extends Vector {
      * @throws IllegalArgumentException
      */
     private Vector3D(Vector otherVec) throws IllegalArgumentException{
-        super(otherVec.m_members);
+        super(otherVec.members);
         if(otherVec.dimension() > 3)
             throw new IllegalArgumentException("Vector must have 3 members");
     }
@@ -35,11 +35,11 @@ public class Vector3D extends Vector {
      */
     public Vector3D crossProduct(Vector3D otherVector){
         // (a_2 * b_3 - a_3 * b_2)
-        Double x = ((m_members.get(1) * otherVector.m_members.get(2)) - (m_members.get(2) * otherVector.m_members.get(1)));
+        Double x = ((this.members.get(1) * otherVector.members.get(2)) - (this.members.get(2) * otherVector.members.get(1)));
         // -(a_1 * b_3 - a_3 * b_1)
-        Double y = (-1 * ((m_members.get(0) * otherVector.m_members.get(2)) - (m_members.get(2) * otherVector.m_members.get(0))));
+        Double y = (-1 * ((this.members.get(0) * otherVector.members.get(2)) - (this.members.get(2) * otherVector.members.get(0))));
         // (a_1 * b_2 - a_2 * b_1)
-        Double z = ((m_members.get(0) * otherVector.m_members.get(1)) - (m_members.get(1) * otherVector.m_members.get(0)));
+        Double z = ((this.members.get(0) * otherVector.members.get(1)) - (this.members.get(1) * otherVector.members.get(0)));
         return new Vector3D(x, y, z);
     }
 
