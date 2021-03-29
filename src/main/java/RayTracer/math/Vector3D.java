@@ -43,6 +43,18 @@ public class Vector3D extends Vector {
         return new Vector3D(x, y, z);
     }
 
+    /**
+     * Returns component of othervector which is perpendicular to this
+     * @param otherVector
+     * @return component of othervector which is perpendicular to this
+     */
+    public Vector3D findPerpendicular(Vector3D otherVector){
+        // Find projection of b onto a
+        Vector3D projOther = scalarMult(dotProduct(otherVector) / euclideanNorm());
+        // This is the component of b perpendicular to a
+        return otherVector.subtract(projOther);
+    }
+
     @Override
     public Vector3D add(Vector otherVector) throws IllegalArgumentException{
         Vector result = super.add(otherVector);
