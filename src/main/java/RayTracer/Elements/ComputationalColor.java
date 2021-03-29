@@ -3,18 +3,18 @@ package RayTracer.Elements;
 /**
  * represent RGB color
  */
-public class Color {
+public class ComputationalColor {
     private double red;
     private double green;
     private double blue;
 
-    public Color(double red, double green, double blue) {
+    public ComputationalColor(double red, double green, double blue) {
         this.red = red;
         this.green = green;
         this.blue = blue;
     }
 
-    public Color(int red, int green, int blue) {
+    public ComputationalColor(int red, int green, int blue) {
         checkRGB(red, green, blue);
         this.red = red / 255.0;
         this.green = green / 255.0;
@@ -48,20 +48,20 @@ public class Color {
      * @param c2 second color
      * @return Color with its rgb values are the sum of c1 and c2 values.
      */
-    public static Color sumColors(Color c1, Color c2) {
-        return new Color(c1.getRed() + c2.getRed(), c1.getGreen() + c2.getGreen(), c1.getBlue() + c2.getBlue());
+    public static ComputationalColor sumColors(ComputationalColor c1, ComputationalColor c2) {
+        return new ComputationalColor(c1.getRed() + c2.getRed(), c1.getGreen() + c2.getGreen(), c1.getBlue() + c2.getBlue());
     }
 
     /**
      *
-     * @param fraction the fraction of the output color
-     * @return Color with rgb values which equal to fraction * originalColor
+     * @param scaleFactor the scale factor of the output color
+     * @return ComputationalColor with scaled rgb values
      */
-    public static Color multiplyByFraction(Color color, double fraction) {
-        if (fraction <= 0 || fraction > 1) {
+    public static ComputationalColor multiplyByFraction(ComputationalColor color, double scaleFactor) {
+        if (scaleFactor <= 0 || scaleFactor > 1) {
             throw new IllegalArgumentException("fraction parameter's value should be between 0 to 1");
         }
-        return new Color(color.getRed() * fraction, color.green * fraction, color.getBlue() * fraction);
+        return new ComputationalColor(color.getRed() * scaleFactor, color.green * scaleFactor, color.getBlue() * scaleFactor);
     }
 
 
@@ -74,8 +74,8 @@ public class Color {
     @Override
     public boolean equals(Object obj) {
         if (obj == this) return true;
-        if (obj instanceof Color) {
-            Color other = (Color) obj;
+        if (obj instanceof ComputationalColor) {
+            ComputationalColor other = (ComputationalColor) obj;
             return red == other.red
                     && green == other.green
                     && blue == other.blue;
