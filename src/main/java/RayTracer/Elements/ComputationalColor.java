@@ -1,5 +1,7 @@
 package RayTracer.Elements;
 
+import java.awt.*;
+
 /**
  * represent RGB color
  */
@@ -15,10 +17,29 @@ public class ComputationalColor {
     }
 
     public ComputationalColor(int red, int green, int blue) {
-        checkRGB(red, green, blue);
+        //TODO decide if redundant or not:
+        // checkRGB(red, green, blue);
         this.red = red / 255.0;
         this.green = green / 255.0;
         this.blue = blue / 255.0;
+    }
+
+    /**
+     * Copy constructor
+     * @param color ComputationalColor object
+     */
+    public ComputationalColor(ComputationalColor color) {
+        red = color.red;
+        green = color.green;
+        blue = color.blue;
+    }
+
+    /**
+     * Copy constructor
+     * @param color java.awt.Color object
+     */
+    public ComputationalColor(Color color) {
+        this(color.getRed(), color.getGreen(), color.getBlue());
     }
 
     public double getRed() {
@@ -44,6 +65,18 @@ public class ComputationalColor {
     }
 
     /**
+     *
+     * @param scaleFactor the scale factor of the output color
+     * @return ComputationalColor with scaled rgb values
+     */
+    public static ComputationalColor scaleColor(ComputationalColor color, double scaleFactor) {
+        if (scaleFactor <= 0 || scaleFactor > 1) {
+            throw new IllegalArgumentException("fraction parameter's value should be between 0 to 1");
+        }
+        return new ComputationalColor(color.getRed() * scaleFactor, color.green * scaleFactor, color.getBlue() * scaleFactor);
+    }
+
+    /**
      * @param c1 first color
      * @param c2 second color
      * @return Color with its rgb values are the sum of c1 and c2 values.
@@ -52,63 +85,39 @@ public class ComputationalColor {
         return new ComputationalColor(c1.getRed() + c2.getRed(), c1.getGreen() + c2.getGreen(), c1.getBlue() + c2.getBlue());
     }
 
+    public static ComputationalColor multColors(ComputationalColor c1, ComputationalColor c2) {
+        return new ComputationalColor(c1.getRed() * c2.getRed(), c1.getGreen() * c2.getGreen(), c1.getBlue() * c2.getBlue());
+
+    }
+
     /**
      *
-     * @param scaleFactor the scale factor of the output color
-     * @return ComputationalColor with scaled rgb values
+     * @return java.awt.Color object
      */
-    public static ComputationalColor multiplyByFraction(ComputationalColor color, double scaleFactor) {
-        if (scaleFactor <= 0 || scaleFactor > 1) {
-            throw new IllegalArgumentException("fraction parameter's value should be between 0 to 1");
-        }
-        return new ComputationalColor(color.getRed() * scaleFactor, color.green * scaleFactor, color.getBlue() * scaleFactor);
+    public Color toColor() {
+        this.clipColor();
+        int[] rgb = getIntRepresentation();
+        return new Color(rgb[0], rgb[1], rgb[2]);
+    }
+
+    /**
+     * Clips colors values to be a floating point number between 0 and 1
+     */
+    private void clipColor() {
+        red = Math.min(red, 1);
+        green = Math.min(green, 1);
+        blue = Math.min(blue, 1);
     }
 
 
     /**
-     * Indicates whether some other object is "equal to" this one.
-     *
-     * @param obj the reference object with which to compare.
-     * @return {@code true} if this object is equal to the {@code obj} argument; {@code false} otherwise.
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj instanceof ComputationalColor) {
-            ComputationalColor other = (ComputationalColor) obj;
-            return red == other.red
-                    && green == other.green
-                    && blue == other.blue;
-        } else return false;
-    }
-
-
-    /**
-     * Returns a string representation of this {@code main.Color}.
-     *
-     * @return the string representation
-     */
-    //TODO change serialization and add deserialization
-    @Override
-    public String toString() {
-        int rgb[] = getIntRepresentation();
-        return "r: " + String.valueOf(rgb[0]) + ", g: " + String.valueOf(rgb[1]) + ", b: " + String.valueOf(rgb[2]);
-    }
-
-    private void trimColors() {
-        this.red = Math.min(red, 1);
-        this.green = Math.min(green, 1);
-        this.blue = Math.min(blue, 1);
-    }
-
-    /**
+     * TODO remove later
      * Check if the integer arguments values are in range [0, 255]. if not, Throws IllegalArgumentException.
      *
      * @param red
      * @param green
      * @param blue
      */
-
     private static void checkRGB(int red, int green, int blue) {
         if (red < 0 || red > 255) {
             throw new IllegalArgumentException("Color's red parameter (" + red + ") expects color values 0-255");
@@ -120,4 +129,6 @@ public class ComputationalColor {
             throw new IllegalArgumentException("Color's blue parameter (" + blue + ") expects color values 0-255");
         }
     }
+
+
 }
