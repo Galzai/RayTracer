@@ -126,6 +126,13 @@ public class Vector implements IVector<Double>{
         return this.members.size();
     }
 
+    /**
+     * Returns string representation of vector
+     */
+    public String toString(){
+        return this.members.toString();
+    }
+
     @Override
     public Double get(int index) throws IllegalArgumentException {
         if(dimension() <= index)
