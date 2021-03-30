@@ -23,8 +23,8 @@ public class Camera {
      public Camera(Vector3D position, Vector3D lookAtPoint, Vector3D up, Boolean fisheye){
         this.position = position;
         this.towards = lookAtPoint.subtract(position).normalize();
-        this.up = this.towards.findPerpendicular(up).normalize();
-        this.right = this.up.crossProduct(this.towards).normalize();
+        this.right = up.crossProduct(this.towards).normalize();
+        this.up = this.towards.crossProduct(this.right).normalize();
         this.fisheye = fisheye;
      }
 

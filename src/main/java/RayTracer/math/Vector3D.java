@@ -50,7 +50,7 @@ public class Vector3D extends Vector {
      */
     public Vector3D findPerpendicular(Vector3D otherVector){
         // Find projection of b onto a
-        Vector3D projOther = scalarMult(dotProduct(otherVector) / euclideanNorm());
+        Vector3D projOther = scalarMult(dotProduct(otherVector) / (euclideanNorm() * euclideanNorm()));
         // This is the component of b perpendicular to a
         return otherVector.subtract(projOther);
     }
