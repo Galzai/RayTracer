@@ -19,7 +19,18 @@ public class Vector3D extends Vector {
     }
 
     /**
-     * Private constructor used for downcasting
+     * construct a new 3D vector
+     *
+     * @param first  first member
+     * @param second second member
+     * @param third  third member
+     */
+    public Vector3D(int first, int second, int third) {
+        super(new ArrayList<Double>(Arrays.asList((double)first, (double)second, (double)third)));
+    }
+
+    /**
+     * Private constructor used for down-casting
      *
      * @param otherVec other vector to create 3d vector from
      * @throws IllegalArgumentException

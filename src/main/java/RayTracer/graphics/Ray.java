@@ -46,7 +46,12 @@ public class Ray {
         return origin.add(direction.scalarMult(t));
     }
 
-    public Optional<Vector3D> findIntersectionPoint(Surface surface) {
+    /**
+     *
+     * @param surface
+     * @return Vector3D of intersection point if exists, otherwise returns null
+     */
+    public Vector3D findIntersectionPoint(Surface surface) {
         return surface.findIntersectionPoint(this);
     }
     

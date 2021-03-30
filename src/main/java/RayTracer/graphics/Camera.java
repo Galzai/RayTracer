@@ -5,10 +5,11 @@ import RayTracer.math.Vector3D;
 public class Camera {
 
     // Camera direction vectors
-    private Vector3D v;
-    private Vector3D u;
-    private Vector3D w;
+    private Vector3D v; // up direction
+    private Vector3D u; // right direction
+    private Vector3D w; // facing the opposite direction of "towards" vector
     private Vector3D position;
+    private double focalLength;
 
     // Other members
     Boolean fisheye;
@@ -21,11 +22,12 @@ public class Camera {
      * @param up          camera up vector
      * @param fisheye     true if camera uses fisheye lens
      */
-    public Camera(Vector3D position, Vector3D lookAtPoint, Vector3D up, Boolean fisheye) {
+    public Camera(Vector3D position, Vector3D lookAtPoint, Vector3D up, double focalLength, Boolean fisheye) {
         this.position = position;
-        this.w = position.subtract(lookAtPoint).normalize();  // facing the opposite direction of "towards" vector
-        this.u = up.crossProduct(this.w).normalize();  // right direction
-        this.v = this.w.crossProduct(this.u).normalize();  // up direction
+        this.w = position.subtract(lookAtPoint).normalize();
+        this.u = this.w.crossProduct(up).normalize();
+        this.v = this.u.crossProduct(this.w).normalize();
+        this.focalLength = focalLength;
         this.fisheye = fisheye;
     }
 
@@ -43,5 +45,9 @@ public class Camera {
 
     public Vector3D position() {
         return this.position;
+    }
+
+    public double focalLength() {
+        return focalLength;
     }
 }

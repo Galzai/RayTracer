@@ -8,5 +8,5 @@ import java.util.Optional;
 public interface Surface {
     public double findIntersectionDistance(Ray ray);
 
-    public Optional<Vector3D> findIntersectionPoint(Ray ray);
+    public Vector3D findIntersectionPoint(Ray ray);
 }
