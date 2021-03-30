@@ -1,5 +1,6 @@
 package RayTracer.Elements;
 
+import RayTracer.math.Vector3D;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -12,17 +13,8 @@ public class ColorTest {
         assertEquals(intColor.getGreen(), 128 / 255.0);
         ComputationalColor fColor = new ComputationalColor(1.0, 0.5, 1.0);
         assertEquals(fColor.getRed(), 1);
-        try {
-            ComputationalColor c = new ComputationalColor(300, 100, 100);
-        } catch (IllegalArgumentException e) {
-            assertTrue(true);
-        }
-
-        try {
-            ComputationalColor c = new ComputationalColor(10, 0, 100);
-        } catch (IllegalArgumentException e) {
-            assertTrue(true);
-        }
+        Vector3D vec = new Vector3D(0.,1., 0.5);
+        ComputationalColor color = new ComputationalColor(vec);
     }
 
     @Test

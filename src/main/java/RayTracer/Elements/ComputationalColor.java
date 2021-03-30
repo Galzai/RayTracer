@@ -1,27 +1,23 @@
 package RayTracer.Elements;
 
+import RayTracer.math.Vector3D;
+
 import java.awt.*;
 
 /**
  * represent RGB color
  */
+
+//TODO add verifiers to the constructors (check if the parameters are in the correct range)
 public class ComputationalColor {
-    private double red;
-    private double green;
-    private double blue;
+    Vector3D rgb;
 
     public ComputationalColor(double red, double green, double blue) {
-        this.red = red;
-        this.green = green;
-        this.blue = blue;
+        rgb = new Vector3D(red, green, blue);
     }
 
     public ComputationalColor(int red, int green, int blue) {
-        //TODO decide if redundant or not:
-        // checkRGB(red, green, blue);
-        this.red = red / 255.0;
-        this.green = green / 255.0;
-        this.blue = blue / 255.0;
+        rgb = new Vector3D(red / 255.0, green / 255.0, blue / 255.0);
     }
 
     /**
@@ -29,9 +25,11 @@ public class ComputationalColor {
      * @param color ComputationalColor object
      */
     public ComputationalColor(ComputationalColor color) {
-        red = color.red;
-        green = color.green;
-        blue = color.blue;
+        rgb = color.rgb;
+    }
+
+    public ComputationalColor(Vector3D rgb) {
+        rgb = new Vector3D(rgb.get(0), rgb.get(1), rgb.get(2));
     }
 
     /**
@@ -43,24 +41,24 @@ public class ComputationalColor {
     }
 
     public double getRed() {
-        return red;
+        return rgb.get(0);
     }
 
     public double getGreen() {
-        return green;
+        return rgb.get(1);
     }
 
     public double getBlue() {
-        return blue;
+        return rgb.get(2);
     }
 
     /**
      * @return array of int representing the color's values in integer format ( 0 <= r,g,b <= 255)
      */
     public int[] getIntRepresentation() {
-        int r = (int) Math.round(red * 255.0);
-        int g = (int) Math.round(green * 255.0);
-        int b = (int) Math.round(blue * 255.0);
+        int r = (int) Math.round(rgb.get(0) * 255.0);
+        int g = (int) Math.round(rgb.get(1) * 255.0);
+        int b = (int) Math.round(rgb.get(2) * 255.0);
         return new int[]{r, g, b};
     }
 
@@ -73,7 +71,7 @@ public class ComputationalColor {
         if (scaleFactor <= 0 || scaleFactor > 1) {
             throw new IllegalArgumentException("fraction parameter's value should be between 0 to 1");
         }
-        return new ComputationalColor(color.getRed() * scaleFactor, color.green * scaleFactor, color.getBlue() * scaleFactor);
+        return new ComputationalColor(color.rgb.scalarMult(scaleFactor));
     }
 
     /**
@@ -82,12 +80,8 @@ public class ComputationalColor {
      * @return Color with its rgb values are the sum of c1 and c2 values.
      */
     public static ComputationalColor sumColors(ComputationalColor c1, ComputationalColor c2) {
-        return new ComputationalColor(c1.getRed() + c2.getRed(), c1.getGreen() + c2.getGreen(), c1.getBlue() + c2.getBlue());
-    }
-
-    public static ComputationalColor multColors(ComputationalColor c1, ComputationalColor c2) {
-        return new ComputationalColor(c1.getRed() * c2.getRed(), c1.getGreen() * c2.getGreen(), c1.getBlue() * c2.getBlue());
-
+        Vector3D sum = c1.rgb.add(c2.rgb);
+        return new ComputationalColor(sum);
     }
 
     /**
@@ -104,31 +98,6 @@ public class ComputationalColor {
      * Clips colors values to be a floating point number between 0 and 1
      */
     private void clipColor() {
-        red = Math.min(red, 1);
-        green = Math.min(green, 1);
-        blue = Math.min(blue, 1);
+        rgb = new Vector3D(Math.min(getRed(), 1),Math.min(getGreen(), 1), Math.min(getBlue(), 1));
     }
-
-
-    /**
-     * TODO remove later
-     * Check if the integer arguments values are in range [0, 255]. if not, Throws IllegalArgumentException.
-     *
-     * @param red
-     * @param green
-     * @param blue
-     */
-    private static void checkRGB(int red, int green, int blue) {
-        if (red < 0 || red > 255) {
-            throw new IllegalArgumentException("Color's red parameter (" + red + ") expects color values 0-255");
-        }
-        if (green < 0 || green > 255) {
-            throw new IllegalArgumentException("Color's green parameter (" + green + ") expects color values 0-255");
-        }
-        if (blue < 0 || blue > 255) {
-            throw new IllegalArgumentException("Color's blue parameter (" + blue + ") expects color values 0-255");
-        }
-    }
-
-
 }
