@@ -13,6 +13,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -38,7 +39,7 @@ public class SphereTest {
         Vector3D origin = new Vector3D(0.0, 0.0, 0.0);
         Vector3D lookAt = new Vector3D(0, 0, 1);
         Vector3D up = new Vector3D(0, 1, 0);
-        Camera camera = new Camera(origin, lookAt, up, 1, false);
+        Camera camera = new Camera(origin, lookAt, up, 0.5, false);
         Viewport viewport = new Viewport(screenWidth, imageWidth, imageHeight, camera);
         Sphere sphere = new Sphere(new Vector3D(0, 0, 2), 1);
 
@@ -66,13 +67,17 @@ public class SphereTest {
     public void simpleRenderSphere2() throws IOException {
         int imageWidth = 400;
         int imageHeight = 225;
-        double screenWidth = 2.0;
-        Vector3D origin = new Vector3D(0.0, 0.0, 0.0);
-        Vector3D lookAt = new Vector3D(0, 0, 1);
-        Vector3D up = new Vector3D(0, 1, 0);
-        Camera camera = new Camera(origin, lookAt, up, 1, false);
+        double screenWidth = 10;
+        Vector3D origin = new Vector3D(-2,2,1);
+        Vector3D lookAt = new Vector3D(0,0,-1);
+        Vector3D up = new Vector3D(0,1,0);
+        Camera camera = new Camera(origin, lookAt, up, 5, false);
         Viewport viewport = new Viewport(screenWidth, imageWidth, imageHeight, camera);
-        Sphere sphere = new Sphere(new Vector3D(0, 0, 2), 1);
+        Sphere center = new Sphere(new Vector3D(0.0,    0.0, -1.0), 0.5);
+        Sphere right = new Sphere(new Vector3D(1.0,    0.0, -1.0), 0.5);
+        Sphere left = new Sphere(new Vector3D(-1.0,    0.0, -1.0), 0.5);
+
+
 
 
         BufferedImage img = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB);
@@ -80,11 +85,20 @@ public class SphereTest {
             for (int i = 1; i <= imageWidth; ++i) {
                 Vector3D direction = viewport.pixelToScreenPoint(i, j);
                 Ray ray = new Ray(origin, direction);
-                if (ray.findIntersectionPoint(sphere) != null) {
+                boolean background = true;
+                if (ray.findIntersectionPoint(center) != null) {
+                    img.setRGB(i - 1, j - 1, Color.green.getRGB());
+                }
+
+                else if (ray.findIntersectionPoint(left) != null) {
                     img.setRGB(i - 1, j - 1, Color.red.getRGB());
                 }
-                else {
+
+                else if (ray.findIntersectionPoint(right) != null) {
                     img.setRGB(i - 1, j - 1, Color.blue.getRGB());
+                }
+                else {
+                    img.setRGB(i - 1, j - 1, Color.white.getRGB());
                 }
             }
 
