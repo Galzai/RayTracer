@@ -1,4 +1,4 @@
-package RayTracer.Elements;
+package RayTracer.graphics;
 
 import RayTracer.math.Vector3D;
 
@@ -10,7 +10,7 @@ import java.awt.*;
 
 //TODO add verifiers to the constructors (check if the parameters are in the correct range)
 public class ComputationalColor {
-    Vector3D rgb;
+    private Vector3D rgb;
 
     public ComputationalColor(double red, double green, double blue) {
         rgb = new Vector3D(red, green, blue);

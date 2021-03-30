@@ -1,6 +1,9 @@
-package RayTracer.Elements;
+package RayTracer.graphics;
 
+import RayTracer.geometry.Surface;
 import  RayTracer.math.Vector3D;
+
+import java.util.Optional;
 
 /**
  * Rays from origin in direction of direction
@@ -13,11 +16,11 @@ public class Ray {
     /**
      * Constructs a ray from origin in direction
      * @param origin origin vector
-     * @param direction direction vector
+     * @param direction direction vector (not necessarily normalized!)
      */
     public Ray(Vector3D origin, Vector3D  direction){
         this.origin = origin;
-        this.direction = direction;
+        this.direction = direction.normalize();
     }
 
     /**
@@ -41,6 +44,10 @@ public class Ray {
      */
     public Vector3D at(Double t){
         return origin.add(direction.scalarMult(t));
+    }
+
+    public Optional<Vector3D> findIntersectionPoint(Surface surface) {
+        return surface.findIntersectionPoint(this);
     }
     
 }

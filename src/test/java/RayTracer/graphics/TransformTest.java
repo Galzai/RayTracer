@@ -1,4 +1,4 @@
-package RayTracer.Elements;
+package RayTracer.graphics;
 import RayTracer.math.Matrix3D;
 import RayTracer.math.Vector3D;
 

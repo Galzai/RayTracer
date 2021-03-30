@@ -1,4 +1,4 @@
-package RayTracer.Elements;
+package RayTracer.graphics;
 import RayTracer.math.Vector3D;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

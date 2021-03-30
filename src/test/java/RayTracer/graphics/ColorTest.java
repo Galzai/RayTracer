@@ -1,4 +1,4 @@
-package RayTracer.Elements;
+package RayTracer.graphics;
 
 import RayTracer.math.Vector3D;
 import org.junit.jupiter.api.Test;
