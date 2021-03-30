@@ -53,6 +53,8 @@ public class SphereTest {
         Camera camera = new Camera(origin, lookAt, up, 0.5, false);
         Viewport viewport = new Viewport(screenWidth, imageWidth, imageHeight, camera);
         Sphere sphere = new Sphere(new Vector3D(0, 0, 2), 1, null);
+        Sphere sphere2 = new Sphere(new Vector3D(2, 0, 2), 1, null);
+
 
 
 
@@ -64,6 +66,9 @@ public class SphereTest {
                 if (ray.findIntersectionPoint(sphere) != null) {
                     img.setRGB(i - 1, j - 1, Color.red.getRGB());
                 }
+                else if (ray.findIntersectionPoint(sphere2) != null) {
+                    img.setRGB(i-1, j-1, Color.green.getRGB());
+                }
                 else {
                     img.setRGB(i - 1, j - 1, Color.blue.getRGB());
                 }
@@ -71,7 +76,7 @@ public class SphereTest {
 
         }
 
-        File f = new File("C:\\Users\\Tal\\Desktop\\university\\CS\\year3\\03 - Graphics and Computer Vision\\HW\\RayTracer\\src\\test\\resources\\Output.png");
+        File f = new File("C:\\Users\\Tal\\Desktop\\university\\CS\\year3\\03 - Graphics and Computer Vision\\HW\\RayTracer\\src\\test\\resources\\simple sphere.png");
         ImageIO.write(img, "png", f);
     }
 
