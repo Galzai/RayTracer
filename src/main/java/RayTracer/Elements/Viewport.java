@@ -7,7 +7,7 @@ public class Viewport {
     // Screen dimensions
     private Double width;
     private Double aspectRatio;
-    private Double focalLength; 
+    private Double focalLength; //TODO I think it is redundant
     private Double height;
 
     // Screen Vectors
@@ -17,11 +17,11 @@ public class Viewport {
     Integer imageWidth;
     Integer imageHeight;
 
-    public Viewport(Double width, Double aspectRatio, Double focalLength, int imageWidth, int imageHeight, Vector3D origin){
+    public Viewport(Double width, Double focalLength, int imageWidth, int imageHeight, Camera camera){
 
         // Dimensions
         this.width = width;
-        this.aspectRatio = aspectRatio;
+        this.aspectRatio = (double)imageWidth / imageHeight;
         this.focalLength = focalLength;
         this.height = aspectRatio * width;
 
@@ -30,7 +30,10 @@ public class Viewport {
         this.imageHeight = imageHeight;
 
         // This is where we start moving from the screen
-        lowerLeftVec = new Vector3D(origin.get(0) - (width / 2.0), origin.get(1) - (height / 2.0), focalLength);
+        lowerLeftVec = camera.position().subtract(camera.w().scalarMult(focalLength));  // forward to the center of the screen
+        lowerLeftVec = lowerLeftVec.subtract(camera.u().scalarMult(width/2));  // left to the left bound of the screen
+        lowerLeftVec = lowerLeftVec.subtract(camera.v().scalarMult(height / 2));  // down to the lower bound of the screen
+
     }
 
     /**
