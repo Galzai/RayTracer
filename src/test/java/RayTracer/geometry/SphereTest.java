@@ -23,7 +23,7 @@ public class SphereTest {
 
     @Test
     public void sphereIntersection() {
-        Sphere sphere = new Sphere(new Vector3D(0, 0, 2), 0.5);
+        Sphere sphere = new Sphere(new Vector3D(0, 0, 2), 0.5, null);
         Vector3D origin = new Vector3D(0.0, 0.0, 0.0);
         Vector3D direction = new Vector3D(0, 0, 1);
         Ray ray = new Ray(origin, direction);
@@ -41,7 +41,8 @@ public class SphereTest {
         Vector3D up = new Vector3D(0, 1, 0);
         Camera camera = new Camera(origin, lookAt, up, 0.5, false);
         Viewport viewport = new Viewport(screenWidth, imageWidth, imageHeight, camera);
-        Sphere sphere = new Sphere(new Vector3D(0, 0, 2), 1);
+        Sphere sphere = new Sphere(new Vector3D(0, 0, 2), 1, null);
+        
 
 
         BufferedImage img = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB);
@@ -64,7 +65,7 @@ public class SphereTest {
     }
 
     @Test
-    public void simpleRenderSphere2() throws IOException {
+    public void threeSpheresRenderingTest() throws IOException {
         int imageWidth = 400;
         int imageHeight = 225;
         double screenWidth = 10;
@@ -73,9 +74,9 @@ public class SphereTest {
         Vector3D up = new Vector3D(0,1,0);
         Camera camera = new Camera(origin, lookAt, up, 5, false);
         Viewport viewport = new Viewport(screenWidth, imageWidth, imageHeight, camera);
-        Sphere center = new Sphere(new Vector3D(0.0,    0.0, -1.0), 0.5);
-        Sphere right = new Sphere(new Vector3D(1.0,    0.0, -1.0), 0.5);
-        Sphere left = new Sphere(new Vector3D(-1.0,    0.0, -1.0), 0.5);
+        Sphere center = new Sphere(new Vector3D(0.0,    0.0, -1.0), 0.5, null);
+        Sphere right = new Sphere(new Vector3D(1.0,    0.0, -1.0), 0.5, null);
+        Sphere left = new Sphere(new Vector3D(-1.0,    0.0, -1.0), 0.5, null);
 
 
 

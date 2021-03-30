@@ -57,7 +57,7 @@ public class Vector3D extends Vector {
         return new Vector3D(x, y, z);
     }
 
-    /**
+    /** TODO delete function
      * Returns component of othervector which is perpendicular to this
      *
      * @param otherVector
