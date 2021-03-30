@@ -27,7 +27,7 @@ public class SphereTest {
         Vector3D origin = new Vector3D(0.0, 0.0, 0.0);
         Vector3D direction = new Vector3D(0, 0, 1);
         Ray ray = new Ray(origin, direction);
-        Vector3D intersection = ray.findIntersectionPoint(sphere);;
+        Vector3D intersection = ray.findIntersectionPoint(sphere);
         assertNotEquals(intersection, null);
 
     }
@@ -42,7 +42,7 @@ public class SphereTest {
         Camera camera = new Camera(origin, lookAt, up, 0.5, false);
         Viewport viewport = new Viewport(screenWidth, imageWidth, imageHeight, camera);
         Sphere sphere = new Sphere(new Vector3D(0, 0, 2), 1, null);
-        
+
 
 
         BufferedImage img = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB);
