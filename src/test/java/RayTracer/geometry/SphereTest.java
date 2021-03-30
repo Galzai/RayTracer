@@ -29,8 +29,19 @@ public class SphereTest {
         Ray ray = new Ray(origin, direction);
         Vector3D intersection = ray.findIntersectionPoint(sphere);
         assertNotEquals(intersection, null);
-
     }
+
+    @Test
+    public void sphereIntersection_noIntersection() {
+        Sphere sphere = new Sphere(new Vector3D(0, 0, 2), 0.5, null);
+        Vector3D origin = new Vector3D(0.0, 0.0, 0.0);
+        // opposite direction
+        Vector3D direction = new Vector3D(0, 0, -1);
+        Ray ray = new Ray(origin, direction);
+        Vector3D intersection = ray.findIntersectionPoint(sphere);
+        assertEquals(intersection, null);
+    }
+
     @Test
     public void simpleRenderSphere() throws IOException {
         int imageWidth = 400;
