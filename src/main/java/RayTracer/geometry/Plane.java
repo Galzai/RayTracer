@@ -1,5 +1,6 @@
 package RayTracer.geometry;
 
+import RayTracer.graphics.Intersection;
 import RayTracer.graphics.Material;
 import RayTracer.graphics.Ray;
 import RayTracer.math.MathUtils;
@@ -27,21 +28,13 @@ public class Plane implements Surface {
     }
 
     @Override
-    public double findIntersectionDistance(Ray ray) {
-        Vector3D intersection = findIntersectionPoint(ray);
-        if (intersection != null) {
-            return intersection.calculateDistance(ray.origin());
-        }
-        return -1;
-    }
-
-    @Override
-    public Vector3D findIntersectionPoint(Ray ray) {
+    public Intersection findIntersection(Ray ray) {
         double denominator = this.normal.dotProduct(ray.direction());
         if (denominator > MathUtils.EPSILON) {
-            // t = (p0 - ray origin) * normal / dotProduct(ray direction, normal)
             double t = this.normal.dotProduct(this.p0.subtract(ray.origin())) / denominator;
-            return ray.at(t);
+            Vector3D intersectionPoint = ray.at(t);
+            Vector3D pointNormal = this.normal.findProjection(ray.direction()).scalarMult(-1.0);
+            return new Intersection(intersectionPoint, pointNormal, this, t);
         }
         return null;
 

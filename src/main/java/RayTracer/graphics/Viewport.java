@@ -50,4 +50,12 @@ public class Viewport {
         return this.lowerLeftVec.add(this.camera.u().scalarMult(widthRatio * this.width)).add(this.camera.v().scalarMult(heightRatio * this.height));
     }
 
+    public Integer getImageWidth() {
+        return this.imageWidth;
+    }
+
+    public Integer getImageHeight() {
+        return this.imageWidth;
+    }
+
 }

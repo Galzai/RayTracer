@@ -1,14 +1,13 @@
 package RayTracer.graphics;
-import java.awt.Color;
 
 public class Material {
-    private Color diffuseColor;
-    private Color specularColor;
-    private Color reflectionColor;
+    private ComputationalColor diffuseColor;
+    private ComputationalColor specularColor;
+    private ComputationalColor reflectionColor;
     double phongSpecularityCoeff;
     double transparency;
 
-    public Material(Color diffuseColor, Color specularColor, Color reflectionColor, double phongSpecularityCoeff, double transparency) {
+    public Material(ComputationalColor diffuseColor, ComputationalColor specularColor, ComputationalColor reflectionColor, double phongSpecularityCoeff, double transparency) {
         this.diffuseColor = diffuseColor;
         this.specularColor = specularColor;
         this.reflectionColor = reflectionColor;
@@ -24,24 +23,24 @@ public class Material {
      *
      * TODO: implement with vector calculations!
      */
-    public Color getOutputColor(Color backgroundColor) {
+    public ComputationalColor getOutputColor(ComputationalColor backgroundColor) {
 //        Color outputColor = Color.multiplyByFraction(Color.sumColors(diffuseColor, specularColor), 1 - transparency);
 //        outputColor = Color.sumColors(outputColor, Color.multiplyByFraction(backgroundColor, transparency));
 //        outputColor = Color.sumColors(outputColor, reflectionColor);
 //        return outputColor;
-        return new Color(1,2,3);
+        return new ComputationalColor(1,2,3);
     }
 
 
-    public Color getDiffuseColor() {
+    public ComputationalColor getDiffuseColor() {
         return diffuseColor;
     }
 
-    public Color getSpecularColor() {
+    public ComputationalColor getSpecularColor() {
         return specularColor;
     }
 
-    public Color getReflectionColor() {
+    public ComputationalColor getReflectionColor() {
         return reflectionColor;
     }
 
