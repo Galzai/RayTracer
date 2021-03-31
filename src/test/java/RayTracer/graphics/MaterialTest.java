@@ -1,4 +1,4 @@
-package RayTracer.Elements;
+package RayTracer.graphics;
 import java.awt.Color;
 
 import org.junit.jupiter.api.Test;
