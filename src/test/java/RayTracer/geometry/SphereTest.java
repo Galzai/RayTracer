@@ -1,5 +1,6 @@
 package RayTracer.geometry;
 
+import RayTracer.TestUtils;
 import RayTracer.graphics.Camera;
 import RayTracer.graphics.Ray;
 import RayTracer.graphics.Viewport;
@@ -20,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class SphereTest {
+
 
     @Test
     public void sphereIntersection() {
@@ -54,11 +56,6 @@ public class SphereTest {
         Viewport viewport = new Viewport(screenWidth, imageWidth, imageHeight, camera);
         Sphere sphere = new Sphere(new Vector3D(0, 0, 2), 1, null);
         Sphere sphere2 = new Sphere(new Vector3D(2, 0, 2), 1, null);
-
-
-
-
-
         BufferedImage img = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB);
         for (int j = imageHeight; j >= 1; --j) {
             for (int i = 1; i <= imageWidth; ++i) {
@@ -66,11 +63,9 @@ public class SphereTest {
                 Ray ray = new Ray(origin, direction);
                 if (ray.findIntersectionPoint(sphere) != null) {
                     img.setRGB(i - 1, imageHeight - j, Color.red.getRGB());
-                }
-                else if (ray.findIntersectionPoint(sphere2) != null) {
-                    img.setRGB(i-1, imageHeight - j, Color.green.getRGB());
-                }
-                else {
+                } else if (ray.findIntersectionPoint(sphere2) != null) {
+                    img.setRGB(i - 1, imageHeight - j, Color.green.getRGB());
+                } else {
                     img.setRGB(i - 1, imageHeight - j, Color.blue.getRGB());
                 }
             }
@@ -78,7 +73,7 @@ public class SphereTest {
         }
 
 
-        File f = new File("C:\\Users\\Tal\\Desktop\\university\\CS\\year3\\03 - Graphics and Computer Vision\\HW\\RayTracer\\src\\test\\resources\\simple sphere.png");
+        File f = new File(TestUtils.getOutputPath() + "simple sphere.png");
         ImageIO.write(img, "png", f);
     }
 
@@ -87,16 +82,14 @@ public class SphereTest {
         int imageWidth = 400;
         int imageHeight = 225;
         double screenWidth = 10;
-        Vector3D origin = new Vector3D(-2,2,1);
-        Vector3D lookAt = new Vector3D(0,0,-1);
-        Vector3D up = new Vector3D(0,1,0);
+        Vector3D origin = new Vector3D(-2, 2, 1);
+        Vector3D lookAt = new Vector3D(0, 0, -1);
+        Vector3D up = new Vector3D(0, 1, 0);
         Camera camera = new Camera(origin, lookAt, up, 5, false);
         Viewport viewport = new Viewport(screenWidth, imageWidth, imageHeight, camera);
-        Sphere center = new Sphere(new Vector3D(0.0,    0.0, -1.0), 0.5, null);
-        Sphere right = new Sphere(new Vector3D(1.0,    0.0, -1.0), 0.5, null);
-        Sphere left = new Sphere(new Vector3D(-1.0,    0.0, -1.0), 0.5, null);
-
-
+        Sphere center = new Sphere(new Vector3D(0.0, 0.0, -1.0), 0.5, null);
+        Sphere right = new Sphere(new Vector3D(1.0, 0.0, -1.0), 0.5, null);
+        Sphere left = new Sphere(new Vector3D(-1.0, 0.0, -1.0), 0.5, null);
 
 
         BufferedImage img = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB);
@@ -107,23 +100,18 @@ public class SphereTest {
                 boolean background = true;
                 if (ray.findIntersectionPoint(center) != null) {
                     img.setRGB(i - 1, imageHeight - j, Color.green.getRGB());
-                }
-
-                else if (ray.findIntersectionPoint(left) != null) {
+                } else if (ray.findIntersectionPoint(left) != null) {
                     img.setRGB(i - 1, imageHeight - j, Color.red.getRGB());
-                }
-
-                else if (ray.findIntersectionPoint(right) != null) {
+                } else if (ray.findIntersectionPoint(right) != null) {
                     img.setRGB(i - 1, imageHeight - j, Color.blue.getRGB());
-                }
-                else {
+                } else {
                     img.setRGB(i - 1, imageHeight - j, Color.white.getRGB());
                 }
             }
 
         }
 
-        File f = new File("C:\\Users\\Tal\\Desktop\\university\\CS\\year3\\03 - Graphics and Computer Vision\\HW\\RayTracer\\src\\test\\resources\\Output2.png");
+        File f = new File(TestUtils.getOutputPath() + "three spheres.png");
         ImageIO.write(img, "png", f);
     }
 
@@ -132,16 +120,14 @@ public class SphereTest {
         int imageWidth = 400;
         int imageHeight = 225;
         double screenWidth = 10;
-        Vector3D origin = new Vector3D(0,10,0);
-        Vector3D lookAt = new Vector3D(0,-100,0);
-        Vector3D up = new Vector3D(0,0,-1);
+        Vector3D origin = new Vector3D(0, 10, 0);
+        Vector3D lookAt = new Vector3D(0, -100, 0);
+        Vector3D up = new Vector3D(0, 0, -1);
         Camera camera = new Camera(origin, lookAt, up, 5, false);
         Viewport viewport = new Viewport(screenWidth, imageWidth, imageHeight, camera);
-        Sphere yellow = new Sphere(new Vector3D(0.0,    0.0, -4.0), 1, null);
-        Sphere black = new Sphere(new Vector3D(1.0,    0.0, -2.0), 1, null);
-        Sphere white = new Sphere(new Vector3D(-1.0,    0.0, -2.0), 1, null);
-
-
+        Sphere yellow = new Sphere(new Vector3D(0.0, 0.0, -4.0), 1, null);
+        Sphere black = new Sphere(new Vector3D(1.0, 0.0, -2.0), 1, null);
+        Sphere white = new Sphere(new Vector3D(-1.0, 0.0, -2.0), 1, null);
 
 
         BufferedImage img = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB);
@@ -152,23 +138,18 @@ public class SphereTest {
                 boolean background = true;
                 if (ray.findIntersectionPoint(yellow) != null) {
                     img.setRGB(i - 1, imageHeight - j, Color.yellow.getRGB());
-                }
-
-                else if (ray.findIntersectionPoint(black) != null) {
+                } else if (ray.findIntersectionPoint(black) != null) {
                     img.setRGB(i - 1, imageHeight - j, Color.black.getRGB());
-                }
-
-                else if (ray.findIntersectionPoint(white) != null) {
+                } else if (ray.findIntersectionPoint(white) != null) {
                     img.setRGB(i - 1, imageHeight - j, Color.white.getRGB());
-                }
-                else {
+                } else {
                     img.setRGB(i - 1, imageHeight - j, Color.green.getRGB());
                 }
             }
 
         }
 
-        File f = new File("C:\\Users\\Tal\\Desktop\\university\\CS\\year3\\03 - Graphics and Computer Vision\\HW\\RayTracer\\src\\test\\resources\\pool.png");
+        File f = new File(TestUtils.getOutputPath() + "pool.png");
         ImageIO.write(img, "png", f);
     }
 

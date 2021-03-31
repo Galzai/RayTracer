@@ -86,7 +86,7 @@ public class ComputationalColor {
     }
 
     /**
-     *
+     * TODO add getRGB() method instead
      * @return java.awt.Color object
      */
     public Color toColor() {
