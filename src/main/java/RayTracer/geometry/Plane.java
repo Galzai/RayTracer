@@ -2,6 +2,7 @@ package RayTracer.geometry;
 
 import RayTracer.graphics.Material;
 import RayTracer.graphics.Ray;
+import RayTracer.math.MathUtils;
 import RayTracer.math.Vector3D;
 
 public class Plane implements Surface {
@@ -37,7 +38,7 @@ public class Plane implements Surface {
     @Override
     public Vector3D findIntersectionPoint(Ray ray) {
         double denominator = this.normal.dotProduct(ray.direction());
-        if (denominator > 1e-6) {
+        if (denominator > MathUtils.EPSILON) {
             // t = (p0 - ray origin) * normal / dotProduct(ray direction, normal)
             double t = this.normal.dotProduct(this.p0.subtract(ray.origin())) / denominator;
             return ray.at(t);

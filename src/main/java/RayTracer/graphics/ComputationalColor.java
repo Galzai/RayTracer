@@ -11,13 +11,14 @@ import java.awt.*;
 //TODO add verifiers to the constructors (check if the parameters are in the correct range)
 public class ComputationalColor {
     private Vector3D rgb;
+    public static final double RGB_MAX = 255;
 
     public ComputationalColor(double red, double green, double blue) {
         rgb = new Vector3D(red, green, blue);
     }
 
     public ComputationalColor(int red, int green, int blue) {
-        rgb = new Vector3D(red / 255.0, green / 255.0, blue / 255.0);
+        rgb = new Vector3D(red / RGB_MAX, green / RGB_MAX, blue / RGB_MAX);
     }
 
     /**
@@ -56,9 +57,9 @@ public class ComputationalColor {
      * @return array of int representing the color's values in integer format ( 0 <= r,g,b <= 255)
      */
     public int[] getIntRepresentation() {
-        int r = (int) Math.round(rgb.get(0) * 255.0);
-        int g = (int) Math.round(rgb.get(1) * 255.0);
-        int b = (int) Math.round(rgb.get(2) * 255.0);
+        int r = (int) Math.round(rgb.get(0) * RGB_MAX);
+        int g = (int) Math.round(rgb.get(1) * RGB_MAX);
+        int b = (int) Math.round(rgb.get(2) * RGB_MAX);
         return new int[]{r, g, b};
     }
 
