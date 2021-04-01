@@ -33,7 +33,7 @@ public class Plane implements Surface {
         if (denominator > MathUtils.EPSILON) {
             double t = this.normal.dotProduct(this.p0.subtract(ray.origin())) / denominator;
             Vector3D intersectionPoint = ray.at(t);
-            Vector3D pointNormal = this.normal.findProjection(ray.direction()).scalarMult(-1.0);
+            Vector3D pointNormal = this.normal.findProjection(ray.direction()).scalarMult(-1.0).normalize();
             return new Intersection(intersectionPoint, pointNormal, this, t);
         }
         return null;

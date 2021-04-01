@@ -12,9 +12,9 @@ public class PhongShader {
 
     /**
      * Returns true if the light from the source to the point is shadowed
-     * 
+     *
      * @param intersection intersection data
-     * @param light light source to check
+     * @param light        light source to check
      * @return true if light is shaded
      */
     private Boolean isShadowed(Intersection intersection, Light light) {
@@ -23,18 +23,18 @@ public class PhongShader {
         // that the point is shaded
         Vector3D shadowDirection = light.getPosition().subtract(intersection.getIntersectionPoint()).normalize();
         Ray shadowRay = new Ray(intersection.getIntersectionPoint(), shadowDirection);
-        return scene.IntersectionExists(shadowRay);
+        return scene.IntersectionExists(shadowRay); // some object in between blocks the light
     }
 
     /**
      * Calculates the results of light contibuton to surface shading
-     *  
+     *
      * @param intersection intersection results
-     * @param ray light the found the intersection
+     * @param ray          light the found the intersection
      * @return light color
      */
     public ComputationalColor shade(Intersection intersection, Ray ray) {
-        
+
         // our results
         double red = 0.0;
         double green = 0.0;
@@ -50,30 +50,31 @@ public class PhongShader {
             }
             Vector3D lightDirection = light.getPosition().subtract(intersection.getIntersectionPoint());
             lightDirection.normalize();
-            // H ~= L + V
+            // H = L + V
             Vector3D highlightVec = (ray.direction().scalarMult(-1.0)).add(lightDirection).normalize();
 
             // Specular and diffuse intensity
             Double diffuseIntensity = Math.max(intersection.getNormal().dotProduct(lightDirection), 0.0);
-            Double specularIntensity = Math.pow(Math.max(intersection.getNormal().dotProduct(highlightVec), 0.0), material.getPhongSpecularityCoeff());
+            Double specularIntensity = Math.pow(Math.max(intersection.getNormal().dotProduct(highlightVec), 0.0), material.getPhongSpecularityCoeff()) * light.getSpecularIntensity();
 
-            red += 
-                light.getColor().getRed() * 
-                ((material.getDiffuseColor().getRed() * diffuseIntensity) + 
-                (material.getSpecularColor().getRed() * specularIntensity));
-            
-            green += 
-            shadowMultiplier * light.getColor().getGreen() * 
-            ((material.getDiffuseColor().getGreen() * diffuseIntensity) + 
-            (material.getSpecularColor().getGreen() * specularIntensity));
-            
-            blue += 
-            shadowMultiplier * light.getColor().getBlue() * 
-            ((material.getDiffuseColor().getBlue() * diffuseIntensity) + 
-            (material.getSpecularColor().getBlue() * specularIntensity));
+            red +=
+                    shadowMultiplier * light.getColor().getRed() *
+                            ((material.getDiffuseColor().getRed() * diffuseIntensity) +
+                                    (material.getSpecularColor().getRed() * specularIntensity));
+
+            green +=
+                    shadowMultiplier * light.getColor().getGreen() *
+                            ((material.getDiffuseColor().getGreen() * diffuseIntensity) +
+                                    (material.getSpecularColor().getGreen() * specularIntensity));
+
+            blue +=
+                    shadowMultiplier * light.getColor().getBlue() *
+                            ((material.getDiffuseColor().getBlue() * diffuseIntensity) +
+                                    (material.getSpecularColor().getBlue() * specularIntensity));
 
         }
+        //TODO clip the color after all computation is done
         return new ComputationalColor(red, green, blue);
     }
-    
+
 }
