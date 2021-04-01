@@ -2,12 +2,12 @@ package RayTracer.graphics;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.awt.Color;
 import java.io.IOException;
 
 import RayTracer.TestUtils;
 import RayTracer.geometry.AxisAlignedBox;
-import RayTracer.geometry.Box;
+import RayTracer.geometry.OrientedBox;
+import RayTracer.geometry.Plane;
 import org.junit.jupiter.api.Test;
 
 import RayTracer.geometry.Sphere;
@@ -61,7 +61,7 @@ public class SceneTest {
 
 
     @Test
-    public void boxesSceneTest() throws IOException{
+    public void AABBSceneTest() throws IOException{
         int imageWidth = 400;
         int imageHeight = 225;
         double screenWidth = 10;
@@ -112,32 +112,38 @@ public class SceneTest {
 
 
     @Test
-    public void boxesSceneTest2() throws IOException{
+    public void NiceSceneTest() throws IOException{
         int imageWidth = 400;
         int imageHeight = 225;
         double screenWidth = 10;
-        Vector3D origin = new Vector3D(0,0,0);
-        Vector3D lookAt = new Vector3D(0,0,1);
-        Vector3D up = new Vector3D(0,1,0);
-        Camera camera = new Camera(origin, lookAt, up, 4, false);
+        Vector3D origin = new Vector3D(-2,-2,-2);
+        Vector3D lookAt = new Vector3D(-1,0,0);
+        Vector3D up = new Vector3D(0,-1,0);
+        Camera camera = new Camera(origin, lookAt, up, 3, false);
         Viewport viewport = new Viewport(screenWidth, imageWidth, imageHeight, camera);
 
         ComputationalColor dYellowColor = new ComputationalColor(0.95, 0.95, 0.07);
         ComputationalColor sYellowColor = new ComputationalColor(1.0, 1.0, 1.0);
         Material yellowMaterial = new Material(dYellowColor, sYellowColor, null, 30.0, 0.0);
         ComputationalColor dBlackColor = new ComputationalColor(0.1, 0.1, 0.1);
-        Material BlackMaterial = new Material(dBlackColor, sYellowColor, null, 30.0, 0.0);
-        ComputationalColor dWhiteColor = new ComputationalColor(0.95, 0.95, 0.07);
+        Material blackMaterial = new Material(dBlackColor, sYellowColor, null, 30.0, 0.0);
+        ComputationalColor dWhiteColor = new ComputationalColor(0.2, 0.1, 0.4);
         ComputationalColor sWhiteColor = new ComputationalColor(0.5, 0.5, 0.5);
         Material whiteMaterial = new Material(dWhiteColor, sWhiteColor, null, 30.0, 0.0);
-
-
         ComputationalColor dpinkColor =  new ComputationalColor(255,20,147);
-        ComputationalColor spinkColor =  new ComputationalColor(0.5, 0.5, 0.5);;
+        ComputationalColor spinkColor =  new ComputationalColor(0.5, 0.5, 0.5);
+        ComputationalColor drandomColor =  new ComputationalColor(10,100,187);
+        ComputationalColor srandomColor =  new ComputationalColor(0.1, 0.2, 0.4);
+
+
         Material pinkMaterial = new Material(dpinkColor, spinkColor, null, 30.0, 0.0);
+        Material randomMaterial = new Material(drandomColor, srandomColor, null, 20, 0.0);
 
-
-        Box box = new Box(new Vector3D(0,0,5), new Vector3D(2,2,2), new Vector3D(Math.PI / 4,Math.PI / 4,Math.PI / 4), pinkMaterial);
+        OrientedBox OBB = new OrientedBox(new Vector3D(0,0,5), new Vector3D(2,2,2), new Vector3D(Math.PI / 3,Math.PI / 5,Math.PI / 4), pinkMaterial);
+        AxisAlignedBox AABB = new AxisAlignedBox(new Vector3D(1, 2, 3), new Vector3D(1,2,3), randomMaterial);
+        Sphere sphere1 = new Sphere(new Vector3D(3,3,3), 2, yellowMaterial);
+        Plane plane = new Plane(new Vector3D(-5,2,-5), 4, whiteMaterial);
+        Sphere sphere2 = new Sphere(new Vector3D(0, 5, 5), 3, blackMaterial);
 
 
 
@@ -149,13 +155,22 @@ public class SceneTest {
         ComputationalColor lightColor2 = new ComputationalColor(255,192,203);
         Light light2 = new Light(lightPosition2, lightColor2, 1.0, 0.5, 1.0);
 
+        Vector3D lightPosition3 = new Vector3D(-1, -5, 3);
+        ComputationalColor lightColor3 = new ComputationalColor(2,192,203);
+        Light light3 = new Light(lightPosition3, lightColor3, 0.5, 0.5, 0.1);
+
         ComputationalColor backgroundColor = new ComputationalColor(0.47, 0.27, 0.95);
         Scene scene = new Scene((camera), viewport, backgroundColor);
         scene.addLight(light);
         scene.addLight(light2);
-        scene.addSurface(box);
+        scene.addLight(light3);
+        scene.addSurface(sphere1);
+        scene.addSurface(sphere2);
+        scene.addSurface(OBB);
+        scene.addSurface(AABB);
+        scene.addSurface(plane);
 
-        scene.renderScene(TestUtils.getOutputPath() + "OBB.png");
+        scene.renderScene(TestUtils.getOutputPath() + "scene.png");
 
     }
     
