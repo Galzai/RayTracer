@@ -1,5 +1,6 @@
 package RayTracer.geometry;
 
+import RayTracer.graphics.Intersection;
 import RayTracer.graphics.Material;
 import RayTracer.graphics.Ray;
 import RayTracer.math.Vector;
@@ -25,19 +26,8 @@ public class Sphere implements Surface {
         this.material = material;
     }
 
-
     @Override
-    public double findIntersectionDistance(Ray ray) {
-        Vector3D intersection = findIntersectionPoint(ray);
-        if (intersection != null) {
-            return intersection.calculateDistance(ray.origin());
-        }
-        return -1;
-    }
-
-
-    @Override
-    public Vector3D findIntersectionPoint(Ray ray) {
+    public Intersection findIntersection(Ray ray) {
         Vector3D oc = ray.origin().subtract(this.center);
         double b = 2 * ray.direction().dotProduct(oc);
         double c = oc.dotProduct(oc) - this.radius * this.radius;
@@ -46,7 +36,11 @@ public class Sphere implements Surface {
             double t1 = (-b + Math.sqrt(delta)) / 2;
             double t2 = (- b - Math.sqrt(delta)) / 2;
             if (t1 > 0 && t2 > 0) {
-                return ray.at(Math.min(t1,t2));
+
+                double t = Math.min(t1,t2); 
+                Vector3D intersectionPoint = ray.at(t);
+                Vector3D normal = (intersectionPoint.subtract(center)).normalize();
+                return new Intersection(intersectionPoint, normal, this, t);
             }
         }
         return null;
