@@ -45,14 +45,4 @@ public class Ray {
     public Vector3D at(Double t){
         return origin.add(direction.scalarMult(t));
     }
-
-    /**
-     *
-     * @param surface
-     * @return Vector3D of intersection point if exists, otherwise returns null
-     */
-    public Vector3D findIntersectionPoint(Surface surface) {
-        return surface.findIntersectionPoint(this);
-    }
-    
 }

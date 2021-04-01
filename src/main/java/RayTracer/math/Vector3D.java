@@ -57,6 +57,18 @@ public class Vector3D extends Vector {
         return new Vector3D(x, y, z);
     }
 
+    /**
+     * Returns component of othervector which is paralel to this
+     *
+     * @param otherVector
+     * @return component of othervector which is paralel to this
+     */
+    public Vector3D findProjection(Vector3D otherVector) {
+        // Find projection of b onto a
+        double norm = euclideanNorm();
+        return scalarMult(dotProduct(otherVector) / norm * norm);
+    }
+
     /** TODO delete function
      * Returns component of othervector which is perpendicular to this
      *
