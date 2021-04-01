@@ -2,6 +2,7 @@ package RayTracer.geometry;
 
 import RayTracer.TestUtils;
 import RayTracer.graphics.Camera;
+import RayTracer.graphics.Intersection;
 import RayTracer.graphics.Ray;
 import RayTracer.graphics.Viewport;
 import RayTracer.math.Vector;
@@ -29,7 +30,7 @@ public class SphereTest {
         Vector3D origin = new Vector3D(0.0, 0.0, 0.0);
         Vector3D direction = new Vector3D(0, 0, 1);
         Ray ray = new Ray(origin, direction);
-        Vector3D intersection = ray.findIntersectionPoint(sphere);
+        Intersection intersection = sphere.findIntersection(ray);
         assertNotEquals(intersection, null);
     }
 
@@ -40,7 +41,7 @@ public class SphereTest {
         // opposite direction
         Vector3D direction = new Vector3D(0, 0, -1);
         Ray ray = new Ray(origin, direction);
-        Vector3D intersection = ray.findIntersectionPoint(sphere);
+        Intersection intersection = sphere.findIntersection(ray);
         assertEquals(intersection, null);
     }
 
@@ -61,9 +62,9 @@ public class SphereTest {
             for (int i = 1; i <= imageWidth; ++i) {
                 Vector3D direction = viewport.pixelToScreenPoint(i, j).subtract(origin);
                 Ray ray = new Ray(origin, direction);
-                if (ray.findIntersectionPoint(sphere) != null) {
+                if (sphere.findIntersection(ray) != null) {
                     img.setRGB(i - 1, imageHeight - j, Color.red.getRGB());
-                } else if (ray.findIntersectionPoint(sphere2) != null) {
+                } else if (sphere2.findIntersection(ray) != null) {
                     img.setRGB(i - 1, imageHeight - j, Color.green.getRGB());
                 } else {
                     img.setRGB(i - 1, imageHeight - j, Color.blue.getRGB());
@@ -98,11 +99,11 @@ public class SphereTest {
                 Vector3D direction = viewport.pixelToScreenPoint(i, j).subtract(origin);
                 Ray ray = new Ray(origin, direction);
                 boolean background = true;
-                if (ray.findIntersectionPoint(center) != null) {
+                if (center.findIntersection(ray) != null) {
                     img.setRGB(i - 1, imageHeight - j, Color.green.getRGB());
-                } else if (ray.findIntersectionPoint(left) != null) {
+                } else if (left.findIntersection(ray) != null) {
                     img.setRGB(i - 1, imageHeight - j, Color.red.getRGB());
-                } else if (ray.findIntersectionPoint(right) != null) {
+                } else if (right.findIntersection(ray) != null) {
                     img.setRGB(i - 1, imageHeight - j, Color.blue.getRGB());
                 } else {
                     img.setRGB(i - 1, imageHeight - j, Color.white.getRGB());
@@ -136,11 +137,11 @@ public class SphereTest {
                 Vector3D direction = viewport.pixelToScreenPoint(i, j).subtract(origin);
                 Ray ray = new Ray(origin, direction);
                 boolean background = true;
-                if (ray.findIntersectionPoint(yellow) != null) {
+                if (yellow.findIntersection(ray) != null) {
                     img.setRGB(i - 1, imageHeight - j, Color.yellow.getRGB());
-                } else if (ray.findIntersectionPoint(black) != null) {
+                } else if (black.findIntersection(ray) != null) {
                     img.setRGB(i - 1, imageHeight - j, Color.black.getRGB());
-                } else if (ray.findIntersectionPoint(white) != null) {
+                } else if (white.findIntersection(ray) != null) {
                     img.setRGB(i - 1, imageHeight - j, Color.white.getRGB());
                 } else {
                     img.setRGB(i - 1, imageHeight - j, Color.green.getRGB());

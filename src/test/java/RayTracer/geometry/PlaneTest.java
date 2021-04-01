@@ -2,6 +2,7 @@ package RayTracer.geometry;
 
 import RayTracer.TestUtils;
 import RayTracer.graphics.Camera;
+import RayTracer.graphics.Intersection;
 import RayTracer.graphics.Ray;
 import RayTracer.graphics.Viewport;
 import RayTracer.math.Vector3D;
@@ -24,13 +25,13 @@ public class PlaneTest {
 
         // all rays with z > 0 should intersect:
         Ray ray = new Ray(origin, new Vector3D(0, 0, 1));
-        Vector3D intersection = ray.findIntersectionPoint(plane);
+        Intersection intersection = plane.findIntersection(ray);
         assertNotEquals(intersection, null);
         ray = new Ray(origin, new Vector3D(1, 1, 2));
-        intersection = ray.findIntersectionPoint(plane);
+        intersection = plane.findIntersection(ray);
         assertNotEquals(intersection, null);
         ray = new Ray(origin, new Vector3D(10.1, 0.1, 1.1));
-        intersection = ray.findIntersectionPoint(plane);
+        intersection = plane.findIntersection(ray);
         assertNotEquals(intersection, null);
     }
 
@@ -42,18 +43,18 @@ public class PlaneTest {
 
         // parallel to plane:
         Ray ray = new Ray(origin, new Vector3D(0, 1, 0));
-        Vector3D intersection = ray.findIntersectionPoint(plane);
+        Intersection intersection = plane.findIntersection(ray);
         assertEquals(intersection, null);
         ray = new Ray(origin, new Vector3D(10.1, 0.1, 0.0));
-        intersection = ray.findIntersectionPoint(plane);
+        intersection = plane.findIntersection(ray);
         assertEquals(intersection, null);
 
         // negative direction:
         ray = new Ray(origin, new Vector3D(0, 0, -1));
-        intersection = ray.findIntersectionPoint(plane);
+        intersection = plane.findIntersection(ray);
         assertEquals(intersection, null);
         ray = new Ray(origin, new Vector3D(41, 2, -10));
-        intersection = ray.findIntersectionPoint(plane);
+        intersection = plane.findIntersection(ray);
         assertEquals(intersection, null);
     }
 
@@ -76,13 +77,13 @@ public class PlaneTest {
             for (int i = 1; i <= imageWidth; ++i) {
                 Vector3D direction = viewport.pixelToScreenPoint(i, j);
                 Ray ray = new Ray(origin, direction);
-                if (ray.findIntersectionPoint(plane) != null) {
+                if (plane.findIntersection(ray) != null) {
                     img.setRGB(i - 1, imageWidth - j, Color.red.getRGB());
                 } else {
                     img.setRGB(i - 1, imageWidth - j, Color.blue.getRGB());
                 }
 
-                if (ray.findIntersectionPoint(sphere) != null) {
+                if (sphere.findIntersection(ray) != null) {
                     img.setRGB(i - 1, imageWidth - j, Color.gray.getRGB());
 
                 }
