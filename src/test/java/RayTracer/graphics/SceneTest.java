@@ -86,7 +86,7 @@ public class SceneTest {
         Material pinkMaterial = new Material(dpinkColor, spinkColor, null, 30.0, 0.0);
 
 
-        AxisAlignedBox box = new AxisAlignedBox(new Vector3D(0,0,7), new Vector3D(5,3,4), new Vector3D(0,0,0), pinkMaterial);
+        AxisAlignedBox box = new AxisAlignedBox(new Vector3D(0,0,7), new Vector3D(5,3,4), pinkMaterial);
         Sphere sphere = new Sphere(new Vector3D(0.0,    3.0, 7.0), 1, whiteMaterial);
 
 
@@ -117,8 +117,8 @@ public class SceneTest {
         int imageHeight = 225;
         double screenWidth = 10;
         Vector3D origin = new Vector3D(0,0,0);
-        Vector3D lookAt = new Vector3D(0,0,5);
-        Vector3D up = new Vector3D(0,1,0);
+        Vector3D lookAt = new Vector3D(0,-8,0);
+        Vector3D up = new Vector3D(0,0,1);
         Camera camera = new Camera(origin, lookAt, up, 4, false);
         Viewport viewport = new Viewport(screenWidth, imageWidth, imageHeight, camera);
 
@@ -137,8 +137,7 @@ public class SceneTest {
         Material pinkMaterial = new Material(dpinkColor, spinkColor, null, 30.0, 0.0);
 
 
-        Box box = new Box(new Vector3D(0,0,7), new Vector3D(2,2,2), new Vector3D(Math.PI / 4,Math.PI / 4,0.0), pinkMaterial);
-//TODO figure out why exception is thrown work  Box box = new Box(new Vector3D(0,0,7), new Vector3D(2,2,2), new Vector3D(Math.PI / 4,Math.PI / 4,0.0), pinkMaterial);
+        Box box = new Box(new Vector3D(0,0,5), new Vector3D(2,2,2), new Vector3D(Math.PI / 4,0.0,Math.PI / 4), pinkMaterial);
 
 
 

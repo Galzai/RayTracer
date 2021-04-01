@@ -21,6 +21,10 @@ public class Box implements Surface{
     private Matrix3D inverseTransformationMatrix;
     private Material material;
 
+    private Vector3D tMinBounds;
+    private Vector3D tMaxBounds;
+
+
     public Box(Vector3D center, Vector3D scales, Vector3D rotations, Material material) {
         this.center = center;
         this.scales = scales;
@@ -41,8 +45,11 @@ public class Box implements Surface{
         Vector3D transformedScales = transformationMatrix.vecMult(scales);
         Vector3D transformedCenter = transformationMatrix.vecMult(center);
 
-        this.minBounds = transformedCenter.subtract(transformedScales.scalarMult(0.5));
-        this.maxBounds = transformedCenter.add(transformedScales.scalarMult(0.5));
+        this.minBounds = center.subtract(transformedScales.scalarMult(0.5));
+        this.maxBounds = center.add(transformedScales.scalarMult(0.5));
+
+        this.tMinBounds = this.inverseTransformationMatrix.vecMult(minBounds);
+        this.tMaxBounds = this.inverseTransformationMatrix.vecMult(maxBounds);
     }
 
     @Override
@@ -51,13 +58,13 @@ public class Box implements Surface{
         Vector3D transformedDirection = this.transformationMatrix.vecMult((ray.direction()));
         Ray transformedRay = new Ray(transformedOrigin, transformedDirection);
 
-        double tUmin = (this.minBounds.get(0) - transformedRay.origin().get(0)) / transformedRay.direction().get(0);
-        double tUMax = (maxBounds.get(0) - transformedRay.origin().get(0)) / transformedRay.direction().get(0);
+        double tUmin = (this.tMinBounds.get(0) - transformedRay.origin().get(0)) / transformedRay.direction().get(0);
+        double tUMax = (tMaxBounds.get(0) - transformedRay.origin().get(0)) / transformedRay.direction().get(0);
         double tMin = Math.min(tUmin, tUMax);
         double tMax = Math.max(tUmin, tUMax);
 
-        double tVMin = (minBounds.get(1) - transformedRay.origin().get(1)) / transformedRay.direction().get(1);
-        double tVMax = (maxBounds.get(1) - transformedRay.origin().get(1)) / transformedRay.direction().get(1);
+        double tVMin = (tMinBounds.get(1) - transformedRay.origin().get(1)) / transformedRay.direction().get(1);
+        double tVMax = (tMaxBounds.get(1) - transformedRay.origin().get(1)) / transformedRay.direction().get(1);
         double tVEnter = Math.min(tVMin, tVMax);
         double tVExit = Math.max(tVMin, tVMax);
 
@@ -67,8 +74,8 @@ public class Box implements Surface{
         tMin = Math.max(tMin, tVEnter);
         tMax = Math.min(tMax, tVExit);
 
-        double tWMin = (minBounds.get(2) - transformedRay.origin().get(2)) / transformedRay.direction().get(2);
-        double tWMax = (maxBounds.get(2) - transformedRay.origin().get(2)) / transformedRay.direction().get(2);
+        double tWMin = (tMinBounds.get(2) - transformedRay.origin().get(2)) / transformedRay.direction().get(2);
+        double tWMax = (tMaxBounds.get(2) - transformedRay.origin().get(2)) / transformedRay.direction().get(2);
         double tWEnter = Math.min(tWMin, tWMax);
         double tWExit = Math.max(tWMin, tWMax);
 
@@ -85,37 +92,23 @@ public class Box implements Surface{
         }
 
         Vector3D TransformedIntersectionPoint = transformedRay.at(tMin);
+        Vector3D normal = null;
 
-        Vector3D transformedNormal = null;
+        if (Math.abs(TransformedIntersectionPoint.get(0) - this.tMinBounds.get(0)) <= MathUtils.EPSILON)
+            normal = this.uAxis.scalarMult(-1.0);
+        else if (Math.abs(TransformedIntersectionPoint.get(0) - this.tMaxBounds.get(0)) <= MathUtils.EPSILON)
+            normal = this.uAxis.scalarMult(1.0);
+        else if (Math.abs(TransformedIntersectionPoint.get(1) - this.tMinBounds.get(1)) <= MathUtils.EPSILON)
+            normal = this.vAxis.scalarMult(-1.0);
+        else if (Math.abs(TransformedIntersectionPoint.get(1) - this.tMaxBounds.get(1)) <= MathUtils.EPSILON)
+            normal = this.vAxis.scalarMult(1.0);
+        else if (Math.abs(TransformedIntersectionPoint.get(2) - this.tMinBounds.get(2)) <= MathUtils.EPSILON)
+            normal = this.wAxis.scalarMult(-1.0);
+        else if (Math.abs(TransformedIntersectionPoint.get(2) - this.tMaxBounds.get(2)) <= MathUtils.EPSILON)
+            normal = this.wAxis.scalarMult(1.0);
 
-//        if (Math.abs(TransformedIntersectionPoint.get(0) - minBounds.get(0)) <= MathUtils.EPSILON)
-//            transformedNormal = this.uAxis.scalarMult(-1.0);
-//        else if (Math.abs(TransformedIntersectionPoint.get(0) - maxBounds.get(0)) <= MathUtils.EPSILON)
-//            transformedNormal = this.uAxis.scalarMult(1.0);
-//        else if (Math.abs(TransformedIntersectionPoint.get(1) - minBounds.get(1)) <= MathUtils.EPSILON)
-//            transformedNormal = this.vAxis.scalarMult(-1.0);
-//        else if (Math.abs(TransformedIntersectionPoint.get(1) - maxBounds.get(1)) <= MathUtils.EPSILON)
-//            transformedNormal = this.vAxis.scalarMult(1.0);
-//        else if (Math.abs(TransformedIntersectionPoint.get(2) - minBounds.get(2)) <= MathUtils.EPSILON)
-//            transformedNormal = this.wAxis.scalarMult(-1.0);
-//        else if (Math.abs(TransformedIntersectionPoint.get(2) - maxBounds.get(2)) <= MathUtils.EPSILON)
-//            transformedNormal = this.wAxis.scalarMult(1.0);
-
-        if (Math.abs(TransformedIntersectionPoint.get(0) - this.inverseTransformationMatrix.vecMult(this.minBounds).get(0)) <= MathUtils.EPSILON)
-            transformedNormal = this.uAxis.scalarMult(-1.0);
-        else if (Math.abs(TransformedIntersectionPoint.get(0) - this.inverseTransformationMatrix.vecMult(this.maxBounds).get(0)) <= MathUtils.EPSILON)
-            transformedNormal = this.uAxis.scalarMult(1.0);
-        else if (Math.abs(TransformedIntersectionPoint.get(1) - this.inverseTransformationMatrix.vecMult(this.minBounds).get(1)) <= MathUtils.EPSILON)
-            transformedNormal = this.vAxis.scalarMult(-1.0);
-        else if (Math.abs(TransformedIntersectionPoint.get(1) - this.inverseTransformationMatrix.vecMult(this.maxBounds).get(1)) <= MathUtils.EPSILON)
-            transformedNormal = this.vAxis.scalarMult(1.0);
-        else if (Math.abs(TransformedIntersectionPoint.get(2) - this.inverseTransformationMatrix.vecMult(this.minBounds).get(2)) <= MathUtils.EPSILON)
-            transformedNormal = this.wAxis.scalarMult(-1.0);
-        else if (Math.abs(TransformedIntersectionPoint.get(2) - this.inverseTransformationMatrix.vecMult(this.maxBounds).get(2)) <= MathUtils.EPSILON)
-            transformedNormal = this.wAxis.scalarMult(1.0);
-
-        Vector3D normal = this.inverseTransformationMatrix.vecMult(transformedNormal);
         Vector3D intersectionPoint = this.inverseTransformationMatrix.vecMult(TransformedIntersectionPoint);
+        Vector3D intersectionPoint2 = ray.at(tMin);
         return new Intersection(intersectionPoint, normal, this, tMin); // same t value
 
     }
