@@ -4,72 +4,68 @@ import RayTracer.graphics.Intersection;
 import RayTracer.graphics.Material;
 import RayTracer.graphics.Ray;
 import RayTracer.math.MathUtils;
+import RayTracer.math.Matrix3D;
 import RayTracer.math.Vector3D;
 
-public class AxisAlignedBox implements Surface {
-    private Material material;
-    private Vector3D minBounds;
-    private Vector3D maxBounds;
+import java.util.HashMap;
 
-    public AxisAlignedBox(Vector3D center, Vector3D axisScales, Material material) {
+
+public class AxisAlignedBox implements Surface {
+    private Vector3D center;
+    private Vector3D halfScales;
+    private Material material;
+
+
+    public AxisAlignedBox(Vector3D center, Vector3D scales, Material material) {
         this.material = material;
-        this.minBounds = center.subtract(axisScales.scalarMult(0.5));
-        this.maxBounds = center.add(axisScales.scalarMult(0.5));
+        this.center = center;
+        this.halfScales = scales.scalarMult(0.5);
     }
 
     @Override
     public Intersection findIntersection(Ray ray) {
-        double tXMin = (this.minBounds.get(0) - ray.origin().get(0)) / ray.direction().get(0);
-        double tXMax = (this.maxBounds.get(0) - ray.origin().get(0)) / ray.direction().get(0);
-        double tMin = Math.min(tXMin, tXMax);
-        double tMax = Math.max(tXMin, tXMax);
+        double tNear = Double.NEGATIVE_INFINITY;
+        double tFar = Double.POSITIVE_INFINITY;
+        Vector3D co = center.subtract(ray.origin());
+        double r, s, t0, t1;
+        Vector3D axis[] = {Matrix3D.xAxis, Matrix3D.yAxis, Matrix3D.zAxis};
 
-        double tYMin = (this.minBounds.get(1) - ray.origin().get(1)) / ray.direction().get(1);
-        double tYMax = (this.maxBounds.get(1) - ray.origin().get(1)) / ray.direction().get(1);
-        double tYEnter = Math.min(tYMin, tYMax);
-        double tYExit = Math.max(tYMin, tYMax);
-
-        if ((tMin > tYExit) || (tYEnter > tMax)) {
-            return null;
+        for (int i = 0; i < 3; i++) {
+            r = co.get(i);
+            s = ray.direction().get(i);
+            t0 = (r + this.halfScales.get(i)) / s;
+            t1 = (r - this.halfScales.get(i)) / s;
+            if (t0 > t1) {  // swap
+                double tmp = t0;
+                t0 = t1;
+                t1 = tmp;
+            }
+            tNear = Math.max(tNear, t0);
+            tFar = Math.min(tFar, t1);
+            if (tNear > tFar || tFar < 0) {  // no intersection
+                return null;
+            }
         }
-        tMin = Math.max(tMin, tYEnter);
-        tMax = Math.min(tMax, tYExit);
-
-        double tZMin = (this.minBounds.get(2) - ray.origin().get(2)) / ray.direction().get(2);
-        double tZMax = (this.maxBounds.get(2) - ray.origin().get(2)) / ray.direction().get(2);
-        double tZEnter = Math.min(tZMin, tZMax);
-        double tZExit = Math.max(tZMin, tZMax);
-
-        if ((tMin > tZMax) || (tZMin > tMax)) {
-            return null;
-        }
-
-        tMin = Math.max(tMin, tZEnter);
-        tMax = Math.min(tMax, tZExit);
-
-        if (tMin < 0) {
-            // opposite direction
-            return null;
+        if (tNear < 0) {
+            return null; // opposite direction
         }
 
-        Vector3D intersectionPoint = ray.at(tMin);
+        Vector3D intersectionPoint = ray.at(tNear);
+        Vector3D pc = intersectionPoint.subtract(this.center);
         Vector3D normal = null;
-
-        if (Math.abs(intersectionPoint.get(0) - this.minBounds.get(0)) <= MathUtils.EPSILON)
-            normal = new Vector3D(-1,0,0);
-        else if (Math.abs(intersectionPoint.get(0) - this.maxBounds.get(0)) <= MathUtils.EPSILON)
-            normal = new Vector3D(1,0,0);
-        else if (Math.abs(intersectionPoint.get(1) - this.minBounds.get(1)) <= MathUtils.EPSILON)
-            normal = new Vector3D(0,-1,0);
-        else if (Math.abs(intersectionPoint.get(1) - this.maxBounds.get(1)) <= MathUtils.EPSILON)
-            normal = new Vector3D(0,1,0);
-        else if (Math.abs(intersectionPoint.get(2) - this.minBounds.get(2)) <= MathUtils.EPSILON)
-            normal = new Vector3D(0,0,-1);
-        else if (Math.abs(intersectionPoint.get(2) - this.maxBounds.get(2)) <= MathUtils.EPSILON)
-            normal = new Vector3D(0,0,1);
-
-        return new Intersection(intersectionPoint, normal, this, tMin);
+        for (int i = 0; i < 3; i++) {
+            if (Math.abs(pc.get(i) - this.halfScales.get(i)) <= MathUtils.EPSILON) {
+                normal = axis[i];
+                break;
+            }
+            if (Math.abs(pc.dotProduct(axis[i]) + this.halfScales.get(i)) <= MathUtils.EPSILON) {
+                normal = axis[i].scalarMult(-1.0);
+                break;
+            }
+        }
+        return new Intersection(intersectionPoint, normal, this, tNear);
     }
+
 
     @Override
     public Material getMaterial() {

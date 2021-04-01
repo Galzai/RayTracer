@@ -36,32 +36,6 @@ public class Matrix3D {
         return new Vector3D(first, second, third);
     }
 
-    /**TODO delete or modify
-     * Creates a transformation matrix  from standard base to right, up ,towards
-     *
-     * @param right
-     * @param up
-     * @param towards
-     * @return transformation matrix
-     */
-//    public static Matrix3D createTransformationMatrix(Vector3D right, Vector3D up, Vector3D towards) {
-//        Double[][] matrix = new Double[3][3];
-//
-//        matrix[0][0] = right.get(0);
-//        matrix[0][1] = right.get(1);
-//        matrix[0][2] = right.get(2);
-//
-//        matrix[1][0] = up.get(0);
-//        matrix[1][1] = up.get(1);
-//        matrix[1][2] = up.get(2);
-//
-//        matrix[2][0] = towards.get(0);
-//        matrix[2][1] = towards.get(1);
-//        matrix[2][2] = towards.get(2);
-//
-//        return new Matrix3D(matrix);
-//    }
-
     /**
      * Creates a transformation matrix from standard base to u, v, w
      *
