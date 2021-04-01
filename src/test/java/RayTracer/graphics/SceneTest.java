@@ -173,5 +173,44 @@ public class SceneTest {
         scene.renderScene(TestUtils.getOutputPath() + "scene.png");
 
     }
+
+    @Test
+    public void boxSceneTest() throws IOException{
+        int imageWidth = 400;
+        int imageHeight = 225;
+        double screenWidth = 10;
+        Vector3D origin = new Vector3D(0,0,0);
+        Vector3D lookAt = new Vector3D(0,0,1);
+        Vector3D up = new Vector3D(0,
+                1,0);
+        Camera camera = new Camera(origin, lookAt, up, 3, false);
+        Viewport viewport = new Viewport(screenWidth, imageWidth, imageHeight, camera);
+
+
+        ComputationalColor dWhiteColor = new ComputationalColor(0.2, 0.1, 0.4);
+        ComputationalColor sWhiteColor = new ComputationalColor(0.5, 0.5, 0.5);
+        Material whiteMaterial = new Material(dWhiteColor, sWhiteColor, null, 30.0, 0.0);
+        ComputationalColor dpinkColor =  new ComputationalColor(255,20,147);
+        ComputationalColor spinkColor =  new ComputationalColor(0.5, 0.5, 0.5);
+        Material pinkMaterial = new Material(dpinkColor, spinkColor, null, 30.0, 0.0);
+
+        OrientedBox OBB = new OrientedBox(new Vector3D(0,0,5), new Vector3D(2,2,2), new Vector3D(0,0,0), pinkMaterial);
+        AxisAlignedBox AABB = new AxisAlignedBox(new Vector3D(0,0,5), new Vector3D(2,2,2), pinkMaterial);
+
+
+
+        Vector3D lightPosition1 = new Vector3D(0, 0, -5);
+        ComputationalColor lightColor = new ComputationalColor(255,192,203);
+        Light light = new Light(lightPosition1, lightColor, 1.0, 0.9, 1.0);
+
+        ComputationalColor backgroundColor = new ComputationalColor(0.47, 0.27, 0.95);
+        Scene scene = new Scene((camera), viewport, backgroundColor);
+        scene.addLight(light);
+        scene.addSurface(AABB);
+
+
+        scene.renderScene(TestUtils.getOutputPath() + "box.png");
+
+    }
     
 }

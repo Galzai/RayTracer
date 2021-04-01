@@ -35,17 +35,17 @@ public class OrientedBox implements Surface {
         double r, s, t0, t1;
 
         for (int i = 0; i < 3; i++) {
-            //TODO maybe remove - it checks if the ray is parallel to one of the planes but it causes some problems.
-//            if (Math.abs(this.axis[i].dotProduct(ray.direction())) < MathUtils.EPSILON) {
-//                r = this.axis[i].dotProduct(co);
-//                if (-r - this.halfScales.get(i) > 0 || -r + this.halfScales.get(i) > 0) {
-//                    return null;
-//                }
-//            }
+
             r = this.axis[i].dotProduct(co);
             s = this.axis[i].dotProduct(ray.direction());
-            t0 = (r + this.halfScales.get(i)) / s;
-            t1 = (r - this.halfScales.get(i)) / s;
+            if (Math.abs(s) < MathUtils.EPSILON) {
+                t0 = r + this.halfScales.get(i) > 0 ? Double.POSITIVE_INFINITY : Double.NEGATIVE_INFINITY;
+                t1 = r - this.halfScales.get(i) > 0 ? Double.POSITIVE_INFINITY : Double.NEGATIVE_INFINITY;
+            }
+            else {
+                t0 = (r + this.halfScales.get(i)) / s;
+                t1 = (r - this.halfScales.get(i)) / s;
+            }
             if (t0 > t1) {  // swap
                 double tmp = t0;
                 t0 = t1;

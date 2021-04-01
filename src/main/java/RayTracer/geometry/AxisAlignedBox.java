@@ -33,8 +33,14 @@ public class AxisAlignedBox implements Surface {
         for (int i = 0; i < 3; i++) {
             r = co.get(i);
             s = ray.direction().get(i);
-            t0 = (r + this.halfScales.get(i)) / s;
-            t1 = (r - this.halfScales.get(i)) / s;
+            if (Math.abs(s) < MathUtils.EPSILON) {
+                t0 = r + this.halfScales.get(i) > 0 ? Double.POSITIVE_INFINITY : Double.NEGATIVE_INFINITY;
+                t1 = r - this.halfScales.get(i) > 0 ? Double.POSITIVE_INFINITY : Double.NEGATIVE_INFINITY;
+            }
+            else {
+                t0 = (r + this.halfScales.get(i)) / s;
+                t1 = (r - this.halfScales.get(i)) / s;
+            }
             if (t0 > t1) {  // swap
                 double tmp = t0;
                 t0 = t1;
