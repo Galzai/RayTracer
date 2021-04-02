@@ -66,8 +66,8 @@ public class PlaneTest {
         Vector3D origin = new Vector3D(0.0, 0.0, 0.0);
         Vector3D lookAt = new Vector3D(10, 0, 1);
         Vector3D up = new Vector3D(0, 1, 0);
-        Camera camera = new Camera(origin, lookAt, up, 0.5, false);
-        Viewport viewport = new Viewport(screenWidth, imageWidth, imageHeight, camera);
+        Camera camera = new Camera(origin, lookAt, up, 0.5, screenWidth, false);
+        Viewport viewport = new Viewport(imageWidth, imageHeight, camera);
         Plane plane = new Plane(new Vector3D(0, 0, 1), 5, null);
         Sphere sphere = new Sphere(new Vector3D(5, 0, 0), 2, null);
 
@@ -90,7 +90,7 @@ public class PlaneTest {
             }
         }
 
-        File f = new File(TestUtils.getOutputPath() + "simplePlane.png");
+        File f = new File(TestUtils.OUTPUT_PATH + "simplePlane.png");
         ImageIO.write(img, "png", f);
     }
 }

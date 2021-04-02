@@ -53,8 +53,8 @@ public class SphereTest {
         Vector3D origin = new Vector3D(0.0, 0.0, 0.0);
         Vector3D lookAt = new Vector3D(0, 0, 1);
         Vector3D up = new Vector3D(0, 1, 0);
-        Camera camera = new Camera(origin, lookAt, up, 0.5, false);
-        Viewport viewport = new Viewport(screenWidth, imageWidth, imageHeight, camera);
+        Camera camera = new Camera(origin, lookAt, up, 0.5, screenWidth,false);
+        Viewport viewport = new Viewport(imageWidth, imageHeight, camera);
         Sphere sphere = new Sphere(new Vector3D(0, 0, 2), 1, null);
         Sphere sphere2 = new Sphere(new Vector3D(2, 0, 2), 1, null);
         BufferedImage img = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB);
@@ -74,7 +74,7 @@ public class SphereTest {
         }
 
 
-        File f = new File(TestUtils.getOutputPath() + "simple sphere.png");
+        File f = new File(TestUtils.OUTPUT_PATH + "simple sphere.png");
         ImageIO.write(img, "png", f);
     }
 
@@ -86,8 +86,8 @@ public class SphereTest {
         Vector3D origin = new Vector3D(-2, 2, 1);
         Vector3D lookAt = new Vector3D(0, 0, -1);
         Vector3D up = new Vector3D(0, 1, 0);
-        Camera camera = new Camera(origin, lookAt, up, 5, false);
-        Viewport viewport = new Viewport(screenWidth, imageWidth, imageHeight, camera);
+        Camera camera = new Camera(origin, lookAt, up, 5, screenWidth, false);
+        Viewport viewport = new Viewport(imageWidth, imageHeight, camera);
         Sphere center = new Sphere(new Vector3D(0.0, 0.0, -1.0), 0.5, null);
         Sphere right = new Sphere(new Vector3D(1.0, 0.0, -1.0), 0.5, null);
         Sphere left = new Sphere(new Vector3D(-1.0, 0.0, -1.0), 0.5, null);
@@ -112,7 +112,7 @@ public class SphereTest {
 
         }
 
-        File f = new File(TestUtils.getOutputPath() + "three spheres.png");
+        File f = new File(TestUtils.OUTPUT_PATH + "three spheres.png");
         ImageIO.write(img, "png", f);
     }
 
@@ -124,8 +124,8 @@ public class SphereTest {
         Vector3D origin = new Vector3D(0, 10, 0);
         Vector3D lookAt = new Vector3D(0, -100, 0);
         Vector3D up = new Vector3D(0, 0, -1);
-        Camera camera = new Camera(origin, lookAt, up, 5, false);
-        Viewport viewport = new Viewport(screenWidth, imageWidth, imageHeight, camera);
+        Camera camera = new Camera(origin, lookAt, up, 5,screenWidth, false);
+        Viewport viewport = new Viewport(imageWidth, imageHeight, camera);
         Sphere yellow = new Sphere(new Vector3D(0.0, 0.0, -4.0), 1, null);
         Sphere black = new Sphere(new Vector3D(1.0, 0.0, -2.0), 1, null);
         Sphere white = new Sphere(new Vector3D(-1.0, 0.0, -2.0), 1, null);
@@ -150,7 +150,7 @@ public class SphereTest {
 
         }
 
-        File f = new File(TestUtils.getOutputPath() + "pool.png");
+        File f = new File(TestUtils.OUTPUT_PATH + "pool.png");
         ImageIO.write(img, "png", f);
     }
 

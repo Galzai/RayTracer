@@ -22,8 +22,8 @@ public class SceneTest {
         Vector3D origin = new Vector3D(0,10,0);
         Vector3D lookAt = new Vector3D(0,-100,0);
         Vector3D up = new Vector3D(0,0,-1);
-        Camera camera = new Camera(origin, lookAt, up, 5, false);
-        Viewport viewport = new Viewport(screenWidth, imageWidth, imageHeight, camera);
+        Camera camera = new Camera(origin, lookAt, up, 5, screenWidth);
+        Viewport viewport = new Viewport(imageWidth, imageHeight, camera);
 
         ComputationalColor dYellowColor = new ComputationalColor(0.95, 0.95, 0.07);
         ComputationalColor sYellowColor = new ComputationalColor(1.0, 1.0, 1.0);
@@ -55,7 +55,7 @@ public class SceneTest {
         scene.addSurface(yellow);
         scene.addSurface(black);
         scene.addSurface(white);
-        scene.renderScene(TestUtils.getOutputPath() + "pooltest.png");
+        scene.renderScene(TestUtils.OUTPUT_PATH + "pooltest.png");
 
     }
 
@@ -68,8 +68,8 @@ public class SceneTest {
         Vector3D origin = new Vector3D(1,2,1);
         Vector3D lookAt = new Vector3D(1,0,5);
         Vector3D up = new Vector3D(2,1,3);
-        Camera camera = new Camera(origin, lookAt, up, 4, false);
-        Viewport viewport = new Viewport(screenWidth, imageWidth, imageHeight, camera);
+        Camera camera = new Camera(origin, lookAt, up, 4, screenWidth);
+        Viewport viewport = new Viewport(imageWidth, imageHeight, camera);
 
         ComputationalColor dYellowColor = new ComputationalColor(0.95, 0.95, 0.07);
         ComputationalColor sYellowColor = new ComputationalColor(1.0, 1.0, 1.0);
@@ -105,7 +105,7 @@ public class SceneTest {
         scene.addSurface(box);
         scene.addSurface(sphere);
 
-        scene.renderScene(TestUtils.getOutputPath() + "box.png");
+        scene.renderScene(TestUtils.OUTPUT_PATH + "box.png");
 
     }
 
@@ -119,8 +119,8 @@ public class SceneTest {
         Vector3D origin = new Vector3D(-2,-2,-2);
         Vector3D lookAt = new Vector3D(-1,0,0);
         Vector3D up = new Vector3D(0,-1,0);
-        Camera camera = new Camera(origin, lookAt, up, 3, false);
-        Viewport viewport = new Viewport(screenWidth, imageWidth, imageHeight, camera);
+        Camera camera = new Camera(origin, lookAt, up, 3, screenWidth);
+        Viewport viewport = new Viewport(imageWidth, imageHeight, camera);
 
         ComputationalColor dYellowColor = new ComputationalColor(0.95, 0.95, 0.07);
         ComputationalColor sYellowColor = new ComputationalColor(1.0, 1.0, 1.0);
@@ -170,7 +170,7 @@ public class SceneTest {
         scene.addSurface(AABB);
         scene.addSurface(plane);
 
-        scene.renderScene(TestUtils.getOutputPath() + "scene.png");
+        scene.renderScene(TestUtils.OUTPUT_PATH + "scene.png");
 
     }
 
@@ -183,8 +183,8 @@ public class SceneTest {
         Vector3D lookAt = new Vector3D(0,0,1);
         Vector3D up = new Vector3D(0,
                 1,0);
-        Camera camera = new Camera(origin, lookAt, up, 3, false);
-        Viewport viewport = new Viewport(screenWidth, imageWidth, imageHeight, camera);
+        Camera camera = new Camera(origin, lookAt, up, 3, screenWidth);
+        Viewport viewport = new Viewport(imageWidth, imageHeight, camera);
 
 
         ComputationalColor dWhiteColor = new ComputationalColor(0.2, 0.1, 0.4);
@@ -209,7 +209,7 @@ public class SceneTest {
         scene.addSurface(AABB);
 
 
-        scene.renderScene(TestUtils.getOutputPath() + "box.png");
+        scene.renderScene(TestUtils.OUTPUT_PATH+ "box.png");
 
     }
     

@@ -1,9 +1,9 @@
 package RayTracer;
 
-public class TestUtils {
-    private final static String OUTPUT_PATH = System.getProperty("user.dir") + "\\src\\test\\resources\\";
+import RayTracer.graphics.Scene;
 
-    public static String getOutputPath() {
-        return OUTPUT_PATH;
-    }
+public class TestUtils {
+    public final static String OUTPUT_PATH = System.getProperty("user.dir") + "\\src\\test\\resources\\";
+    public final static String SCENES_PATH = System.getProperty("user.dir") + "\\scenes\\";
+
 }

@@ -1,6 +1,7 @@
 package RayTracer.graphics;
 
 import RayTracer.math.Vector3D;
+import com.sun.prism.image.ViewPort;
 
 public class Camera {
 
@@ -10,9 +11,14 @@ public class Camera {
     private Vector3D w; // facing the opposite direction of "towards" vector
     private Vector3D position;
     private double focalLength;
-
     // Other members
-    Boolean fisheye;
+    private boolean fisheye;
+    private double fisheyeCoeff;
+    private double screenWidth;
+    private Viewport viewport;
+
+    //TODO maybe add ViewPort as a member
+
 
     /**
      * Constructs a new camera object with normalized axis vectors
@@ -22,13 +28,23 @@ public class Camera {
      * @param up          camera up vector
      * @param fisheye     true if camera uses fisheye lens
      */
-    public Camera(Vector3D position, Vector3D lookAtPoint, Vector3D up, double focalLength, Boolean fisheye) {
+    public Camera(Vector3D position, Vector3D lookAtPoint, Vector3D up, double focalLength, double screenWidth, boolean fisheye, double fisheyeCoeff) {
         this.position = position;
         this.w = position.subtract(lookAtPoint).normalize();
         this.u = this.w.crossProduct(up).normalize();
         this.v = this.u.crossProduct(this.w).normalize();
         this.focalLength = focalLength;
         this.fisheye = fisheye;
+        this.fisheyeCoeff = fisheyeCoeff;
+        this.screenWidth = screenWidth;
+    }
+
+    public Camera(Vector3D position, Vector3D lookAtPoint, Vector3D up, double screenWidth, double focalLength, boolean fisheye) {
+        this(position, lookAtPoint, up, focalLength, screenWidth, fisheye, 0.5);
+    }
+
+    public Camera(Vector3D position, Vector3D lookAtPoint, Vector3D up, double focalLength, double screenWidth) {
+        this(position, lookAtPoint, up, focalLength, screenWidth, false, 0.5);
     }
 
     public Vector3D v() {
@@ -49,5 +65,13 @@ public class Camera {
 
     public double focalLength() {
         return focalLength;
+    }
+
+    public double screenWidth() {
+        return screenWidth;
+    }
+
+    void setViewport(Viewport viewport) {
+        this.viewport = viewport;
     }
 }
