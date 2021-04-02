@@ -10,16 +10,6 @@ public class PhongShader {
         this.scene = scene;
     }
 
-//TODO remove old version
-//    private boolean isShadowed(Intersection intersection, Light light) {
-//
-//        // We cast a ray from the point to the light, if it intersects with anything that  means
-//        // that the point is shaded
-//        Vector3D shadowDirection = light.getPosition().subtract(intersection.getIntersectionPoint()).normalize();
-//        Ray shadowRay = new Ray(intersection.getIntersectionPoint(), shadowDirection);
-//        return scene.IntersectionExists(shadowRay); // some object in between blocks the light
-//    }
-
     /**
      * Returns true if the light from the source to the point is shadowed
      *
@@ -57,7 +47,7 @@ public class PhongShader {
                 shadowMultiplier = 1.0 - light.getShadowIntensity();
             }
             Vector3D lightDirection = light.getPosition().subtract(intersection.getIntersectionPoint());
-            lightDirection.normalize(); //TODO
+            lightDirection.normalize();
             // H = L + V
             Vector3D highlightVec = (ray.direction().scalarMult(-1.0)).add(lightDirection).normalize();
 
