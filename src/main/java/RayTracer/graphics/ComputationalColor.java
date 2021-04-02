@@ -40,7 +40,7 @@ public class ComputationalColor {
     public ComputationalColor(Color color) {
         this(color.getRed(), color.getGreen(), color.getBlue());
     }
-
+//TODO there is a problem with null pointer exception - probably because of destruction of the inner vector. fix it!
     public double getRed() {
         return rgb.get(0);
     }
@@ -73,16 +73,6 @@ public class ComputationalColor {
             throw new IllegalArgumentException("fraction parameter's value should be between 0 to 1");
         }
         return new ComputationalColor(color.rgb.scalarMult(scaleFactor));
-    }
-
-    /**
-     * @param c1 first color
-     * @param c2 second color
-     * @return Color with its rgb values are the sum of c1 and c2 values.
-     */
-    public static ComputationalColor sumColors(ComputationalColor c1, ComputationalColor c2) {
-        Vector3D sum = c1.rgb.add(c2.rgb);
-        return new ComputationalColor(sum);
     }
 
     /**
