@@ -30,7 +30,7 @@ public class Plane implements Surface {
     @Override
     public Intersection findIntersection(Ray ray) {
         double denominator = this.normal.dotProduct(ray.direction());
-        if (denominator > MathUtils.EPSILON) {
+        if (Math.abs(denominator) > MathUtils.EPSILON) {
             double t = this.normal.dotProduct(this.p0.subtract(ray.origin())) / denominator;
             Vector3D intersectionPoint = ray.at(t);
             Vector3D pointNormal = this.normal.findProjection(ray.direction()).scalarMult(-1.0).normalize();

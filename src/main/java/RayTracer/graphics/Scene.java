@@ -137,13 +137,39 @@ public class Scene {
      * @param ray ray to intersect with
      * @return true if any surface intersection exists
      */
-    public Boolean IntersectionExists(Ray ray) {
+    public boolean IntersectionExists(Ray ray) {
         for(Surface surface : surfaces) {
             if (surface.findIntersection(ray) != null) {
                 return true;
             }
         }
         return false;
+    }
+
+    /**
+     * Checks if there is a surface between an existing intersection and the light
+     *
+     * @param intersection
+     * @param light
+     * @return
+     */
+    public boolean hasDirectView(Intersection intersection, Light light) {
+        Vector3D lightDirection = light.getPosition().subtract(intersection.getIntersectionPoint()).normalize();
+        Ray ray = new Ray(intersection.getIntersectionPoint(), lightDirection);
+        double distance = intersection.getIntersectionPoint().calculateDistance(light.getPosition());
+        for(Surface surface : surfaces) {
+            if (surface == intersection.getSurface()) {
+                continue;
+            }
+            Intersection potentialIntersection = surface.findIntersection(ray);
+            if (potentialIntersection != null) {
+                // only if there is a surface between the ray's origin and the destination
+                if (distance > ray.origin().calculateDistance(ray.at(potentialIntersection.getRayVal()))) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     /**
@@ -172,6 +198,7 @@ public class Scene {
                 Vector3D direction = viewport.pixelToScreenPoint(x, y).subtract(this.camera.position());
                 Ray ray = new Ray(this.camera.position(), direction);
                 Intersection intersection = IntersectRay(ray);
+                //TODO replace with ComputationalColor.getRGB()
                 img.setRGB(x - 1, viewport.getImageHeight() - y, getColor(intersection, ray).clipColor().toColor().getRGB());
             }
         }
