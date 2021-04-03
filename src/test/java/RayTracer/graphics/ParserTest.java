@@ -26,4 +26,12 @@ public class ParserTest {
         scene.renderScene(TestUtils.OUTPUT_PATH + "spheres.png");
 
     }
+
+    @Test
+    public void parseTransparencySceneTest() throws IOException {
+        SceneParser parser = new SceneParser();
+        Scene scene = parser.parseScene(TestUtils.SCENES_PATH + "Transparency.txt", 500, 500);
+        scene.renderScene(TestUtils.OUTPUT_PATH + "Transparency.png");
+
+    }
 }

@@ -90,6 +90,12 @@ public class Vector3D extends Vector {
     }
 
     @Override
+    public Vector3D componentMult(Vector otherVector) throws IllegalArgumentException {
+        Vector result = super.componentMult(otherVector);
+        return new Vector3D(result);
+    }
+
+    @Override
     public Vector3D subtract(Vector otherVector) throws IllegalArgumentException {
         Vector result = super.subtract(otherVector);
         return new Vector3D(result);

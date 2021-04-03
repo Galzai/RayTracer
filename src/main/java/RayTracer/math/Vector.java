@@ -133,6 +133,17 @@ public class Vector implements IVector<Double> {
         return Math.sqrt(distance);
     }
 
+    public Vector componentMult(Vector otherVector) {
+        if (otherVector.dimension() != dimension())
+            throw new IllegalArgumentException("Vector dimensions must match");
+        ArrayList<Double> newMembers = new ArrayList<Double>();
+        // Calculate the new vector product
+        for (int index = 0; index < dimension(); ++index) {
+            newMembers.add(this.members.get(index) * otherVector.members.get(index));
+        }
+        return new Vector(newMembers);
+    }
+
     /**
      * Returns the dimension of the vector
      */

@@ -130,6 +130,33 @@ public class Scene {
         }
         return minIntersection;
     }
+
+        /**
+     * Finds the closest surface that intersects with the ray that isnt ignoreSurface and its intersection
+     * 
+     * @param ray ray to intersect with
+     * @param ray ignoreSurface surface to ignore intersections with
+     * @return intersection data
+     */
+    public Intersection IntersectRayWithoutSurface(Ray ray, Surface ignoreSurface) {
+        // We are searching for the closest intersecting surface
+        double minRayVal = Double.MAX_VALUE;
+        Intersection minIntersection = null;
+        Intersection curIntersection = null;
+
+        for (Surface surface : surfaces) {
+            if(surface == ignoreSurface) {
+                continue;
+            }
+
+            curIntersection = surface.findIntersection(ray);
+            if ((curIntersection != null) && (curIntersection.getRayVal() <= minRayVal)) {
+                minIntersection = curIntersection;
+                minRayVal = minIntersection.getRayVal();   
+            }
+        }
+        return minIntersection;
+    }
     
     /**
      * Checks if any surface intersects the given ray
@@ -180,7 +207,7 @@ public class Scene {
      */
     public ComputationalColor getColor(Intersection intersection, Ray ray) {
         if (intersection == null) return backgroundColor;
-        return this.shader.shade(intersection, ray);
+        return this.shader.shade(intersection, ray, maxRecursionDepth);
     }
 
     /**

@@ -14,11 +14,11 @@ public class ComputationalColor {
     public static final double RGB_MAX = 255;
 
     public ComputationalColor(double red, double green, double blue) {
-        rgb = new Vector3D(red, green, blue);
+        this.rgb = new Vector3D(red, green, blue);
     }
 
     public ComputationalColor(int red, int green, int blue) {
-        rgb = new Vector3D(red / RGB_MAX, green / RGB_MAX, blue / RGB_MAX);
+        this.rgb = new Vector3D(red / RGB_MAX, green / RGB_MAX, blue / RGB_MAX);
     }
 
     /**
@@ -26,11 +26,11 @@ public class ComputationalColor {
      * @param color ComputationalColor object
      */
     public ComputationalColor(ComputationalColor color) {
-        rgb = color.rgb;
+        this.rgb = color.rgb;
     }
 
     public ComputationalColor(Vector3D rgb) {
-        rgb = new Vector3D(rgb.get(0), rgb.get(1), rgb.get(2));
+        this.rgb = new Vector3D(rgb.get(0), rgb.get(1), rgb.get(2));
     }
 
     /**
@@ -42,24 +42,24 @@ public class ComputationalColor {
     }
 //TODO there is a problem with null pointer exception - probably because of destruction of the inner vector. fix it!
     public double getRed() {
-        return rgb.get(0);
+        return this.rgb.get(0);
     }
 
     public double getGreen() {
-        return rgb.get(1);
+        return this.rgb.get(1);
     }
 
     public double getBlue() {
-        return rgb.get(2);
+        return this.rgb.get(2);
     }
 
     /**
      * @return array of int representing the color's values in integer format ( 0 <= r,g,b <= 255)
      */
     public int[] getIntRepresentation() {
-        int r = (int) Math.round(rgb.get(0) * RGB_MAX);
-        int g = (int) Math.round(rgb.get(1) * RGB_MAX);
-        int b = (int) Math.round(rgb.get(2) * RGB_MAX);
+        int r = (int) Math.round(this.rgb.get(0) * RGB_MAX);
+        int g = (int) Math.round(this.rgb.get(1) * RGB_MAX);
+        int b = (int) Math.round(this.rgb.get(2) * RGB_MAX);
         return new int[]{r, g, b};
     }
 
@@ -90,5 +90,31 @@ public class ComputationalColor {
      */
     public ComputationalColor clipColor() {
         return new ComputationalColor(Math.min(getRed(), 1.0),Math.min(getGreen(), 1.0), Math.min(getBlue(), 1.0));
+    }
+
+    /**
+     *  Multiply colors component by component
+     * @param otherColor
+     * @return
+     */
+    public ComputationalColor mult(ComputationalColor otherColor) {
+        return new ComputationalColor(rgb.componentMult(otherColor.rgb));
+    }
+
+     /**
+     *  add colors component by component
+     * @param otherColor
+     * @return
+     */
+    public ComputationalColor add(ComputationalColor otherColor) {
+        return new ComputationalColor(rgb.add(otherColor.rgb));
+    }
+
+     /**
+     *  Multiplies color by scale
+     * @return
+     */
+    public ComputationalColor scale(Double scale) {
+        return new ComputationalColor(rgb.scalarMult(scale));
     }
 }
