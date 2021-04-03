@@ -15,26 +15,31 @@ public class Viewport {
     // Used to get point on screen
     Integer imageWidth;
     Integer imageHeight;
-    Camera camera; //TODO temporary solution
 
-    public Viewport(Double width, int imageWidth, int imageHeight, Camera camera) {
+    Vector3D u;
+    Vector3D v;
+    Vector3D w;
+
+    public Viewport(int imageWidth, int imageHeight, Camera camera) {
 
         // Dimensions
-        this.width = width;
+        this.width = camera.screenWidth();
         this.aspectRatio = (double) imageWidth / imageHeight;
         this.height =  width / aspectRatio;
 
         // Pixel dimensions
         this.imageWidth = imageWidth;
         this.imageHeight = imageHeight;
+        this.u = camera.u();
+        this.v = camera.v();
+        this.w = camera.w();
 
         // This is where we start moving from the screen
         this.lowerLeftVec = camera.position().subtract(camera.w().scalarMult(camera.focalLength()));  // forward to the center of the screen
         this.lowerLeftVec = this.lowerLeftVec.subtract(camera.u().scalarMult(this.width / 2));  // left to the left bound of the screen
         this.lowerLeftVec = this.lowerLeftVec.subtract(camera.v().scalarMult(this.height / 2));  // down to the lower bound of the screen
 
-        this.camera = camera;
-
+        camera.setViewport(this);
     }
 
     /**
@@ -47,7 +52,7 @@ public class Viewport {
     public Vector3D pixelToScreenPoint(Integer widthPixel, Integer heightPixel) {
         double widthRatio = widthPixel.doubleValue() / imageWidth;
         double heightRatio = heightPixel.doubleValue() / imageHeight;
-        return this.lowerLeftVec.add(this.camera.u().scalarMult(widthRatio * this.width)).add(this.camera.v().scalarMult(heightRatio * this.height));
+        return this.lowerLeftVec.add(this.u.scalarMult(widthRatio * this.width)).add(this.v.scalarMult(heightRatio * this.height));
     }
 
     public Integer getImageWidth() {

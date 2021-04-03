@@ -40,7 +40,7 @@ public class ComputationalColor {
     public ComputationalColor(Color color) {
         this(color.getRed(), color.getGreen(), color.getBlue());
     }
-
+//TODO there is a problem with null pointer exception - probably because of destruction of the inner vector. fix it!
     public double getRed() {
         return rgb.get(0);
     }
@@ -76,17 +76,7 @@ public class ComputationalColor {
     }
 
     /**
-     * @param c1 first color
-     * @param c2 second color
-     * @return Color with its rgb values are the sum of c1 and c2 values.
-     */
-    public static ComputationalColor sumColors(ComputationalColor c1, ComputationalColor c2) {
-        Vector3D sum = c1.rgb.add(c2.rgb);
-        return new ComputationalColor(sum);
-    }
-
-    /**
-     *
+     * TODO add getRGB() method instead
      * @return java.awt.Color object
      */
     public Color toColor() {
@@ -98,7 +88,7 @@ public class ComputationalColor {
     /**
      * Clips colors values to be a floating point number between 0 and 1
      */
-    private void clipColor() {
-        rgb = new Vector3D(Math.min(getRed(), 1),Math.min(getGreen(), 1), Math.min(getBlue(), 1));
+    public ComputationalColor clipColor() {
+        return new ComputationalColor(Math.min(getRed(), 1.0),Math.min(getGreen(), 1.0), Math.min(getBlue(), 1.0));
     }
 }

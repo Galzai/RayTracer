@@ -6,9 +6,9 @@ import org.junit.jupiter.api.Test;
 public class MaterialTest {
     @Test
     public void materialInitialization() {
-        Color diffuse = new Color(255,0,0);
-        Color specular = new Color(0,255,0);
-        Color reflection = new Color(0,0,255);
+        ComputationalColor diffuse = new ComputationalColor(255,0,0);
+        ComputationalColor specular = new ComputationalColor(0,255,0);
+        ComputationalColor reflection = new ComputationalColor(0,0,255);
 //        Color background = new Color(0,0,255);
         double transparency = 0.5;
         double phong = 1;

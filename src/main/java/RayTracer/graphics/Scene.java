@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 
@@ -17,8 +18,12 @@ public class Scene {
     private ComputationalColor  backgroundColor;
     private PhongShader shader;
 
-    private ArrayList<Light> lights;
-    public ArrayList<Surface> surfaces;
+    private List<Light> lights;
+    public List<Surface> surfaces;
+    private double shadowRaysRoot;
+    private int maxRecursionDepth;
+
+
 
     /**
      * Construct a scene object with pre-populated arrays
@@ -30,7 +35,7 @@ public class Scene {
      * @param surfaces
      */
     public Scene(Camera camera, Viewport viewport, ComputationalColor backgroundColor,
-     ArrayList<Light> lights, ArrayList<Surface> surfaces ) {
+                 List<Light> lights, List<Surface> surfaces, double shadowRaysRoot, int maxRecursionDepth) {
 
          this.camera = camera;
          this.viewport = viewport;
@@ -38,6 +43,8 @@ public class Scene {
          this.lights = lights;
          this.surfaces = surfaces;
          this.shader = new PhongShader(this);
+         this.shadowRaysRoot = shadowRaysRoot;
+         this.maxRecursionDepth = maxRecursionDepth;
     }
 
     public Camera getCamera() {
@@ -52,23 +59,36 @@ public class Scene {
         return this.backgroundColor;
     }
 
-    public ArrayList<Light> getLights() {
+    public List<Light> getLights() {
         return this.lights;
     }
 
-    public ArrayList<Surface> getSurfaces() {
+    public List<Surface> getSurfaces() {
         return this.surfaces;
     }
 
     /**
      * Construct a scene with empty lights and surfaces
-     * 
+     *
+     * @param camera
+     * @param viewport
+     * @param backgroundColor
+     * @param shadowRaysRoot
+     * @param maxRecursionDepth
+     */
+    public Scene(Camera camera, Viewport viewport, ComputationalColor backgroundColor, double shadowRaysRoot, int maxRecursionDepth ) {
+        this(camera, viewport, backgroundColor, new ArrayList<Light>(), new ArrayList<Surface>(), shadowRaysRoot, maxRecursionDepth);
+    }
+
+    /**
+     * Construct a scene with empty lights and surfaces and without recursion or shadow rays
+     *
      * @param camera
      * @param viewport
      * @param backgroundColor
      */
     public Scene(Camera camera, Viewport viewport, ComputationalColor backgroundColor) {
-        this(camera, viewport, backgroundColor, new ArrayList<Light>(), new ArrayList<Surface>());
+        this(camera, viewport, backgroundColor, new ArrayList<Light>(), new ArrayList<Surface>(), 0, 0);
     }
 
     /**
@@ -117,13 +137,39 @@ public class Scene {
      * @param ray ray to intersect with
      * @return true if any surface intersection exists
      */
-    public Boolean IntersectionExists(Ray ray) {
+    public boolean IntersectionExists(Ray ray) {
         for(Surface surface : surfaces) {
             if (surface.findIntersection(ray) != null) {
                 return true;
             }
         }
         return false;
+    }
+
+    /**
+     * Checks if there is a surface between an existing intersection and the light
+     *
+     * @param intersection
+     * @param light
+     * @return
+     */
+    public boolean hasDirectView(Intersection intersection, Light light) {
+        Vector3D lightDirection = light.getPosition().subtract(intersection.getIntersectionPoint()).normalize();
+        Ray ray = new Ray(intersection.getIntersectionPoint(), lightDirection);
+        double distance = intersection.getIntersectionPoint().calculateDistance(light.getPosition());
+        for(Surface surface : surfaces) {
+            if (surface == intersection.getSurface()) {
+                continue;
+            }
+            Intersection potentialIntersection = surface.findIntersection(ray);
+            if (potentialIntersection != null) {
+                // only if there is a surface between the ray's origin and the destination
+                if (distance > ray.origin().calculateDistance(ray.at(potentialIntersection.getRayVal()))) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     /**
@@ -152,7 +198,8 @@ public class Scene {
                 Vector3D direction = viewport.pixelToScreenPoint(x, y).subtract(this.camera.position());
                 Ray ray = new Ray(this.camera.position(), direction);
                 Intersection intersection = IntersectRay(ray);
-                img.setRGB(x - 1, viewport.getImageHeight() - y, getColor(intersection, ray).toColor().getRGB());
+                //TODO replace with ComputationalColor.getRGB()
+                img.setRGB(x - 1, viewport.getImageHeight() - y, getColor(intersection, ray).clipColor().toColor().getRGB());
             }
         }
         File f = new File(path);

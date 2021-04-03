@@ -18,6 +18,7 @@ public class Ray {
      * @param origin origin vector
      * @param direction direction vector (not necessarily normalized!)
      */
+    //TODO handle direction = (0,0,0) case
     public Ray(Vector3D origin, Vector3D  direction){
         this.origin = origin;
         this.direction = direction.normalize();
