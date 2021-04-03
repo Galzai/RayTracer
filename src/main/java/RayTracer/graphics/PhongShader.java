@@ -34,9 +34,9 @@ public class PhongShader {
     public ComputationalColor shade(Intersection intersection, Ray ray) {
 
         // our results
-        double red = 0.0;
-        double green = 0.0;
-        double blue = 0.0;
+        Double red = 0.0;
+        Double green = 0.0;
+        Double blue = 0.0;
 
         Material material = intersection.getSurface().getMaterial();
 
@@ -46,15 +46,14 @@ public class PhongShader {
             if (isShadowed(intersection, light)) {
                 shadowMultiplier = 1.0 - light.getShadowIntensity();
             }
-            Vector3D lightDirection = light.getPosition().subtract(intersection.getIntersectionPoint());
-            lightDirection.normalize();
+            Vector3D lightDirection = light.getPosition().subtract(intersection.getIntersectionPoint()).normalize();
             // H = L + V
             Vector3D highlightVec = (ray.direction().scalarMult(-1.0)).add(lightDirection).normalize();
 
             // Specular and diffuse intensity
             Double diffuseIntensity = Math.max(intersection.getNormal().dotProduct(lightDirection), 0.0);
             Double specularIntensity = Math.pow(Math.max(intersection.getNormal().dotProduct(highlightVec), 0.0), material.getPhongSpecularityCoeff()) * light.getSpecularIntensity();
-
+            
             red +=
                     shadowMultiplier * light.getColor().getRed() *
                             ((material.getDiffuseColor().getRed() * diffuseIntensity) +

@@ -89,6 +89,6 @@ public class ComputationalColor {
      * Clips colors values to be a floating point number between 0 and 1
      */
     public ComputationalColor clipColor() {
-        return new ComputationalColor(Math.min(getRed(), 1),Math.min(getGreen(), 1), Math.min(getBlue(), 1));
+        return new ComputationalColor(Math.min(getRed(), 1.0),Math.min(getGreen(), 1.0), Math.min(getBlue(), 1.0));
     }
 }
