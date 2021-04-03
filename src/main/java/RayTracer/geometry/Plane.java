@@ -16,7 +16,7 @@ public class Plane implements Surface {
         this.normal = normal;
         this.offset = offset;
         this.material = material;
-        this.p0 = normal.scalarMult(this.offset / this.normal.dotProduct(this.normal));
+        this.p0 = normal.scalarMult(this.offset / (normal.euclideanNorm() * normal.euclideanNorm()));
     }
 
     public Vector3D getNormal() {
@@ -32,6 +32,9 @@ public class Plane implements Surface {
         double denominator = this.normal.dotProduct(ray.direction());
         if (Math.abs(denominator) > MathUtils.EPSILON) {
             double t = this.normal.dotProduct(this.p0.subtract(ray.origin())) / denominator;
+            if(t < 0){
+                return null;
+            }
             Vector3D intersectionPoint = ray.at(t);
             Vector3D pointNormal = this.normal.findProjection(ray.direction()).scalarMult(-1.0).normalize();
             return new Intersection(intersectionPoint, pointNormal, this, t);
