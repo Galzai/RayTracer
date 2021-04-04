@@ -1,7 +1,5 @@
 package RayTracer.graphics;
 
-import javax.swing.undo.CompoundEdit;
-
 import RayTracer.math.Vector3D;
 
 public class PhongShader {
@@ -89,7 +87,7 @@ public class PhongShader {
         // R = V - -2 * ( V dot N) * N
         Vector3D reflectionDirection = ray.direction().subtract(reflectionNormal);
         Ray reflectionRay = new Ray(intersection.getIntersectionPoint(), reflectionDirection.normalize());
-        Intersection nextIntersection = scene.IntersectRayWithoutSurface(reflectionRay, intersection.getSurface());
+        Intersection nextIntersection = scene.intersectRayWithoutSurface(reflectionRay, intersection.getSurface());
         return shade(nextIntersection, reflectionRay, recursionDepth - 1);
     }
 
@@ -114,7 +112,7 @@ public class PhongShader {
         ComputationalColor reflection = shadeReflection(intersection, ray, recursionDepth).mult(intersection.getSurface().getMaterial().getReflectionColor());
         // Find background intersection
         Ray newRay = new Ray(intersection.getIntersectionPoint(), ray.direction());
-        Intersection nextIntersection = scene.IntersectRayWithoutSurface(newRay, intersection.getSurface());
+        Intersection nextIntersection = scene.intersectRayWithoutSurface(newRay, intersection.getSurface());
         // transparency addition
         ComputationalColor transparentColor = shade(nextIntersection, newRay, recursionDepth).scale(transparency);
         ComputationalColor result = diffuseSpecular.add(reflection).add(transparentColor);   

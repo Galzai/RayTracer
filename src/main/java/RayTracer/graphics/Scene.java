@@ -138,7 +138,7 @@ public class Scene {
      * @param ray ignoreSurface surface to ignore intersections with
      * @return intersection data
      */
-    public Intersection IntersectRayWithoutSurface(Ray ray, Surface ignoreSurface) {
+    public Intersection intersectRayWithoutSurface(Ray ray, Surface ignoreSurface) {
         // We are searching for the closest intersecting surface
         double minRayVal = Double.MAX_VALUE;
         Intersection minIntersection = null;
