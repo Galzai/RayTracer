@@ -27,22 +27,20 @@ public class PhongShader {
     private double calcSoftShadowsPercentage(Intersection intersection, Light light) {
 
         // We cast a multiple rays from the point to the light's area and compute the shadow rays percentage
-        return scene.calcSoftShadowsPercentage(intersection, light); // some object in between blocks the light
+        return scene.calcLightPercentage(intersection, light); // some object in between blocks the light
     }
 
     /**
      * Calculates the results of diffuse and specular light contibuton to surface shading
      *
      * @param intersection intersection results
-     * @param ray          light the found the intersection
+     * @param ray          light that found the intersection
      * @return light color
      */
     public ComputationalColor shadeDiffuseSpecular(Intersection intersection, Ray ray) {
         // our results
         ComputationalColor diffuseSpecular = new ComputationalColor(0,0,0);
-
         Material material = intersection.getSurface().getMaterial();
-
         // Check effect of each light in scene
         for (Light light : scene.getLights()) {
             double shadowIntensity = light.getShadowIntensity();
@@ -51,13 +49,16 @@ public class PhongShader {
                 double shadowPercentage = calcSoftShadowsPercentage(intersection, light);
                 lightIntensity = 1 - shadowIntensity + shadowIntensity * shadowPercentage;
             }
+
             Vector3D lightDirection = light.getPosition().subtract(intersection.getIntersectionPoint()).normalize();
-            // H = L + V
-            Vector3D highlightVec = (ray.direction().scalarMult(-1.0)).add(lightDirection).normalize();
+            // 2 * ( L dot N) * N
+            Vector3D reflectionNormal = intersection.getNormal().scalarMult(2.0 *lightDirection.dotProduct(intersection.getNormal()));
+            // R = 2 * ( V dot N) * N - L
+            Vector3D reflectionDirection = reflectionNormal.subtract(lightDirection);
 
             // Specular and diffuse intensity
             Double diffuseIntensity = Math.max(intersection.getNormal().dotProduct(lightDirection), 0.0);
-            Double specularIntensity = Math.pow(Math.max(intersection.getNormal().dotProduct(highlightVec), 0.0), material.getPhongSpecularityCoeff()) * light.getSpecularIntensity();
+            Double specularIntensity = Math.pow(Math.max(ray.direction().scalarMult(-1.0).dotProduct(reflectionDirection), 0.0), material.getPhongSpecularityCoeff()) * light.getSpecularIntensity();
 
             ComputationalColor diffuse = material.getDiffuseColor().scale(diffuseIntensity);
             ComputationalColor specular = material.getSpecularColor().scale(specularIntensity);

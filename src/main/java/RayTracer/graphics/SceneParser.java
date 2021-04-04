@@ -66,6 +66,7 @@ public class SceneParser {
 
         }
         Viewport viewPort = new Viewport(imageWidth, imageHeight, camera);
+        buffRead.close();
         return new Scene(camera, viewPort, backGroundColor, lights, surfaces, shadowRaysRoot, maxRecursionDepth);
 
     }

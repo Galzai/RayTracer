@@ -210,7 +210,7 @@ public class Scene {
         Vector3D lightDirection = lightPosition.subtract(intersection.getIntersectionPoint()).normalize();
         Ray ray = new Ray(intersection.getIntersectionPoint(), lightDirection);
         ray = ray.moveOriginByEpsilon();
-        double distance = intersection.getIntersectionPoint().calculateDistance(lightPosition);
+        double distanceToLight = intersection.getIntersectionPoint().calculateDistance(lightPosition);
         for (Surface surface : surfaces) {
             if (surface == intersection.getSurface()) {
                 continue;
@@ -218,7 +218,7 @@ public class Scene {
             Intersection potentialIntersection = surface.findIntersection(ray);
             if (potentialIntersection != null) {
                 // only if there is a surface between the ray's origin and the destination
-                if (distance > ray.origin().calculateDistance(ray.at(potentialIntersection.getRayVal()))) {
+                if (distanceToLight > ray.origin().calculateDistance(ray.at(potentialIntersection.getRayVal()))) {
                     return true;
                 }
             }
@@ -227,12 +227,12 @@ public class Scene {
     }
 
     /**
-     * Calculates the percentage of shadow rays the lights casts on the intersection
+     * Calculates the percentage of rays the lights casts on the intersection
      * @param intersection
      * @param light
-     * @return The percentage of shadow rays the lights casts on the intersection
+     * @return The percentage of rays the lights casts on the intersection
      */
-    public double calcSoftShadowsPercentage(Intersection intersection, Light light) {
+    public double calcLightPercentage(Intersection intersection, Light light) {
         Vector3D lightDirection = light.getPosition().subtract(intersection.getIntersectionPoint()).normalize();
         Ray ray = new Ray(intersection.getIntersectionPoint(), lightDirection);
         ray = ray.moveOriginByEpsilon();
@@ -243,7 +243,7 @@ public class Scene {
                 shadowedRays++;
             }
         }
-        return (double) shadowedRays / lightPoints.size();
+        return  1 - (double) shadowedRays / lightPoints.size();
     }
 
     /**
@@ -254,7 +254,7 @@ public class Scene {
      */
 
     private List<Vector3D> getLightPoints(Ray ray, Light light) {
-        Random random = new Random();
+        Random random = new Random(); // TODO replace with non random method
         double unit = light.getRadius() / this.shadowRaysRoot;
         Vector3D randomVector = new Vector3D(random.nextDouble(), random.nextDouble(), random.nextDouble());
         Vector3D right = ray.direction().findPerpendicular(randomVector);
