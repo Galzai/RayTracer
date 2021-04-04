@@ -180,9 +180,10 @@ public class Scene {
      * @param light
      * @return
      */
-    public boolean hasDirectView(Intersection intersection, Light light) {
+    public boolean intersectionIsShadowed(Intersection intersection, Light light) {
         Vector3D lightDirection = light.getPosition().subtract(intersection.getIntersectionPoint()).normalize();
         Ray ray = new Ray(intersection.getIntersectionPoint(), lightDirection);
+        ray = ray.moveOriginByEpsilon();
         double distance = intersection.getIntersectionPoint().calculateDistance(light.getPosition());
         for(Surface surface : surfaces) {
             if (surface == intersection.getSurface()) {
@@ -192,11 +193,11 @@ public class Scene {
             if (potentialIntersection != null) {
                 // only if there is a surface between the ray's origin and the destination
                 if (distance > ray.origin().calculateDistance(ray.at(potentialIntersection.getRayVal()))) {
-                    return false;
+                    return true;
                 }
             }
         }
-        return true;
+        return false;
     }
 
     /**
