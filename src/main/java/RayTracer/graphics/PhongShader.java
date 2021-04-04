@@ -40,11 +40,12 @@ public class PhongShader {
         // Check effect of each light in scene
         for (Light light : scene.getLights()) {
             Double shadowMultiplier = 1.0;
-            if (light.getShadowIntensity() == 1.0) {  // light casts only shadows
-                continue;
-            }
-            if (isShadowed(intersection, light)) {
+            double shadowIntensity = light.getShadowIntensity();
+            if (shadowIntensity != 0 && isShadowed(intersection, light)) {
                 shadowMultiplier = 1.0 - light.getShadowIntensity();
+                if (shadowMultiplier == 0.0) {  // light casts only shadows
+                    continue;
+                }
             }
             Vector3D lightDirection = light.getPosition().subtract(intersection.getIntersectionPoint()).normalize();
             // H = L + V
@@ -59,6 +60,7 @@ public class PhongShader {
             ComputationalColor lightColor = light.getColor().scale(shadowMultiplier);
             diffuseSpecular = diffuseSpecular.add(lightColor.mult(diffuse.add(specular)));
         }
+
         return diffuseSpecular;
     }
 
