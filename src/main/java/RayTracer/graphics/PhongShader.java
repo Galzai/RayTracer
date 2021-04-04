@@ -24,6 +24,12 @@ public class PhongShader {
         return scene.intersectionIsShadowed(intersection, light); // some object in between blocks the light
     }
 
+    private double calcSoftShadowsPercentage(Intersection intersection, Light light) {
+
+        // We cast a multiple rays from the point to the light's area and compute the shadow rays percentage
+        return scene.calcSoftShadowsPercentage(intersection, light); // some object in between blocks the light
+    }
+
     /**
      * Calculates the results of diffuse and specular light contibuton to surface shading
      *
@@ -39,13 +45,11 @@ public class PhongShader {
 
         // Check effect of each light in scene
         for (Light light : scene.getLights()) {
-            Double shadowMultiplier = 1.0;
             double shadowIntensity = light.getShadowIntensity();
-            if (shadowIntensity != 0 && isShadowed(intersection, light)) {
-                shadowMultiplier = 1.0 - light.getShadowIntensity();
-                if (shadowMultiplier == 0.0) {  // light casts only shadows
-                    continue;
-                }
+            double lightIntensity = 1;
+            if (shadowIntensity != 0) {  // if shadowIntensity == 0 there is no effect on the shadows anyway
+                double shadowPercentage = calcSoftShadowsPercentage(intersection, light);
+                lightIntensity = 1 - shadowIntensity + shadowIntensity * shadowPercentage;
             }
             Vector3D lightDirection = light.getPosition().subtract(intersection.getIntersectionPoint()).normalize();
             // H = L + V
@@ -57,7 +61,7 @@ public class PhongShader {
 
             ComputationalColor diffuse = material.getDiffuseColor().scale(diffuseIntensity);
             ComputationalColor specular = material.getSpecularColor().scale(specularIntensity);
-            ComputationalColor lightColor = light.getColor().scale(shadowMultiplier);
+            ComputationalColor lightColor = light.getColor().scale(lightIntensity);
             diffuseSpecular = diffuseSpecular.add(lightColor.mult(diffuse.add(specular)));
         }
 

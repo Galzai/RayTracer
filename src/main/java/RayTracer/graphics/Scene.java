@@ -1,21 +1,22 @@
 package RayTracer.graphics;
 
-import java.util.ArrayList;
+import RayTracer.geometry.Surface;
+import RayTracer.math.Vector;
+import RayTracer.math.Vector3D;
+
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-
-import javax.imageio.ImageIO;
-
-import RayTracer.geometry.Surface;
-import RayTracer.math.Vector3D;
+import java.util.Random;
 
 public class Scene {
-    
+
     private Camera camera;
     private Viewport viewport;
-    private ComputationalColor  backgroundColor;
+    private ComputationalColor backgroundColor;
     private PhongShader shader;
 
     private List<Light> lights;
@@ -24,10 +25,9 @@ public class Scene {
     private int maxRecursionDepth;
 
 
-
     /**
      * Construct a scene object with pre-populated arrays
-     * 
+     *
      * @param camera
      * @param viewport
      * @param backgroundColor
@@ -37,14 +37,14 @@ public class Scene {
     public Scene(Camera camera, Viewport viewport, ComputationalColor backgroundColor,
                  List<Light> lights, List<Surface> surfaces, double shadowRaysRoot, int maxRecursionDepth) {
 
-         this.camera = camera;
-         this.viewport = viewport;
-         this.backgroundColor = backgroundColor;
-         this.lights = lights;
-         this.surfaces = surfaces;
-         this.shader = new PhongShader(this);
-         this.shadowRaysRoot = shadowRaysRoot;
-         this.maxRecursionDepth = maxRecursionDepth;
+        this.camera = camera;
+        this.viewport = viewport;
+        this.backgroundColor = backgroundColor;
+        this.lights = lights;
+        this.surfaces = surfaces;
+        this.shader = new PhongShader(this);
+        this.shadowRaysRoot = shadowRaysRoot;
+        this.maxRecursionDepth = maxRecursionDepth;
     }
 
     public Camera getCamera() {
@@ -76,7 +76,7 @@ public class Scene {
      * @param shadowRaysRoot
      * @param maxRecursionDepth
      */
-    public Scene(Camera camera, Viewport viewport, ComputationalColor backgroundColor, double shadowRaysRoot, int maxRecursionDepth ) {
+    public Scene(Camera camera, Viewport viewport, ComputationalColor backgroundColor, double shadowRaysRoot, int maxRecursionDepth) {
         this(camera, viewport, backgroundColor, new ArrayList<Light>(), new ArrayList<Surface>(), shadowRaysRoot, maxRecursionDepth);
     }
 
@@ -93,7 +93,7 @@ public class Scene {
 
     /**
      * Add a new light to the scene
-     * 
+     *
      * @param light
      */
     public void addLight(Light light) {
@@ -101,8 +101,8 @@ public class Scene {
     }
 
     /**
-     *  Add a new surface to the scene
-     * 
+     * Add a new surface to the scene
+     *
      * @param surface
      */
     public void addSurface(Surface surface) {
@@ -111,7 +111,7 @@ public class Scene {
 
     /**
      * Finds the closest surface that intersects with the ray and its intersection
-     * 
+     *
      * @param ray ray to intersect with
      * @return intersection data
      */
@@ -125,15 +125,15 @@ public class Scene {
             curIntersection = surface.findIntersection(ray);
             if ((curIntersection != null) && (curIntersection.getRayVal() <= minRayVal)) {
                 minIntersection = curIntersection;
-                minRayVal = minIntersection.getRayVal();   
+                minRayVal = minIntersection.getRayVal();
             }
         }
         return minIntersection;
     }
 
-        /**
+    /**
      * Finds the closest surface that intersects with the ray that isnt ignoreSurface and its intersection
-     * 
+     *
      * @param ray ray to intersect with
      * @param ray ignoreSurface surface to ignore intersections with
      * @return intersection data
@@ -145,27 +145,27 @@ public class Scene {
         Intersection curIntersection = null;
 
         for (Surface surface : surfaces) {
-            if(surface == ignoreSurface) {
+            if (surface == ignoreSurface) {
                 continue;
             }
 
             curIntersection = surface.findIntersection(ray);
             if ((curIntersection != null) && (curIntersection.getRayVal() <= minRayVal)) {
                 minIntersection = curIntersection;
-                minRayVal = minIntersection.getRayVal();   
+                minRayVal = minIntersection.getRayVal();
             }
         }
         return minIntersection;
     }
-    
+
     /**
      * Checks if any surface intersects the given ray
-     *  
+     *
      * @param ray ray to intersect with
      * @return true if any surface intersection exists
      */
     public boolean IntersectionExists(Ray ray) {
-        for(Surface surface : surfaces) {
+        for (Surface surface : surfaces) {
             if (surface.findIntersection(ray) != null) {
                 return true;
             }
@@ -173,7 +173,7 @@ public class Scene {
         return false;
     }
 
-    /**
+    /** TODO remove
      * Checks if there is a surface between an existing intersection and the light
      *
      * @param intersection
@@ -185,7 +185,33 @@ public class Scene {
         Ray ray = new Ray(intersection.getIntersectionPoint(), lightDirection);
         ray = ray.moveOriginByEpsilon();
         double distance = intersection.getIntersectionPoint().calculateDistance(light.getPosition());
-        for(Surface surface : surfaces) {
+        for (Surface surface : surfaces) {
+            if (surface == intersection.getSurface()) {
+                continue;
+            }
+            Intersection potentialIntersection = surface.findIntersection(ray);
+            if (potentialIntersection != null) {
+                // only if there is a surface between the ray's origin and the destination
+                if (distance > ray.origin().calculateDistance(ray.at(potentialIntersection.getRayVal()))) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    /**
+     * Checks if there is a surface between an existing intersection and the light
+     *
+     * @param intersection
+     * @param lightPosition
+     * @return
+     */
+    public boolean intersectionIsShadowed(Intersection intersection, Vector3D lightPosition) {
+        Vector3D lightDirection = lightPosition.subtract(intersection.getIntersectionPoint()).normalize();
+        Ray ray = new Ray(intersection.getIntersectionPoint(), lightDirection);
+        ray = ray.moveOriginByEpsilon();
+        double distance = intersection.getIntersectionPoint().calculateDistance(lightPosition);
+        for (Surface surface : surfaces) {
             if (surface == intersection.getSurface()) {
                 continue;
             }
@@ -201,7 +227,59 @@ public class Scene {
     }
 
     /**
+     * Calculates the percentage of shadow rays the lights casts on the intersection
+     * @param intersection
+     * @param light
+     * @return The percentage of shadow rays the lights casts on the intersection
+     */
+    public double calcSoftShadowsPercentage(Intersection intersection, Light light) {
+        Vector3D lightDirection = light.getPosition().subtract(intersection.getIntersectionPoint()).normalize();
+        Ray ray = new Ray(intersection.getIntersectionPoint(), lightDirection);
+        ray = ray.moveOriginByEpsilon();
+        List<Vector3D> lightPoints = getLightPoints(ray, light);
+        int shadowedRays = 0;
+        for (Vector3D point: lightPoints) {
+            if (intersectionIsShadowed(intersection, point)) {
+                shadowedRays++;
+            }
+        }
+        return (double) shadowedRays / lightPoints.size();
+    }
+
+    /**
+     * returns a list with light's positions across the lights area for computing soft shadows
+     * @param ray
+     * @param light
+     * @return returns list with light's positions across the lights area
+     */
+
+    private List<Vector3D> getLightPoints(Ray ray, Light light) {
+        Random random = new Random();
+        double unit = light.getRadius() / this.shadowRaysRoot;
+        Vector3D randomVector = new Vector3D(random.nextDouble(), random.nextDouble(), random.nextDouble());
+        Vector3D right = ray.direction().findPerpendicular(randomVector);
+        Vector3D up = right.crossProduct(ray.direction()).normalize();
+        right = right.normalize();
+        // go left and down to the bottom left corner:
+        Vector3D lowerLeftVec = light.getPosition().subtract(right.scalarMult(light.getRadius() / 2)).subtract(up.scalarMult(light.getRadius() / 2));
+        // scale for convenience:
+        right = right.scalarMult(unit);
+        up = up.scalarMult(unit);
+        List<Vector3D> lightPositions = new ArrayList<>();
+        for (int i = 0; i < this.shadowRaysRoot; i++) {
+            for (int j = 0; j < this.shadowRaysRoot; j++) {
+                double rightOffset = random.nextDouble();
+                double upOffset = random.nextDouble();
+                Vector3D nextVector = lowerLeftVec.add(right.scalarMult(j + rightOffset)).add(up.scalarMult(i + upOffset));
+                lightPositions.add(nextVector);
+            }
+        }
+        return lightPositions;
+    }
+
+    /**
      * TODO: This will need to be expanded and modified
+     *
      * @param intersection
      * @param ray
      * @return
@@ -213,6 +291,7 @@ public class Scene {
 
     /**
      * Render the scene to a file
+     *
      * @param path path to file
      */
     public void renderScene(String path) throws IOException {
