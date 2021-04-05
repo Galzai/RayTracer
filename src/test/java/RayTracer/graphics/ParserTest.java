@@ -20,7 +20,7 @@ public class ParserTest {
 
     }
     @Test
-    public void parseRoomSceneTest() throws IOException {
+    public void parseSphereSceneTest() throws IOException {
         SceneParser parser = new SceneParser();
         Scene scene = parser.parseScene(TestUtils.SCENES_PATH + "Spheres.txt", 500, 500);
         scene.renderScene(TestUtils.OUTPUT_PATH + "spheres.png");
@@ -32,6 +32,14 @@ public class ParserTest {
         SceneParser parser = new SceneParser();
         Scene scene = parser.parseScene(TestUtils.SCENES_PATH + "Transparency.txt", 500, 500);
         scene.renderScene(TestUtils.OUTPUT_PATH + "Transparency.png");
+
+    }
+
+    @Test
+    public void parseRoomSceneTest() throws IOException {
+        SceneParser parser = new SceneParser();
+        Scene scene = parser.parseScene(TestUtils.SCENES_PATH + "Room1.txt", 500, 500);
+        scene.renderScene(TestUtils.OUTPUT_PATH + "Room1.png");
 
     }
 }

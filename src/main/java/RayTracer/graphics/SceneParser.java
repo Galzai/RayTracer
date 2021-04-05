@@ -1,5 +1,6 @@
 package RayTracer.graphics;
 
+import RayTracer.geometry.AxisAlignedBox;
 import RayTracer.geometry.Plane;
 import RayTracer.geometry.Sphere;
 import RayTracer.geometry.Surface;
@@ -54,15 +55,18 @@ public class SceneParser {
                     surfaces.add(parsePlane(materials));
                     break;
                 case "box":
-                    //TODO
+                    surfaces.add(parseBox(materials));
                     break;
                 case "lgt":
                     lights.add(parseLight());
                     break;
+                default:
+                    //TODO throw exception
             }
 
         }
         Viewport viewPort = new Viewport(imageWidth, imageHeight, camera);
+        buffRead.close();
         return new Scene(camera, viewPort, backGroundColor, lights, surfaces, shadowRaysRoot, maxRecursionDepth);
 
     }
@@ -105,6 +109,13 @@ public class SceneParser {
         double offset = Double.parseDouble(currentLine[4]);
         int materialIndex = Integer.parseInt(currentLine[5]);
         return new Plane(normal, offset, materials.get(materialIndex - 1));
+    }
+
+    private AxisAlignedBox parseBox(List<Material> materials) {
+        Vector3D center = parseVector(1, 2, 3);
+        double scale = Double.parseDouble(currentLine[4]);
+        int materialIndex = Integer.parseInt(currentLine[5]);
+        return new AxisAlignedBox(center, new Vector3D(scale, scale, scale), materials.get(materialIndex - 1));
     }
 
     private Light parseLight() {

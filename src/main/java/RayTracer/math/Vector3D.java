@@ -58,10 +58,10 @@ public class Vector3D extends Vector {
     }
 
     /**
-     * Returns component of othervector which is paralel to this
+     * Returns component of othervector which is parallel to this
      *
      * @param otherVector
-     * @return component of othervector which is paralel to this
+     * @return component of othervector which is parallel to this
      */
     public Vector3D findProjection(Vector3D otherVector) {
         // Find projection of b onto a

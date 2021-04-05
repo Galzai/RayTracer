@@ -9,10 +9,11 @@ import java.util.Optional;
  * Rays from origin in direction of direction
  */
 public class Ray {
+
     
     private Vector3D origin;
     private Vector3D direction;
-
+    private static final double EPSILON = 0.0001;
     /**
      * Constructs a ray from origin in direction
      * @param origin origin vector
@@ -45,5 +46,9 @@ public class Ray {
      */
     public Vector3D at(Double t){
         return origin.add(direction.scalarMult(t));
+    }
+
+    public Ray moveOriginByEpsilon() {
+        return new Ray(at(Ray.EPSILON), this.direction);
     }
 }
