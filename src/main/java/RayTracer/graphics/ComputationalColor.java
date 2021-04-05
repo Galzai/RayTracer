@@ -32,7 +32,7 @@ public class ComputationalColor {
     }
 
     public ComputationalColor(Vector3D rgb) {
-        this.rgb = new Vector3D(rgb.get(0), rgb.get(1), rgb.get(2));
+        this.rgb = new Vector3D(rgb.getFirst(), rgb.getSecond(), rgb.getThird());
     }
 
     /**
@@ -42,30 +42,30 @@ public class ComputationalColor {
     public ComputationalColor(Color color) {
         this(color.getRed(), color.getGreen(), color.getBlue());
     }
-//TODO there is a problem with null pointer exception - probably because of destruction of the inner vector. fix it!
     public double getRed() {
-        return this.rgb.get(0);
+        return this.rgb.getFirst();
     }
 
     public double getGreen() {
-        return this.rgb.get(1);
+        return this.rgb.getSecond();
     }
 
     public double getBlue() {
-        return this.rgb.get(2);
+        return this.rgb.getThird();
     }
 
     /**
      * @return array of int representing the color's values in integer format ( 0 <= r,g,b <= 255)
      */
     public int[] getIntRepresentation() {
-        int r = (int) Math.round(this.rgb.get(0) * RGB_MAX);
-        int g = (int) Math.round(this.rgb.get(1) * RGB_MAX);
-        int b = (int) Math.round(this.rgb.get(2) * RGB_MAX);
+        int r = (int) Math.round(this.rgb.getFirst() * RGB_MAX);
+        int g = (int) Math.round(this.rgb.getSecond() * RGB_MAX);
+        int b = (int) Math.round(this.rgb.getThird() * RGB_MAX);
         return new int[]{r, g, b};
     }
 
     /**
+     *TODO inplace!
      *
      * @param scaleFactor the scale factor of the output color
      * @return ComputationalColor with scaled rgb values
@@ -87,7 +87,8 @@ public class ComputationalColor {
         return new Color(rgb[0], rgb[1], rgb[2]);
     }
 
-    /**
+    /** TODO inplace
+     *
      * Clips colors values to be a floating point number between 0 and 1
      */
     public ComputationalColor clipColor() {
@@ -112,7 +113,8 @@ public class ComputationalColor {
         return new ComputationalColor(rgb.add(otherColor.rgb));
     }
 
-     /**
+     /**TODO inplace
+      *
      *  Multiplies color by scale
      * @return
      */
@@ -125,7 +127,7 @@ public class ComputationalColor {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ComputationalColor that = (ComputationalColor) o;
-        return rgb.get(0) == that.rgb.get(0) && rgb.get(1) == that.rgb.get(1) && rgb.get(2) == that.rgb.get(2);
+        return rgb.getFirst() == that.rgb.getFirst() && rgb.getSecond() == that.rgb.getSecond() && rgb.getThird() == that.rgb.getThird();
     }
 
 
