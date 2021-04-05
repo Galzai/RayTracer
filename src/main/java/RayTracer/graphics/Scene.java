@@ -257,9 +257,8 @@ public class Scene {
         Random random = new Random(); // TODO replace with non random method
         double unit = light.getRadius() / this.shadowRaysRoot;
         Vector3D randomVector = new Vector3D(random.nextDouble(), random.nextDouble(), random.nextDouble());
-        Vector3D right = ray.direction().findPerpendicular(randomVector);
+        Vector3D right = ray.direction().findPerpendicular(randomVector).normalize();
         Vector3D up = right.crossProduct(ray.direction()).normalize();
-        right = right.normalize();
         // go left and down to the bottom left corner:
         Vector3D lowerLeftVec = light.getPosition().subtract(right.scalarMult(light.getRadius() / 2)).subtract(up.scalarMult(light.getRadius() / 2));
         // scale for convenience:

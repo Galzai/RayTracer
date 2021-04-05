@@ -116,12 +116,10 @@ public class Vector3D {
         return new Vector3D(this.first - otherVector.first, this.second - otherVector.second, this.third - otherVector.third);
     }
 
-    //TODO change to be in place
     public Vector3D normalize() {
         return new Vector3D(first / norm, second / norm, third / norm);
     }
 
-    //TODO change to be in place
     public Vector3D scalarMult(double scalar) {
         return new Vector3D(this.first * scalar, this.second * scalar, this.third * scalar);
     }

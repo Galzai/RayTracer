@@ -80,8 +80,8 @@ public class PhongShader {
         // 2 * ( V dot N) * N
         Vector3D reflectionNormal = intersection.getNormal().scalarMult(2.0 * ray.direction().dotProduct(intersection.getNormal()));
         // R = V - -2 * ( V dot N) * N
-        Vector3D reflectionDirection = ray.direction().subtract(reflectionNormal);
-        Ray reflectionRay = new Ray(intersection.getIntersectionPoint(), reflectionDirection.normalize());
+        Vector3D reflectionDirection = ray.direction().subtract(reflectionNormal).normalize();
+        Ray reflectionRay = new Ray(intersection.getIntersectionPoint(), reflectionDirection);
         reflectionRay = reflectionRay.moveOriginByEpsilon();
         Intersection nextIntersection = scene.intersectRayWithoutSurface(reflectionRay, intersection.getSurface());
         return shade(nextIntersection, reflectionRay, recursionDepth - 1);
@@ -103,10 +103,12 @@ public class PhongShader {
         }
         Material material = intersection.getSurface().getMaterial();
         Double transparency = material.getTransparency();
-        ComputationalColor diffuseSpecular = shadeDiffuseSpecular(intersection, ray).scale(1.0 - transparency);
+        ComputationalColor result = shadeDiffuseSpecular(intersection, ray).scale(1.0 - transparency);
         // Reflection addition
-        ComputationalColor reflection = shadeReflection(intersection, ray, recursionDepth).mult(material.getReflectionColor());
-        ComputationalColor result = diffuseSpecular.add(reflection);
+        if (material.getReflectionColor() != ComputationalColor.BLACK) {  // only if material is reflective
+            ComputationalColor reflection = shadeReflection(intersection, ray, recursionDepth).mult(material.getReflectionColor());
+            result = result.add(reflection);
+        }
         // transparency addition
         if (transparency > 0) { // only if surface is transparent
             Ray newRay = new Ray(intersection.getIntersectionPoint(), ray.direction());
