@@ -42,4 +42,13 @@ public class ParserTest {
         scene.renderScene(TestUtils.OUTPUT_PATH + "Room1.png");
 
     }
+
+
+    @Test
+    public void parseMirrorSceneTest() throws IOException {
+        SceneParser parser = new SceneParser();
+        Scene scene = parser.parseScene(TestUtils.SCENES_PATH + "Mirror.txt", 500, 500);
+        scene.renderScene(TestUtils.OUTPUT_PATH + "Mirror.png");
+
+    }
 }

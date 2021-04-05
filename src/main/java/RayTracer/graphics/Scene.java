@@ -300,7 +300,6 @@ public class Scene {
 
         for (int y = viewport.getImageHeight(); y >= 1; --y) {
             for (int x = 1; x <= viewport.getImageWidth(); ++x) {
-
                 // Find direction for current pixel
                 Vector3D direction = viewport.pixelToScreenPoint(x, y).subtract(this.camera.position());
                 Ray ray = new Ray(this.camera.position(), direction);

@@ -3,6 +3,7 @@ package RayTracer.graphics;
 import RayTracer.math.Vector3D;
 
 import java.awt.*;
+import java.util.Objects;
 
 /**
  * represent RGB color
@@ -12,6 +13,7 @@ import java.awt.*;
 public class ComputationalColor {
     private Vector3D rgb;
     public static final double RGB_MAX = 255;
+    public static final ComputationalColor BLACK = new ComputationalColor(0,0,0);
 
     public ComputationalColor(double red, double green, double blue) {
         this.rgb = new Vector3D(red, green, blue);
@@ -117,4 +119,14 @@ public class ComputationalColor {
     public ComputationalColor scale(Double scale) {
         return new ComputationalColor(rgb.scalarMult(scale));
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ComputationalColor that = (ComputationalColor) o;
+        return rgb.get(0) == that.rgb.get(0) && rgb.get(1) == that.rgb.get(1) && rgb.get(2) == that.rgb.get(2);
+    }
+
+
 }
