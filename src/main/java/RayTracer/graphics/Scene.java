@@ -290,6 +290,37 @@ public class Scene {
     }
 
     /**
+     * Calculats the effective radius of the fisheye lens
+     * 
+     * @param theta angle of direct ray to screen relative to w axis
+     * @return effective radius
+     */
+    private double calculateEffectiveRadius(double theta) {
+        // calculate values we will most likely use
+        double fishEyefactor = this.camera.focalLength() / this.camera.fisheyeCoeff();
+        double factoredTheta = theta * this.camera.fisheyeCoeff();
+        if ((this.camera.fisheyeCoeff() > 0.0) && (this.camera.fisheyeCoeff() <= 1.0)) {
+            return fishEyefactor * Math.tan(factoredTheta);
+        }
+        else if ((this.camera.fisheyeCoeff() > 0.0) && (this.camera.fisheyeCoeff() <= 1.0)) {
+            return fishEyefactor * Math.sin(factoredTheta);
+        } else {
+            return theta * this.camera.focalLength();
+        }
+    }
+    private Ray calculateFisheyeDirection(Vector3D direction, Vector3D screenPoint) {
+
+        // get theta
+        double theta =  -1 * Vector3D.findAngle(camera.u(), direction);
+        double rEffective = calculateEffectiveRadius(theta);
+        // unit Vector from viewport origin to original pixel
+        Vector3D screenPointDirection = screenPoint.subtract(this.viewport.getLowerLeftVec()).normalize();
+        // new ray position on screen point
+        Vector3D newScreenPoint = this.viewport.getLowerLeftVec().add(screenPointDirection.scalarMult(rEffective));
+        return new Ray(this.camera.position(), newScreenPoint.subtract(this.camera.position()));
+    }
+
+    /**
      * Render the scene to a file
      *
      * @param path path to file
@@ -301,9 +332,17 @@ public class Scene {
         for (int y = viewport.getImageHeight(); y >= 1; --y) {
             for (int x = 1; x <= viewport.getImageWidth(); ++x) {
 
-                // Find direction for current pixel
-                Vector3D direction = viewport.pixelToScreenPoint(x, y).subtract(this.camera.position());
-                Ray ray = new Ray(this.camera.position(), direction);
+                // Find direction and screen point for current pixel
+                Vector3D screenPoint = viewport.pixelToScreenPoint(x, y);
+                Vector3D direction = screenPoint.subtract(this.camera.position());
+                Ray ray ;
+
+                // If fisheye is enabled we need to correct the direction accordingly
+                if (this.camera.fisheye()) {
+                    ray = calculateFisheyeDirection(direction, screenPoint);
+                } else {
+                    ray = new Ray(this.camera.position(), direction);
+                }
                 Intersection intersection = IntersectRay(ray);
                 //TODO replace with ComputationalColor.getRGB()
                 img.setRGB(x - 1, viewport.getImageHeight() - y, getColor(intersection, ray).clipColor().toColor().getRGB());

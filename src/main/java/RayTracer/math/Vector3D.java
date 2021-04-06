@@ -83,6 +83,16 @@ public class Vector3D extends Vector {
         return otherVector.subtract(projOther);
     }
 
+    /**
+     * find the angle from firstVector to other vector
+     * 
+     * @param firstVector
+     * @param otherVector
+     * @return angle from first vector to otherVector
+     */
+    public static double findAngle(Vector3D firstVector, Vector3D otherVector) {
+        return Math.atan(firstVector.dotProduct(otherVector) / (firstVector.euclideanNorm() * otherVector.euclideanNorm()));
+    }
     @Override
     public Vector3D add(Vector otherVector) throws IllegalArgumentException {
         Vector result = super.add(otherVector);

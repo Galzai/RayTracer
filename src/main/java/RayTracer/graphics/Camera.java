@@ -64,11 +64,19 @@ public class Camera {
     }
 
     public double focalLength() {
-        return focalLength;
+        return this.focalLength;
     }
 
     public double screenWidth() {
-        return screenWidth;
+        return this.screenWidth;
+    }
+
+    public boolean fisheye() {
+        return this.fisheye;
+    }
+
+    public double fisheyeCoeff() {
+        return this.fisheyeCoeff;
     }
 
     void setViewport(Viewport viewport) {

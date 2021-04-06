@@ -63,4 +63,7 @@ public class Viewport {
         return this.imageWidth;
     }
 
+    public Vector3D getLowerLeftVec() {
+        return this.lowerLeftVec;
+    }
 }
