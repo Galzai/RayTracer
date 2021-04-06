@@ -108,7 +108,7 @@ public class Vector3D {
      * @return angle from first vector to otherVector
      */
     public static double findAngle(Vector3D firstVector, Vector3D otherVector) {
-        return Math.atan(firstVector.dotProduct(otherVector) / (firstVector.euclideanNorm() * otherVector.euclideanNorm()));
+        return Math.acos(firstVector.dotProduct(otherVector) / (firstVector.euclideanNorm() * otherVector.euclideanNorm()));
     }
 
     public double euclideanNorm() {

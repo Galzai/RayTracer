@@ -300,22 +300,22 @@ public class Scene {
         if ((this.camera.fisheyeCoeff() > 0.0) && (this.camera.fisheyeCoeff() <= 1.0)) {
             return fishEyefactor * Math.tan(factoredTheta);
         }
-        else if ((this.camera.fisheyeCoeff() > 0.0) && (this.camera.fisheyeCoeff() <= 1.0)) {
+        else if ((this.camera.fisheyeCoeff() >= -1.0) && (this.camera.fisheyeCoeff() < 0.0)) {
             return fishEyefactor * Math.sin(factoredTheta);
         } else {
             return theta * this.camera.focalLength();
         }
     }
-    private Ray calculateFisheyeDirection(Vector3D direction, Vector3D screenPoint) {
+    private Vector3D calculateFisheyeDirection(Vector3D direction, Vector3D screenPoint) {
 
         // get theta
-        double theta =  -1 * Vector3D.findAngle(camera.u(), direction);
+        double theta = Math.PI - Vector3D.findAngle(this.camera.behind(), direction);
         double rEffective = calculateEffectiveRadius(theta);
         // unit Vector from viewport origin to original pixel
-        Vector3D screenPointDirection = screenPoint.subtract(this.viewport.getLowerLeftVec()).normalize();
+        Vector3D screenPointDirection = screenPoint.subtract(this.viewport.getScreenCenter()).normalize();
         // new ray position on screen point
-        Vector3D newScreenPoint = this.viewport.getLowerLeftVec().add(screenPointDirection.scalarMult(rEffective));
-        return new Ray(this.camera.position(), newScreenPoint.subtract(this.camera.position()));
+        return this.viewport.getScreenCenter().add(screenPointDirection.scalarMult(rEffective));
+
     }
 
     /**
@@ -332,17 +332,31 @@ public class Scene {
 
                 // Find direction and screen point for current pixel
                 Vector3D screenPoint = viewport.pixelToScreenPoint(x, y);
-                Vector3D direction = screenPoint.subtract(this.camera.position());
-                Ray ray ;
-
-                // If fisheye is enabled we need to correct the direction accordingly
-                if (this.camera.fisheye()) {
-                    ray = calculateFisheyeDirection(direction, screenPoint);
-                } else {
-                    ray = new Ray(this.camera.position(), direction);
+                if(this.camera.fisheye()) 
+                {
+                    
                 }
+                Vector3D direction = screenPoint.subtract(this.camera.position());
+                Ray ray = new Ray(this.camera.position(), direction);
                 Intersection intersection = IntersectRay(ray);
-                img.setRGB(x - 1, viewport.getImageHeight() - y, getColor(intersection, ray).clipColor().getRGB());
+                // If fisheye is enabled we need to correct the direction accordingly
+                if (this.camera.fisheye()) { 
+                    Vector3D newPoint = calculateFisheyeDirection(direction, screenPoint);
+                    // int[] test = this.viewport.screenPointToPixel(screenPoint);
+                    int[] newPixels = this.viewport.screenPointToPixel(newPoint);
+                    // System.out.println(newPixels);
+                    try{
+                        img.setRGB(newPixels[0] , viewport.getImageHeight() - newPixels[1], getColor(intersection, ray).clipColor().getRGB());
+                    }
+                    catch(Exception ex){
+                        System.out.println("Pixel " + newPixels[0] + " " + newPixels[1]);
+                    }
+
+                } else {
+                    img.setRGB(x - 1, viewport.getImageHeight() - y, getColor(intersection, ray).clipColor().getRGB());
+                }
+
+                
             }
         }
         File f = new File(path);
