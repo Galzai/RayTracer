@@ -78,7 +78,7 @@ public class ComputationalColor {
     }
 
     /**
-     * TODO add getRGB() method instead
+     *
      * @return java.awt.Color object
      */
     public Color toColor() {
@@ -86,6 +86,20 @@ public class ComputationalColor {
         int[] rgb = getIntRepresentation();
         return new Color(rgb[0], rgb[1], rgb[2]);
     }
+
+    /**
+     *
+     * @return the int value of the color
+     */
+    public int getRGB() {
+        int [] intRgb = getIntRepresentation();
+        int r = (intRgb[0] << 16) & 0x00FF0000; //Shift red 16-bits and mask out other stuff
+        int g = (intRgb[1] << 8) & 0x0000FF00; //Shift Green 8-bits and mask out other stuff
+        int b = intRgb[2] & 0x000000FF; //Mask out anything not blue.
+        return 0xFF000000 | r | g | b; //0xFF000000 for 100% Alpha. Bitwise OR everything together.
+    }
+
+
 
     /** TODO inplace
      *

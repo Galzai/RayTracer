@@ -34,6 +34,7 @@ public class OrientedBox implements Surface {
         Vector3D co = center.subtract(ray.origin());
         double r, s, t0, t1;
 
+
         for (int i = 0; i < 3; i++) {
 
             r = this.axis[i].dotProduct(co);

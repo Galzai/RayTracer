@@ -1,7 +1,6 @@
 package RayTracer.graphics;
 
 import RayTracer.geometry.Surface;
-import RayTracer.math.Vector;
 import RayTracer.math.Vector3D;
 
 import javax.imageio.ImageIO;
@@ -173,7 +172,7 @@ public class Scene {
         return false;
     }
 
-    /** TODO remove
+    /**
      * Checks if there is a surface between an existing intersection and the light
      *
      * @param intersection
@@ -303,8 +302,7 @@ public class Scene {
                 Vector3D direction = viewport.pixelToScreenPoint(x, y).subtract(this.camera.position());
                 Ray ray = new Ray(this.camera.position(), direction);
                 Intersection intersection = IntersectRay(ray);
-                //TODO replace with ComputationalColor.getRGB()
-                img.setRGB(x - 1, viewport.getImageHeight() - y, getColor(intersection, ray).clipColor().toColor().getRGB());
+                img.setRGB(x - 1, viewport.getImageHeight() - y, getColor(intersection, ray).clipColor().getRGB());
             }
         }
         File f = new File(path);
