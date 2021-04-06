@@ -4,6 +4,9 @@ import RayTracer.geometry.Surface;
 import RayTracer.math.Vector3D;
 
 import javax.imageio.ImageIO;
+
+import org.w3c.dom.css.RGBColor;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -287,7 +290,6 @@ public class Scene {
         return this.shader.shade(intersection, ray, maxRecursionDepth);
     }
 
-
     /**
      * Calculats the effective theta of the fisheye lens
      * 
@@ -315,9 +317,13 @@ public class Scene {
      * @return ray after changing to effective radius
      */
     private Ray calculateFisheyeRay(Vector3D direction, Vector3D screenPoint) {
-
-        // get theta
+        // Get what angle is required to recieve the effective radius
         double theta = calculateEffectiveTheta(screenPoint.subtract(this.viewport.getScreenCenter()).euclideanNorm());
+        // We cant see behind or horizontal to the sensor
+        if ((theta >= Math.PI / 2) || (theta <= -1 * Math.PI / 2)) { 
+            return null;
+        }
+        // We need to get the new point in the same direction
         Vector3D screenPointDirection = screenPoint.subtract(this.viewport.getScreenCenter()).normalize();
         double rEffective = this.camera.focalLength() * Math.tan(theta);
         Vector3D newPoint = screenPointDirection.scalarMult(rEffective).add(this.viewport.getScreenCenter());
@@ -346,6 +352,10 @@ public class Scene {
                 // If fisheye is enabled we need to correct the direction accordingly
                 if (this.camera.fisheye()) { 
                     ray = calculateFisheyeRay(direction, screenPoint);
+                    if (ray == null) {
+                        img.setRGB(x - 1, viewport.getImageHeight() - y, ComputationalColor.BLACK.getRGB());
+                        continue;
+                    }
                 } else {
                     ray = new Ray(this.camera.position(), direction); 
                 }
