@@ -16,8 +16,8 @@ public class Viewport {
     Integer imageWidth;
     Integer imageHeight;
 
-    Vector3D u;
-    Vector3D v;
+    Vector3D right;
+    Vector3D up;
     Vector3D w;
 
     public Viewport(int imageWidth, int imageHeight, Camera camera) {
@@ -30,14 +30,18 @@ public class Viewport {
         // Pixel dimensions
         this.imageWidth = imageWidth;
         this.imageHeight = imageHeight;
-        this.u = camera.u();
-        this.v = camera.v();
-        this.w = camera.w();
+        this.right = camera.right();
+        this.up = camera.up();
 
         // This is where we start moving from the screen
-        this.lowerLeftVec = camera.position().subtract(camera.w().scalarMult(camera.focalLength()));  // forward to the center of the screen
-        this.lowerLeftVec = this.lowerLeftVec.subtract(camera.u().scalarMult(this.width / 2));  // left to the left bound of the screen
-        this.lowerLeftVec = this.lowerLeftVec.subtract(camera.v().scalarMult(this.height / 2));  // down to the lower bound of the screen
+        this.lowerLeftVec = camera.position().subtract(camera.behind().scalarMult(camera.focalLength()));  // forward to the center of the screen
+        this.lowerLeftVec = this.lowerLeftVec.subtract(camera.right().scalarMult(this.width / 2));  // left to the left bound of the screen
+        this.lowerLeftVec = this.lowerLeftVec.subtract(camera.up().scalarMult(this.height / 2));  // down to the lower bound of the screen
+
+        // scale according to the image dimensions:
+        this.right = this.right.scalarMult(width / imageWidth);
+        this.up = this.up.scalarMult(height / imageHeight);
+
 
         camera.setViewport(this);
     }
@@ -49,10 +53,9 @@ public class Viewport {
      * @param heightPixel height pixel
      * @return point on the screen corresponding to pixel
      */
-    public Vector3D pixelToScreenPoint(Integer widthPixel, Integer heightPixel) {
-        double widthRatio = widthPixel.doubleValue() / imageWidth;
-        double heightRatio = heightPixel.doubleValue() / imageHeight;
-        return this.lowerLeftVec.add(this.u.scalarMult(widthRatio * this.width)).add(this.v.scalarMult(heightRatio * this.height));
+    public Vector3D pixelToScreenPoint(int widthPixel, int heightPixel) {
+        // u and v already scaled
+        return this.lowerLeftVec.add(this.right.scalarMult(widthPixel)).add(this.up.scalarMult(heightPixel));
     }
 
     public Integer getImageWidth() {

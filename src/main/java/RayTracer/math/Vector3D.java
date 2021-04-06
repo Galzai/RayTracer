@@ -1,11 +1,10 @@
 package RayTracer.math;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
-public class Vector3D extends Vector {
-
-    static final int DIMENSION = 3;
+public class Vector3D {
+    private double first;
+    private double second;
+    private double third;
+    double norm;
 
     /**
      * construct a new 3D vector
@@ -14,8 +13,11 @@ public class Vector3D extends Vector {
      * @param second second member
      * @param third  third member
      */
-    public Vector3D(Double first, Double second, Double third) {
-        super(new ArrayList<Double>(Arrays.asList(first, second, third)));
+    public Vector3D(double first, double second, double third) {
+        this.first = first;
+        this.second = second;
+        this.third = third;
+        this.norm = calculateEuclideanNorm();
     }
 
     /**
@@ -26,7 +28,10 @@ public class Vector3D extends Vector {
      * @param third  third member
      */
     public Vector3D(int first, int second, int third) {
-        super(new ArrayList<Double>(Arrays.asList((double)first, (double)second, (double)third)));
+        this.first = first;
+        this.second = second;
+        this.third = third;
+        this.norm = calculateEuclideanNorm();
     }
 
     /**
@@ -35,10 +40,11 @@ public class Vector3D extends Vector {
      * @param otherVec other vector to create 3d vector from
      * @throws IllegalArgumentException
      */
-    private Vector3D(Vector otherVec) throws IllegalArgumentException {
-        super(otherVec.members);
-        if (otherVec.dimension() > 3)
-            throw new IllegalArgumentException("Vector must have 3 members");
+    private Vector3D(Vector3D otherVec) {
+        this.first = otherVec.first;
+        this.second = otherVec.second;
+        this.third = otherVec.third;
+        this.norm = otherVec.norm;
     }
 
     /**
@@ -48,12 +54,12 @@ public class Vector3D extends Vector {
      * @return cross product of vector and otherVector
      */
     public Vector3D crossProduct(Vector3D otherVector) {
-        // (a_2 * b_3 - a_3 * b_2)
-        Double x = ((this.members.get(1) * otherVector.members.get(2)) - (this.members.get(2) * otherVector.members.get(1)));
-        // -(a_1 * b_3 - a_3 * b_1)
-        Double y = (-1 * ((this.members.get(0) * otherVector.members.get(2)) - (this.members.get(2) * otherVector.members.get(0))));
-        // (a_1 * b_2 - a_2 * b_1)
-        Double z = ((this.members.get(0) * otherVector.members.get(1)) - (this.members.get(1) * otherVector.members.get(0)));
+        // a_2 * b_3 - a_3 * b_2
+        double x = this.second * otherVector.third - this.third * otherVector.second;
+        // a_3 * b_1 - a_1 * b_3)
+        double y = this.third * otherVector.first - this.first * otherVector.third;
+        // a_1 * b_2 - a_2 * b_1
+        double z = this.first * otherVector.second - this.second * otherVector.first;
         return new Vector3D(x, y, z);
     }
 
@@ -69,7 +75,19 @@ public class Vector3D extends Vector {
         return scalarMult(dotProduct(otherVector) / norm * norm);
     }
 
-    /** TODO delete function
+    public double getFirst() {
+        return first;
+    }
+
+    public double getSecond() {
+        return second;
+    }
+
+    public double getThird() {
+        return third;
+    }
+
+    /**
      * Returns component of othervector which is perpendicular to this
      *
      * @param otherVector
@@ -77,8 +95,7 @@ public class Vector3D extends Vector {
      */
     public Vector3D findPerpendicular(Vector3D otherVector) {
         // Find projection of b onto a
-        double norm = euclideanNorm();
-        Vector3D projOther = scalarMult(dotProduct(otherVector) / norm * norm);
+        Vector3D projOther = scalarMult(dotProduct(otherVector) / (this.norm * this.norm));
         // This is the component of b perpendicular to a
         return otherVector.subtract(projOther);
     }
@@ -93,32 +110,75 @@ public class Vector3D extends Vector {
     public static double findAngle(Vector3D firstVector, Vector3D otherVector) {
         return Math.atan(firstVector.dotProduct(otherVector) / (firstVector.euclideanNorm() * otherVector.euclideanNorm()));
     }
-    @Override
-    public Vector3D add(Vector otherVector) throws IllegalArgumentException {
-        Vector result = super.add(otherVector);
-        return new Vector3D(result);
+
+    public double euclideanNorm() {
+        return this.norm;
     }
 
-    @Override
-    public Vector3D componentMult(Vector otherVector) throws IllegalArgumentException {
-        Vector result = super.componentMult(otherVector);
-        return new Vector3D(result);
+    public Vector3D add(Vector3D otherVector) {
+        return new Vector3D(this.first + otherVector.first, this.second + otherVector.second, this.third + otherVector.third);
     }
 
-    @Override
-    public Vector3D subtract(Vector otherVector) throws IllegalArgumentException {
-        Vector result = super.subtract(otherVector);
-        return new Vector3D(result);
+    public Vector3D componentMult(Vector3D otherVector) {
+        return new Vector3D(this.first * otherVector.first, this.second * otherVector.second, this.third * otherVector.third);
     }
 
-    @Override
+    public Vector3D subtract(Vector3D otherVector) {
+        return new Vector3D(this.first - otherVector.first, this.second - otherVector.second, this.third - otherVector.third);
+    }
+
     public Vector3D normalize() {
-        return new Vector3D(super.normalize());
+        return new Vector3D(first / norm, second / norm, third / norm);
     }
 
-    @Override
-    public Vector3D scalarMult(Double scalar) {
-        return new Vector3D(super.scalarMult(scalar));
+    public Vector3D scalarMult(double scalar) {
+        return new Vector3D(this.first * scalar, this.second * scalar, this.third * scalar);
     }
+
+
+    /**
+     * Returns the dot product of this vector with another vector
+     *
+     * @param otherVector second vector
+     * @return dot product of this and second vector
+     * @throws IllegalArgumentException
+     */
+    public Double dotProduct(Vector3D otherVector) {
+        return this.first * otherVector.first + this.second * otherVector.second + this.third * otherVector.third;
+    }
+
+    /**
+     * @param other
+     * @return euclidean distance between this and other
+     */
+
+    public double calculateDistance(Vector3D other) {
+        double distance = Math.pow(this.first - other.first, 2) + Math.pow(this.second - other.second, 2) + Math.pow(this.third - other.third, 2);
+        return Math.sqrt(distance);
+    }
+
+    public double get(int index) {
+        if (index < 0 || index > 2) {
+            throw new IllegalArgumentException("index should be between 0 to 2!");
+        }
+        if (index == 0) {
+            return this.first;
+        } else if (index == 1) {
+            return this.second;
+        }
+        return this.third;
+    }
+
+
+    /**
+     * Calculates the euclidean norm of the vector and returns it
+     *
+     * @return the norm of the vector
+     */
+    private double calculateEuclideanNorm() {
+        double norm = first * first + second * second + third * third;
+        return Math.sqrt(norm);
+    }
+
 }
     

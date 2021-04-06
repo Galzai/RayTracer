@@ -1,14 +1,13 @@
 package RayTracer.graphics;
 
 import RayTracer.math.Vector3D;
-import com.sun.prism.image.ViewPort;
 
 public class Camera {
 
     // Camera direction vectors
-    private Vector3D v; // up direction
-    private Vector3D u; // right direction
-    private Vector3D w; // facing the opposite direction of "towards" vector
+    private Vector3D up; // up direction
+    private Vector3D right; // right direction
+    private Vector3D behind; // facing the opposite direction of "towards" vector
     private Vector3D position;
     private double focalLength;
     // Other members
@@ -30,9 +29,9 @@ public class Camera {
      */
     public Camera(Vector3D position, Vector3D lookAtPoint, Vector3D up, double focalLength, double screenWidth, boolean fisheye, double fisheyeCoeff) {
         this.position = position;
-        this.w = position.subtract(lookAtPoint).normalize();
-        this.u = this.w.crossProduct(up).normalize();
-        this.v = this.u.crossProduct(this.w).normalize();
+        this.behind = position.subtract(lookAtPoint).normalize();
+        this.right = this.behind.crossProduct(up).normalize();
+        this.up = this.right.crossProduct(this.behind).normalize();
         this.focalLength = focalLength;
         this.fisheye = fisheye;
         this.fisheyeCoeff = fisheyeCoeff;
@@ -47,16 +46,16 @@ public class Camera {
         this(position, lookAtPoint, up, focalLength, screenWidth, false, 0.5);
     }
 
-    public Vector3D v() {
-        return this.v;
+    public Vector3D up() {
+        return this.up;
     }
 
-    public Vector3D u() {
-        return this.u;
+    public Vector3D right() {
+        return this.right;
     }
 
-    public Vector3D w() {
-        return this.w;
+    public Vector3D behind() {
+        return this.behind;
     }
 
     public Vector3D position() {

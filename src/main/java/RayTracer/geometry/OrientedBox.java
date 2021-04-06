@@ -18,9 +18,9 @@ public class OrientedBox implements Surface {
         this.center = center;
         this.halfScales = scales.scalarMult(0.5);
         this.material = material;
-        Matrix3D xRotation = Matrix3D.createXRotationMatrix(rotations.get(0));
-        Matrix3D yRotation = Matrix3D.createYRotationMatrix(rotations.get(1));
-        Matrix3D zRotation = Matrix3D.createZRotationMatrix(rotations.get(2));
+        Matrix3D xRotation = Matrix3D.createXRotationMatrix(rotations.getFirst());
+        Matrix3D yRotation = Matrix3D.createYRotationMatrix(rotations.getSecond());
+        Matrix3D zRotation = Matrix3D.createZRotationMatrix(rotations.getThird());
         this.axis = new Vector3D[3];
         this.axis[0] = zRotation.vecMult(yRotation.vecMult(Matrix3D.xAxis));
         this.axis[1] = zRotation.vecMult(yRotation.vecMult(xRotation.vecMult(Matrix3D.yAxis)));
@@ -33,6 +33,7 @@ public class OrientedBox implements Surface {
         double tFar = Double.POSITIVE_INFINITY;
         Vector3D co = center.subtract(ray.origin());
         double r, s, t0, t1;
+
 
         for (int i = 0; i < 3; i++) {
 

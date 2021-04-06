@@ -3,6 +3,7 @@ package RayTracer.graphics;
 import RayTracer.math.Vector3D;
 
 import java.awt.*;
+import java.util.Objects;
 
 /**
  * represent RGB color
@@ -12,6 +13,7 @@ import java.awt.*;
 public class ComputationalColor {
     private Vector3D rgb;
     public static final double RGB_MAX = 255;
+    public static final ComputationalColor BLACK = new ComputationalColor(0,0,0);
 
     public ComputationalColor(double red, double green, double blue) {
         this.rgb = new Vector3D(red, green, blue);
@@ -30,7 +32,7 @@ public class ComputationalColor {
     }
 
     public ComputationalColor(Vector3D rgb) {
-        this.rgb = new Vector3D(rgb.get(0), rgb.get(1), rgb.get(2));
+        this.rgb = new Vector3D(rgb.getFirst(), rgb.getSecond(), rgb.getThird());
     }
 
     /**
@@ -40,30 +42,30 @@ public class ComputationalColor {
     public ComputationalColor(Color color) {
         this(color.getRed(), color.getGreen(), color.getBlue());
     }
-//TODO there is a problem with null pointer exception - probably because of destruction of the inner vector. fix it!
     public double getRed() {
-        return this.rgb.get(0);
+        return this.rgb.getFirst();
     }
 
     public double getGreen() {
-        return this.rgb.get(1);
+        return this.rgb.getSecond();
     }
 
     public double getBlue() {
-        return this.rgb.get(2);
+        return this.rgb.getThird();
     }
 
     /**
      * @return array of int representing the color's values in integer format ( 0 <= r,g,b <= 255)
      */
     public int[] getIntRepresentation() {
-        int r = (int) Math.round(this.rgb.get(0) * RGB_MAX);
-        int g = (int) Math.round(this.rgb.get(1) * RGB_MAX);
-        int b = (int) Math.round(this.rgb.get(2) * RGB_MAX);
+        int r = (int) Math.round(this.rgb.getFirst() * RGB_MAX);
+        int g = (int) Math.round(this.rgb.getSecond() * RGB_MAX);
+        int b = (int) Math.round(this.rgb.getThird() * RGB_MAX);
         return new int[]{r, g, b};
     }
 
     /**
+     *TODO inplace!
      *
      * @param scaleFactor the scale factor of the output color
      * @return ComputationalColor with scaled rgb values
@@ -76,7 +78,7 @@ public class ComputationalColor {
     }
 
     /**
-     * TODO add getRGB() method instead
+     *
      * @return java.awt.Color object
      */
     public Color toColor() {
@@ -86,6 +88,21 @@ public class ComputationalColor {
     }
 
     /**
+     *
+     * @return the int value of the color
+     */
+    public int getRGB() {
+        int [] intRgb = getIntRepresentation();
+        int r = (intRgb[0] << 16) & 0x00FF0000; //Shift red 16-bits and mask out other stuff
+        int g = (intRgb[1] << 8) & 0x0000FF00; //Shift Green 8-bits and mask out other stuff
+        int b = intRgb[2] & 0x000000FF; //Mask out anything not blue.
+        return 0xFF000000 | r | g | b; //0xFF000000 for 100% Alpha. Bitwise OR everything together.
+    }
+
+
+
+    /** TODO inplace
+     *
      * Clips colors values to be a floating point number between 0 and 1
      */
     public ComputationalColor clipColor() {
@@ -110,11 +127,22 @@ public class ComputationalColor {
         return new ComputationalColor(rgb.add(otherColor.rgb));
     }
 
-     /**
+     /**TODO inplace
+      *
      *  Multiplies color by scale
      * @return
      */
     public ComputationalColor scale(Double scale) {
         return new ComputationalColor(rgb.scalarMult(scale));
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ComputationalColor that = (ComputationalColor) o;
+        return rgb.getFirst() == that.rgb.getFirst() && rgb.getSecond() == that.rgb.getSecond() && rgb.getThird() == that.rgb.getThird();
+    }
+
+
 }

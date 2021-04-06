@@ -70,7 +70,7 @@ public class PhongShader {
     }
 
         /**
-     * Calculates the results of light contibuton to surface shading
+     * Calculates the results of light contribution to surface shading
      *
      * @param intersection intersection results
      * @param ray          light the found the intersection
@@ -80,8 +80,8 @@ public class PhongShader {
         // 2 * ( V dot N) * N
         Vector3D reflectionNormal = intersection.getNormal().scalarMult(2.0 * ray.direction().dotProduct(intersection.getNormal()));
         // R = V - -2 * ( V dot N) * N
-        Vector3D reflectionDirection = ray.direction().subtract(reflectionNormal);
-        Ray reflectionRay = new Ray(intersection.getIntersectionPoint(), reflectionDirection.normalize());
+        Vector3D reflectionDirection = ray.direction().subtract(reflectionNormal).normalize();
+        Ray reflectionRay = new Ray(intersection.getIntersectionPoint(), reflectionDirection);
         reflectionRay = reflectionRay.moveOriginByEpsilon();
         Intersection nextIntersection = scene.intersectRayWithoutSurface(reflectionRay, intersection.getSurface());
         return shade(nextIntersection, reflectionRay, recursionDepth - 1);
@@ -101,16 +101,18 @@ public class PhongShader {
         if (recursionDepth <= 0) {
             return new ComputationalColor(0.0, 0.0, 0.0);
         }
-        Double transparency = intersection.getSurface().getMaterial().getTransparency();
-        ComputationalColor diffuseSpecular = shadeDiffuseSpecular(intersection, ray).scale(1.0 - transparency);  
+        Material material = intersection.getSurface().getMaterial();
+        Double transparency = material.getTransparency();
+        ComputationalColor result = shadeDiffuseSpecular(intersection, ray).scale(1.0 - transparency);
         // Reflection addition
-        ComputationalColor reflection = shadeReflection(intersection, ray, recursionDepth).mult(intersection.getSurface().getMaterial().getReflectionColor());
-        // Find background intersection
-        Ray newRay = new Ray(intersection.getIntersectionPoint(), ray.direction());
-        newRay = newRay.moveOriginByEpsilon();
-        ComputationalColor result = diffuseSpecular.add(reflection);
+        if (material.getReflectionColor() != ComputationalColor.BLACK) {  // only if material is reflective
+            ComputationalColor reflection = shadeReflection(intersection, ray, recursionDepth).mult(material.getReflectionColor());
+            result = result.add(reflection);
+        }
         // transparency addition
         if (transparency > 0) { // only if surface is transparent
+            Ray newRay = new Ray(intersection.getIntersectionPoint(), ray.direction());
+            newRay = newRay.moveOriginByEpsilon();
             Intersection nextIntersection = scene.intersectRayWithoutSurface(newRay, intersection.getSurface());
             ComputationalColor transparentColor = shade(nextIntersection, newRay, recursionDepth).scale(transparency);
             result = result.add(transparentColor);

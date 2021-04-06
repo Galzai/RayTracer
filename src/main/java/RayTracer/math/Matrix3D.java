@@ -27,11 +27,11 @@ public class Matrix3D {
      */
     public Vector3D vecMult(Vector3D vector) {
         Double first =
-                matrixInner[0][0] * vector.get(0) + matrixInner[0][1] * vector.get(1) + matrixInner[0][2] * vector.get(2);
+                matrixInner[0][0] * vector.getFirst() + matrixInner[0][1] * vector.getSecond() + matrixInner[0][2] * vector.getThird();
         Double second =
-                matrixInner[1][0] * vector.get(0) + matrixInner[1][1] * vector.get(1) + matrixInner[1][2] * vector.get(2);
+                matrixInner[1][0] * vector.getFirst() + matrixInner[1][1] * vector.getSecond() + matrixInner[1][2] * vector.getThird();
         Double third =
-                matrixInner[2][0] * vector.get(0) + matrixInner[2][1] * vector.get(1) + matrixInner[2][2] * vector.get(2);
+                matrixInner[2][0] * vector.getFirst() + matrixInner[2][1] * vector.getSecond() + matrixInner[2][2] * vector.getThird();
 
         return new Vector3D(first, second, third);
     }
@@ -46,17 +46,17 @@ public class Matrix3D {
      */
     public static Matrix3D createTransformationMatrix(Vector3D u, Vector3D v, Vector3D w) {
         Double[][] matrix = new Double[3][3];
-        matrix[0][0] = u.get(0);
-        matrix[0][1] = v.get(0);
-        matrix[0][2] = w.get(0);
+        matrix[0][0] = u.getFirst();
+        matrix[0][1] = v.getFirst();
+        matrix[0][2] = w.getFirst();
 
-        matrix[1][0] = u.get(1);
-        matrix[1][1] = v.get(1);
-        matrix[1][2] = w.get(1);
+        matrix[1][0] = u.getSecond();
+        matrix[1][1] = v.getSecond();
+        matrix[1][2] = w.getSecond();
 
-        matrix[2][0] = u.get(2);
-        matrix[2][1] = v.get(2);
-        matrix[2][2] = w.get(2);
+        matrix[2][0] = u.getThird();
+        matrix[2][1] = v.getThird();
+        matrix[2][2] = w.getThird();
 
         return new Matrix3D(matrix);
     }
