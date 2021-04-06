@@ -1,10 +1,7 @@
 package RayTracer.geometry;
 
 import RayTracer.TestUtils;
-import RayTracer.graphics.Camera;
-import RayTracer.graphics.Intersection;
-import RayTracer.graphics.Ray;
-import RayTracer.graphics.Viewport;
+import RayTracer.graphics.*;
 import RayTracer.math.Vector;
 import RayTracer.math.Vector3D;
 import org.junit.jupiter.api.Test;
@@ -153,5 +150,40 @@ public class SphereTest {
         File f = new File(TestUtils.OUTPUT_PATH + "pool.png");
         ImageIO.write(img, "png", f);
     }
+
+
+//    @Test
+//    public void insideSphereTest() throws IOException {
+//        int imageWidth = 400;
+//        int imageHeight = 225;
+//        double screenWidth = 10;
+//        Vector3D origin = new Vector3D(0,0,0);
+//        Vector3D lookAt = new Vector3D(1,0,5);
+//        Vector3D up = new Vector3D(0,1,0);
+//        Camera camera = new Camera(origin, lookAt, up, 4, screenWidth);
+//        Viewport viewport = new Viewport(imageWidth, imageHeight, camera);
+//
+//
+//        ComputationalColor dpinkColor =  new ComputationalColor(255,20,147);
+//        ComputationalColor spinkColor =  new ComputationalColor(0.5, 0.5, 0.5);;
+//        Material pinkMaterial = new Material(dpinkColor, spinkColor, null, 30.0, 0.5);
+//
+//
+//        AxisAlignedBox box = new AxisAlignedBox(new Vector3D(0,0,0), new Vector3D(5,5,5), pinkMaterial);
+//        Sphere sphere = new Sphere(new Vector3D(0,    0, 0), 5, pinkMaterial);
+//
+//
+//        Vector3D lightPosition1 = new Vector3D(0, 0, 0);
+//        ComputationalColor lightColor = new ComputationalColor(255,192,203);
+//        Light light = new Light(lightPosition1, lightColor, 1.0, 1, 1.0);
+//
+//
+//        ComputationalColor backgroundColor = new ComputationalColor(0.47, 0.27, 0.95);
+//        Scene scene = new Scene((camera), viewport, backgroundColor);
+//        scene.addLight(light);
+//        scene.addSurface(sphere);
+//
+//        scene.renderScene(TestUtils.OUTPUT_PATH + "insideObject.png");
+//    }
 
 }

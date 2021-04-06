@@ -1,7 +1,6 @@
 package RayTracer.graphics;
 
 import RayTracer.TestUtils;
-import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -17,8 +16,8 @@ public class ParserTest {
         assertEquals(scene.getSurfaces().size(), 7);
         assertEquals(scene.getLights().size(), 5);
         scene.renderScene(TestUtils.OUTPUT_PATH + "pool.png");
-
     }
+
     @Test
     public void parseSphereSceneTest() throws IOException {
         SceneParser parser = new SceneParser();
@@ -40,6 +39,24 @@ public class ParserTest {
         SceneParser parser = new SceneParser();
         Scene scene = parser.parseScene(TestUtils.SCENES_PATH + "Room1.txt", 500, 500);
         scene.renderScene(TestUtils.OUTPUT_PATH + "Room1.png");
+
+    }
+
+
+    @Test
+    public void parseMirrorSceneTest() throws IOException {
+        SceneParser parser = new SceneParser();
+        Scene scene = parser.parseScene(TestUtils.SCENES_PATH + "Mirror.txt", 500, 500);
+        scene.renderScene(TestUtils.OUTPUT_PATH + "Mirror.png");
+
+    }
+
+
+    @Test
+    public void parseBoxSceneTest() throws IOException {
+        SceneParser parser = new SceneParser();
+        Scene scene = parser.parseScene(TestUtils.SCENES_PATH + "Box.txt", 500, 500);
+        scene.renderScene(TestUtils.OUTPUT_PATH + "Box.png");
 
     }
 }
