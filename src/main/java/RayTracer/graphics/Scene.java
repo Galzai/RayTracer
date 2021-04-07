@@ -256,10 +256,10 @@ public class Scene {
      */
 
     private List<Vector3D> getLightPoints(Ray ray, Light light) {
-        Random random = new Random(); // TODO replace with non random method
+        Random random = new Random();
         double unit = light.getRadius() / this.shadowRaysRoot;
-        Vector3D randomVector = new Vector3D(random.nextDouble(), random.nextDouble(), random.nextDouble());
-        Vector3D right = ray.direction().findPerpendicular(randomVector).normalize();
+        Vector3D nonParallelVec = ray.direction().generateNonParallel();
+        Vector3D right = ray.direction().findPerpendicular(nonParallelVec).normalize();
         Vector3D up = right.crossProduct(ray.direction()).normalize();
         // go left and down to the bottom left corner:
         Vector3D lowerLeftVec = light.getPosition().subtract(right.scalarMult(light.getRadius() / 2)).subtract(up.scalarMult(light.getRadius() / 2));

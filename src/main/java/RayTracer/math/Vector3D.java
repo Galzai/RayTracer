@@ -169,7 +169,6 @@ public class Vector3D {
         return this.third;
     }
 
-
     /**
      * Calculates the euclidean norm of the vector and returns it
      *
@@ -178,6 +177,31 @@ public class Vector3D {
     private double calculateEuclideanNorm() {
         double norm = first * first + second * second + third * third;
         return Math.sqrt(norm);
+    }
+
+    /**
+     * Generates a vector which isn't parallel to this vector
+     * If the norm is 0, no non parallel vector exists
+     * If any of the members of the normalized vector is 1 , the vector is from standard base
+     * Any other case we can just shift one the coordinates
+     * 
+     * @return
+     */
+    public Vector3D generateNonParallel() {
+        if (this.norm == 0) {
+            return this;
+        }
+        Vector3D normalizedVec = this.normalize();
+        if (normalizedVec.first == 1.0) {
+            return new Vector3D(this.first, this.second + 1.0, this.third);
+        }
+        if (normalizedVec.second == 1.0) {
+            return new Vector3D(this.first + 1.0, this.second, this.third);
+        }
+        if (normalizedVec.third == 1.0) {
+            return new Vector3D(this.first, this.second + 1.0, this.third);
+        }
+        return new Vector3D(this.first, this.second + 1.0, this.third);
     }
 
 }
