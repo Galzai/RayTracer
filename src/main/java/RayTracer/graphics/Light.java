@@ -1,6 +1,5 @@
 package RayTracer.graphics;
 
-import RayTracer.math.Vector;
 import RayTracer.math.Vector3D;
 
 public class Light {

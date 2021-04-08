@@ -1,9 +1,6 @@
 package RayTracer.graphics;
 
-import RayTracer.geometry.Surface;
-import  RayTracer.math.Vector3D;
-
-import java.util.Optional;
+import RayTracer.math.Vector3D;
 
 /**
  * Rays from origin in direction of direction
@@ -20,7 +17,7 @@ public class Ray {
      * @param direction direction vector (not necessarily normalized!)
      */
     //TODO handle direction = (0,0,0) case
-    public Ray(Vector3D origin, Vector3D  direction){
+    public Ray(Vector3D origin, Vector3D direction){
         this.origin = origin;
         this.direction = direction.normalize();
     }

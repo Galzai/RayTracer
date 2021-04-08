@@ -3,11 +3,7 @@ package RayTracer.geometry;
 import RayTracer.graphics.Intersection;
 import RayTracer.graphics.Material;
 import RayTracer.graphics.Ray;
-import RayTracer.math.Vector;
 import RayTracer.math.Vector3D;
-
-import java.util.List;
-import java.util.Optional;
 
 public class Sphere implements Surface {
     private Vector3D center;

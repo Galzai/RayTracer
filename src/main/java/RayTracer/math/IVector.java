@@ -1,5 +1,8 @@
 package RayTracer.math;
 
+//TODO delete class!
+
+
 /**
  * Represents a mathematical vector with T dimensions
  */

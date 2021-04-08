@@ -5,6 +5,8 @@ import java.util.ArrayList;
 /**
  * A vector of type double
  */
+
+//TODO delete class!
 public class Vector implements IVector<Double> {
 
     protected ArrayList<Double> members;

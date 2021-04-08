@@ -5,8 +5,6 @@ import RayTracer.math.Vector3D;
 
 import javax.imageio.ImageIO;
 
-import org.w3c.dom.css.RGBColor;
-
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +23,6 @@ public class Scene {
     public List<Surface> surfaces;
     private double shadowRaysRoot;
     private int maxRecursionDepth;
-
 
     /**
      * Construct a scene object with pre-populated arrays
@@ -336,12 +333,9 @@ public class Scene {
     /**
      * Render the scene to a file
      *
-     * @param path path to file
      */
-    public void renderScene(String path) throws IOException {
-
+    public BufferedImage renderScene() {
         BufferedImage img = new BufferedImage(viewport.getImageWidth(), viewport.getImageHeight(), BufferedImage.TYPE_INT_ARGB);
-
         for (int y = viewport.getImageHeight(); y >= 1; --y) {
             for (int x = 1; x <= viewport.getImageWidth(); ++x) {
 
@@ -361,11 +355,8 @@ public class Scene {
                 }
                 Intersection intersection = IntersectRay(ray);
                 img.setRGB(x - 1, viewport.getImageHeight() - y, getColor(intersection, ray).clipColor().getRGB());
-
-                
             }
         }
-        File f = new File(path);
-        ImageIO.write(img, "png", f);
+        return img;
     }
 }

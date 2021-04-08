@@ -7,8 +7,6 @@ import RayTracer.math.MathUtils;
 import RayTracer.math.Matrix3D;
 import RayTracer.math.Vector3D;
 
-import java.util.HashMap;
-
 
 public class AxisAlignedBox implements Surface {
     private Vector3D center;

@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+
+//TODO delete class!
 public class SceneParser {
     String[] currentLine = null;
 

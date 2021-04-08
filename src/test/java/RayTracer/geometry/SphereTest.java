@@ -2,18 +2,14 @@ package RayTracer.geometry;
 
 import RayTracer.TestUtils;
 import RayTracer.graphics.*;
-import RayTracer.math.Vector;
 import RayTracer.math.Vector3D;
 import org.junit.jupiter.api.Test;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
