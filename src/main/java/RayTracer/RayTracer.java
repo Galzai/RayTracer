@@ -1,3 +1,5 @@
+package RayTracer;
+
 import RayTracer.geometry.AxisAlignedBox;
 import RayTracer.geometry.Plane;
 import RayTracer.geometry.Sphere;
@@ -21,17 +23,14 @@ public class RayTracer {
 
     private int imageWidth;
 	private int imageHeight;
-	private SceneParser parser;
 
     public RayTracer() {
-		this.parser = new SceneParser();
 		// Default values:
 		this.imageWidth = 500;
 		this.imageHeight = 500;
 	}
 
 	public RayTracer(int imageWidth, int imageHeight ) {
-		this.parser = new SceneParser();
 		this.imageWidth = imageWidth;
 		this.imageHeight = imageHeight;
 	}
@@ -162,7 +161,7 @@ public class RayTracer {
     }
 
 
-    public static void saveImage(BufferedImage image, String fileName) {
+    public void saveImage(BufferedImage image, String fileName) {
         try {
             ImageIO.write(image, "png", new File(fileName));
 

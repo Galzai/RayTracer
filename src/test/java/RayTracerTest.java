@@ -1,3 +1,4 @@
+import RayTracer.RayTracer;
 import RayTracer.graphics.Scene;
 import org.junit.jupiter.api.Test;
 import RayTracer.TestUtils;
