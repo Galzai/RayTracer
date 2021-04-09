@@ -18,16 +18,33 @@ public class PhongShader {
      * @return true if light is shaded
      */
     private boolean isShadowed(Intersection intersection, Light light) {
-
         // We cast a ray from the point to the light, if it intersects with anything that  means
         // that the point is shaded
         return scene.intersectionIsShadowed(intersection, light); // some object in between blocks the light
     }
 
-    private double calcSoftShadowsPercentage(Intersection intersection, Light light) {
-
+    /**
+     * Calculates the percentage of light rays coming from the light source that hit the intersection.
+     * @param intersection
+     * @param light light source
+     * @return Percentage of light rays coming from the light source that hit the intersection
+     */
+    private double calcLightPercentage(Intersection intersection, Light light) {
         // We cast a multiple rays from the point to the light's area and compute the shadow rays percentage
         return scene.calcLightPercentage(intersection, light); // some object in between blocks the light
+    }
+
+    /**
+     * calculates the intensity of the lights that is casted upon the intersection, with soft shadows computations and
+     * shadow intensity adjustments regarding to transparent objects.
+     * * @param intersection
+     * @param light
+     * @return
+     */
+    private double calcLightIntensity(Intersection intersection, Light light) {
+        // We cast a ray from the point to the light and calculate the light intensity according to the surfaces in the way
+        // and their transparency coefficients
+        return scene.calcLightIntensity(intersection, light); // some object in between blocks the light
     }
 
     /**
@@ -46,8 +63,7 @@ public class PhongShader {
             double shadowIntensity = light.getShadowIntensity();
             double lightIntensity = 1;
             if (shadowIntensity != 0) {  // if shadowIntensity == 0 there is no effect on the shadows anyway
-                double shadowPercentage = calcSoftShadowsPercentage(intersection, light);
-                lightIntensity = 1 - shadowIntensity + shadowIntensity * shadowPercentage;
+                lightIntensity = 1 - shadowIntensity + shadowIntensity * calcLightIntensity(intersection, light);
             }
 
             Vector3D lightDirection = light.getPosition().subtract(intersection.getIntersectionPoint()).normalize();
