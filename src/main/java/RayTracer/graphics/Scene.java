@@ -19,6 +19,9 @@ public class Scene {
     public List<Surface> surfaces;
     private double shadowRaysRoot;
     private int maxRecursionDepth;
+    private boolean ambientEnabled = false;
+
+    private ComputationalColor ambientLightIntensity;
 
     /**
      * Construct a scene object with pre-populated arrays
@@ -28,9 +31,10 @@ public class Scene {
      * @param backgroundColor
      * @param lights
      * @param surfaces
+     * @param ambientEnabled
      */
     public Scene(Camera camera, Viewport viewport, ComputationalColor backgroundColor,
-                 List<Light> lights, List<Surface> surfaces, double shadowRaysRoot, int maxRecursionDepth) {
+                 List<Light> lights, List<Surface> surfaces, double shadowRaysRoot, int maxRecursionDepth, boolean ambientEnabled) {
 
         this.camera = camera;
         this.viewport = viewport;
@@ -40,6 +44,13 @@ public class Scene {
         this.shader = new PhongShader(this);
         this.shadowRaysRoot = shadowRaysRoot;
         this.maxRecursionDepth = maxRecursionDepth;
+        if (!ambientEnabled || (lights.size() == 0)) {
+            this.ambientLightIntensity = ComputationalColor.BLACK;
+        } else {
+            this.ambientLightIntensity = estimateAmbientIntensity();
+            this.ambientEnabled = true;
+        }
+
     }
 
     public Camera getCamera() {
@@ -72,7 +83,7 @@ public class Scene {
      * @param maxRecursionDepth
      */
     public Scene(Camera camera, Viewport viewport, ComputationalColor backgroundColor, double shadowRaysRoot, int maxRecursionDepth) {
-        this(camera, viewport, backgroundColor, new ArrayList<Light>(), new ArrayList<Surface>(), shadowRaysRoot, maxRecursionDepth);
+        this(camera, viewport, backgroundColor, new ArrayList<Light>(), new ArrayList<Surface>(), shadowRaysRoot, maxRecursionDepth, false);
     }
 
     /**
@@ -83,7 +94,7 @@ public class Scene {
      * @param backgroundColor
      */
     public Scene(Camera camera, Viewport viewport, ComputationalColor backgroundColor) {
-        this(camera, viewport, backgroundColor, new ArrayList<Light>(), new ArrayList<Surface>(), 0, 0);
+        this(camera, viewport, backgroundColor, new ArrayList<Light>(), new ArrayList<Surface>(), 0, 0, false);
     }
 
     /**
@@ -104,6 +115,13 @@ public class Scene {
         this.surfaces.add(surface);
     }
 
+    public ComputationalColor getAmbientLightIntensity() {
+        return this.ambientLightIntensity;
+    }
+
+    public boolean isAmbientEnabled() {
+        return this.ambientEnabled;
+    }
     /**
      * Finds the closest surface that intersects with the ray and its intersection
      *
@@ -366,6 +384,19 @@ public class Scene {
         Ray ray = new Ray(this.camera.position(), newDirection);
         // new ray position on screen point
         return ray;
+    }
+
+    /**
+     * Return the ambient light intensity as the average of all the colors in the scenes
+     * Each color per light gets intensified in relation to its shadow intensity
+     * @return
+     */
+    private ComputationalColor estimateAmbientIntensity() {
+        ComputationalColor ambientLightIntensity = ComputationalColor.BLACK;
+        for (Light light : this.lights) {
+            ambientLightIntensity = ambientLightIntensity.add(light.getColor());
+        }
+        return ambientLightIntensity.scale(1.0 / lights.size());    
     }
 
     /**

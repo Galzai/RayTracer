@@ -73,4 +73,13 @@ public class RayTracerTest {
         tracer.renderScene(scene,TestUtils.OUTPUT_PATH + "Box2.png");
 
     }
+    @Test
+    public void parseAmbientPoolSceneTest() throws IOException, RayTracer.RayTracerException {
+        RayTracer tracer = new RayTracer();
+        Scene scene = tracer.parseScene(TestUtils.SCENES_PATH + "PoolAmbient.txt");
+        assertEquals(scene.getLights().size(), 5);
+        assertEquals(scene.getSurfaces().size(), 7);
+        assertEquals(scene.getLights().size(), 5);
+        tracer.renderScene(scene, TestUtils.OUTPUT_PATH + "PoolAmbient.png");
+    }
 }
