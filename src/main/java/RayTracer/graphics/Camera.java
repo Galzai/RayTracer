@@ -37,7 +37,7 @@ public class Camera {
         this.screenWidth = screenWidth;
     }
 
-    public Camera(Vector3D position, Vector3D lookAtPoint, Vector3D up, double screenWidth, double focalLength, boolean fisheye) {
+    public Camera(Vector3D position, Vector3D lookAtPoint, Vector3D up, double focalLength, double screenWidth,  boolean fisheye) {
         this(position, lookAtPoint, up, focalLength, screenWidth, fisheye, 0.5);
     }
 
