@@ -1,27 +1,29 @@
 package RayTracer.graphics;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-import RayTracer.TestUtils;
 import RayTracer.geometry.AxisAlignedBox;
 import RayTracer.geometry.OrientedBox;
 import RayTracer.geometry.Plane;
 import org.junit.jupiter.api.Test;
-
 import RayTracer.geometry.Sphere;
 import RayTracer.math.Vector3D;
+import RayTracer.RayTracer;
+import RayTracer.TestUtils;
+
+
 public class SceneTest {
 
     @Test
-    public void basicSceneTest() throws IOException{
+    public void basicSceneTest() throws IOException {
         int imageWidth = 400;
         int imageHeight = 225;
         double screenWidth = 10;
-        Vector3D origin = new Vector3D(0,10,0);
-        Vector3D lookAt = new Vector3D(0,-100,0);
-        Vector3D up = new Vector3D(0,0,-1);
+        Vector3D origin = new Vector3D(0, 10, 0);
+        Vector3D lookAt = new Vector3D(0, -100, 0);
+        Vector3D up = new Vector3D(0, 0, -1);
         Camera camera = new Camera(origin, lookAt, up, 5, screenWidth);
         Viewport viewport = new Viewport(imageWidth, imageHeight, camera);
 
@@ -36,9 +38,9 @@ public class SceneTest {
         ComputationalColor sWhiteColor = new ComputationalColor(0.5, 0.5, 0.5);
         Material whiteMaterial = new Material(dWhiteColor, sWhiteColor, null, 30.0, 0.0);
 
-        Sphere yellow = new Sphere(new Vector3D(0.0,    0.0, -4.0), 1, yellowMaterial);
-        Sphere black = new Sphere(new Vector3D(1.0,    0.0, -2.0), 1, BlackMaterial);
-        Sphere white = new Sphere(new Vector3D(-1.0,    0.0, -2.0), 1, whiteMaterial);
+        Sphere yellow = new Sphere(new Vector3D(0.0, 0.0, -4.0), 1, yellowMaterial);
+        Sphere black = new Sphere(new Vector3D(1.0, 0.0, -2.0), 1, BlackMaterial);
+        Sphere white = new Sphere(new Vector3D(-1.0, 0.0, -2.0), 1, whiteMaterial);
 
         Vector3D lightPosition1 = new Vector3D(0.0, 3.0, 0.0);
         ComputationalColor lightColor = new ComputationalColor(0.5, 0.5, 0.3);
@@ -55,9 +57,12 @@ public class SceneTest {
         scene.addSurface(yellow);
         scene.addSurface(black);
         scene.addSurface(white);
-        scene.renderScene(TestUtils.OUTPUT_PATH + "pooltest.png");
-
+        BufferedImage image = scene.renderScene();
+        RayTracer tracer = new RayTracer(400, 225);
+        tracer.saveImage(image, TestUtils.OUTPUT_PATH + "basicScene.png");
     }
+
+
 
 
     @Test
@@ -104,9 +109,9 @@ public class SceneTest {
         scene.addLight(light2);
         scene.addSurface(box);
         scene.addSurface(sphere);
-
-        scene.renderScene(TestUtils.OUTPUT_PATH + "box.png");
-
+        BufferedImage img = scene.renderScene();
+        RayTracer tracer = new RayTracer(imageWidth, imageHeight);
+        tracer.saveImage(img, TestUtils.OUTPUT_PATH + "box.png");
     }
 
 
@@ -170,7 +175,9 @@ public class SceneTest {
         scene.addSurface(AABB);
         scene.addSurface(plane);
 
-        scene.renderScene(TestUtils.OUTPUT_PATH + "scene.png");
+        BufferedImage img = scene.renderScene();
+        RayTracer tracer = new RayTracer(imageWidth, imageHeight);
+        tracer.saveImage(img, TestUtils.OUTPUT_PATH + "blabla.png");
 
     }
 
@@ -209,8 +216,11 @@ public class SceneTest {
         scene.addSurface(AABB);
 
 
-        scene.renderScene(TestUtils.OUTPUT_PATH+ "box.png");
+        BufferedImage img = scene.renderScene();
+        RayTracer tracer = new RayTracer(imageWidth, imageHeight);
+        tracer.saveImage(img, TestUtils.OUTPUT_PATH + "blabla2.png");
 
     }
-    
+
+
 }

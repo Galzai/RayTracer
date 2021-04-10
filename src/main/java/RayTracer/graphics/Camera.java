@@ -16,7 +16,6 @@ public class Camera {
     private double screenWidth;
     private Viewport viewport;
 
-    //TODO maybe add ViewPort as a member
 
 
     /**

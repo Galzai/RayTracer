@@ -3,7 +3,6 @@ package RayTracer.graphics;
 import RayTracer.math.Vector3D;
 
 import java.awt.*;
-import java.util.Objects;
 
 /**
  * represent RGB color

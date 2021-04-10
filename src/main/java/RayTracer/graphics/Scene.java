@@ -3,13 +3,7 @@ package RayTracer.graphics;
 import RayTracer.geometry.Surface;
 import RayTracer.math.Vector3D;
 
-import javax.imageio.ImageIO;
-
-import org.w3c.dom.css.RGBColor;
-
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -25,7 +19,6 @@ public class Scene {
     public List<Surface> surfaces;
     private double shadowRaysRoot;
     private int maxRecursionDepth;
-
 
     /**
      * Construct a scene object with pre-populated arrays
@@ -183,24 +176,9 @@ public class Scene {
      * @return
      */
     public boolean intersectionIsShadowed(Intersection intersection, Light light) {
-        Vector3D lightDirection = light.getPosition().subtract(intersection.getIntersectionPoint()).normalize();
-        Ray ray = new Ray(intersection.getIntersectionPoint(), lightDirection);
-        ray = ray.moveOriginByEpsilon();
-        double distance = intersection.getIntersectionPoint().calculateDistance(light.getPosition());
-        for (Surface surface : surfaces) {
-            if (surface == intersection.getSurface()) {
-                continue;
-            }
-            Intersection potentialIntersection = surface.findIntersection(ray);
-            if (potentialIntersection != null) {
-                // only if there is a surface between the ray's origin and the destination
-                if (distance > ray.origin().calculateDistance(ray.at(potentialIntersection.getRayVal()))) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return intersectionIsShadowed(intersection, light.getPosition());
     }
+
     /**
      * Checks if there is a surface between an existing intersection and the light
      *
@@ -230,6 +208,7 @@ public class Scene {
 
     /**
      * Calculates the percentage of rays the lights casts on the intersection
+     *
      * @param intersection
      * @param light
      * @return The percentage of rays the lights casts on the intersection
@@ -240,16 +219,73 @@ public class Scene {
         ray = ray.moveOriginByEpsilon();
         List<Vector3D> lightPoints = getLightPoints(ray, light);
         int shadowedRays = 0;
-        for (Vector3D point: lightPoints) {
+        for (Vector3D point : lightPoints) {
             if (intersectionIsShadowed(intersection, point)) {
                 shadowedRays++;
             }
         }
-        return  1 - (double) shadowedRays / lightPoints.size();
+        return 1 - (double) shadowedRays / lightPoints.size();
+    }
+
+    /**
+     * Calculates the light intensity that is casted upon the intersection. Each surface that is located between the
+     * light position and the intersection decreases the light intensity (increases the shadow intensity) according
+     * to it's transparency coefficient. The more transparent the surfaces between the light and the intersection are,
+     * The more light gets to the intersection.
+     *
+     * @param intersection
+     * @param lightPosition
+     * @return light intensity of the light that reaches the intersection
+     */
+    public double calcLightIntensity(Intersection intersection, Vector3D lightPosition) {
+        double lightIntensity = 1;
+        Vector3D lightDirection = lightPosition.subtract(intersection.getIntersectionPoint()).normalize();
+        Ray ray = new Ray(intersection.getIntersectionPoint(), lightDirection);
+        ray = ray.moveOriginByEpsilon();
+        double distance = intersection.getIntersectionPoint().calculateDistance(lightPosition);
+        for (Surface surface : surfaces) {
+            if (surface == intersection.getSurface()) {
+                continue;
+            }
+            Intersection potentialIntersection = surface.findIntersection(ray);
+            if (potentialIntersection != null) {
+                // only if there is a surface between the ray's origin and the destination
+                if (distance > ray.origin().calculateDistance(ray.at(potentialIntersection.getRayVal()))) {
+                    // The light intensity is multiplied by the transparency coefficient of the each surface's material
+                    // the less transparent the surface is, the more shadow is casted upon the original intersection
+                    lightIntensity *= potentialIntersection.getSurface().getMaterial().getTransparency();
+                }
+            }
+            if (lightIntensity == 0) {
+                break;
+            }
+        }
+        return lightIntensity;
+    }
+
+    /**
+     * calculates the intensity of the lights that is casted upon the intersection, with soft shadows computations and
+     * shadow intensity adjustments regarding to transparent objects.
+     *
+     * @param intersection
+     * @param light
+     * @return intensity of the lights that is casted upon the intersection
+     */
+    public double calcLightIntensity(Intersection intersection, Light light) {
+        Vector3D lightDirection = light.getPosition().subtract(intersection.getIntersectionPoint()).normalize();
+        Ray ray = new Ray(intersection.getIntersectionPoint(), lightDirection);
+        ray = ray.moveOriginByEpsilon();
+        List<Vector3D> lightPoints = getLightPoints(ray, light);
+        double lightIntensity = 0;
+        for (Vector3D point : lightPoints) {
+            lightIntensity += calcLightIntensity(intersection, point);
+        }
+        return lightIntensity / lightPoints.size();
     }
 
     /**
      * returns a list with light's positions across the lights area for computing soft shadows
+     *
      * @param ray
      * @param light
      * @return returns list with light's positions across the lights area
@@ -292,7 +328,7 @@ public class Scene {
 
     /**
      * Calculats the effective theta of the fisheye lens
-     * 
+     *
      * @param radius radius of point ray to screen relative to origin
      * @return effective radius
      */
@@ -301,8 +337,7 @@ public class Scene {
         double fishEyefactor = (this.camera.fisheyeCoeff() * radius) / this.camera.focalLength();
         if ((this.camera.fisheyeCoeff() > 0.0) && (this.camera.fisheyeCoeff() <= 1.0)) {
             return Math.atan(fishEyefactor) / this.camera.fisheyeCoeff();
-        }
-        else if ((this.camera.fisheyeCoeff() >= -1.0) && (this.camera.fisheyeCoeff() < 0.0)) {
+        } else if ((this.camera.fisheyeCoeff() >= -1.0) && (this.camera.fisheyeCoeff() < 0.0)) {
             return Math.asin(fishEyefactor) / this.camera.fisheyeCoeff();
         } else {
             return radius / this.camera.focalLength();
@@ -311,7 +346,7 @@ public class Scene {
 
     /**
      * Calculates what radius would a ray need to be fired if the point received is screenpoint
-     * 
+     *
      * @param direction
      * @param screenPoint
      * @return ray after changing to effective radius
@@ -320,7 +355,7 @@ public class Scene {
         // Get what angle is required to recieve the effective radius
         double theta = calculateEffectiveTheta(screenPoint.subtract(this.viewport.getScreenCenter()).euclideanNorm());
         // We cant see behind or horizontal to the sensor
-        if ((theta >= Math.PI / 2) || (theta <= -1 * Math.PI / 2)) { 
+        if ((theta >= Math.PI / 2) || (theta <= -1 * Math.PI / 2)) {
             return null;
         }
         // We need to get the new point in the same direction
@@ -335,37 +370,30 @@ public class Scene {
 
     /**
      * Render the scene to a file
-     *
-     * @param path path to file
      */
-    public void renderScene(String path) throws IOException {
-
+    public BufferedImage renderScene() {
         BufferedImage img = new BufferedImage(viewport.getImageWidth(), viewport.getImageHeight(), BufferedImage.TYPE_INT_ARGB);
-
         for (int y = viewport.getImageHeight(); y >= 1; --y) {
             for (int x = 1; x <= viewport.getImageWidth(); ++x) {
 
                 // Find direction and screen point for current pixel
                 Vector3D screenPoint = viewport.pixelToScreenPoint(x, y);
                 Vector3D direction = screenPoint.subtract(this.camera.position());
-                Ray ray ;
+                Ray ray;
                 // If fisheye is enabled we need to correct the direction accordingly
-                if (this.camera.fisheye()) { 
+                if (this.camera.fisheye()) {
                     ray = calculateFisheyeRay(direction, screenPoint);
                     if (ray == null) {
                         img.setRGB(x - 1, viewport.getImageHeight() - y, ComputationalColor.BLACK.getRGB());
                         continue;
                     }
                 } else {
-                    ray = new Ray(this.camera.position(), direction); 
+                    ray = new Ray(this.camera.position(), direction);
                 }
                 Intersection intersection = IntersectRay(ray);
                 img.setRGB(x - 1, viewport.getImageHeight() - y, getColor(intersection, ray).clipColor().getRGB());
-
-                
             }
         }
-        File f = new File(path);
-        ImageIO.write(img, "png", f);
+        return img;
     }
 }

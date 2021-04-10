@@ -3,7 +3,6 @@ package RayTracer.geometry;
 import RayTracer.graphics.Intersection;
 import RayTracer.graphics.Material;
 import RayTracer.graphics.Ray;
-import RayTracer.math.Vector3D;
 
 public interface Surface {
 

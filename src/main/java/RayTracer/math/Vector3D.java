@@ -191,7 +191,7 @@ public class Vector3D {
         if (this.norm == 0) {
             return this;
         }
-        Vector3D normalizedVec = this.normalize();
+        Vector3D normalizedVec = normalize();
         if (normalizedVec.first == 1.0) {
             return new Vector3D(this.first, this.second + 1.0, this.third);
         }
