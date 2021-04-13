@@ -133,7 +133,7 @@ public class PhongShader {
             ComputationalColor transparentColor = shade(nextIntersection, newRay, recursionDepth).scale(transparency);
             result = result.add(transparentColor);
         }
-        // ad ambient contribuiton if its enabled
+        // add ambient contribuiton if its enabled
         if(this.scene.isAmbientEnabled()) {
             result = result.add(this.scene.getAmbientLightIntensity().mult(material.getAmbientColor()));
         }

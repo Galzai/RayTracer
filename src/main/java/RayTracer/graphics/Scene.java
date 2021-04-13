@@ -45,32 +45,11 @@ public class Scene {
         this.shadowRaysRoot = shadowRaysRoot;
         this.maxRecursionDepth = maxRecursionDepth;
         if (!ambientEnabled || (lights.size() == 0)) {
-            this.ambientLightIntensity = ComputationalColor.BLACK;
+            this.ambientLightIntensity = null;
         } else {
             this.ambientLightIntensity = estimateAmbientIntensity();
             this.ambientEnabled = true;
         }
-
-    }
-
-    public Camera getCamera() {
-        return this.camera;
-    }
-
-    public Viewport getViewport() {
-        return this.viewport;
-    }
-
-    public ComputationalColor getBackgroundColor() {
-        return this.backgroundColor;
-    }
-
-    public List<Light> getLights() {
-        return this.lights;
-    }
-
-    public List<Surface> getSurfaces() {
-        return this.surfaces;
     }
 
     /**
@@ -95,6 +74,26 @@ public class Scene {
      */
     public Scene(Camera camera, Viewport viewport, ComputationalColor backgroundColor) {
         this(camera, viewport, backgroundColor, new ArrayList<Light>(), new ArrayList<Surface>(), 0, 0, false);
+    }
+
+    public Camera getCamera() {
+        return this.camera;
+    }
+
+    public Viewport getViewport() {
+        return this.viewport;
+    }
+
+    public ComputationalColor getBackgroundColor() {
+        return this.backgroundColor;
+    }
+
+    public List<Light> getLights() {
+        return this.lights;
+    }
+
+    public List<Surface> getSurfaces() {
+        return this.surfaces;
     }
 
     /**

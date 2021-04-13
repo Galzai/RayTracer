@@ -108,7 +108,7 @@ public class RayTracer {
                     shadowRaysRoot = Double.parseDouble(params[3]);
                     maxRecursionDepth = Integer.parseInt(params[4]);
                     if (params.length > 5) {
-                        ambientEnabled = true;
+                        ambientEnabled = Boolean.parseBoolean(params[5]);
                     }
                     System.out.println(String.format("Parsed general settings (line %d)", lineNum));
                     break;
@@ -197,7 +197,13 @@ public class RayTracer {
     }
 
     private Material parseMaterial(String[] params, int lineNum, boolean ambientEnabled) throws RayTracerException {
-        if (params.length < 11) {
+        
+        // Size constants for material length
+        final int defaultLength = 11;
+        final int ambientLength = 14;
+        int requiredLength = ambientEnabled ? ambientLength : defaultLength;
+
+        if (params.length < requiredLength) {
             throw new RayTracerException(String.format("Not enough parameters were given for material (line %d)", lineNum));
         }
         ComputationalColor diffuse = parseColor(params, 0, 1, 2);
