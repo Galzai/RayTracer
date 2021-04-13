@@ -77,6 +77,7 @@ public class RayTracer {
         int maxRecursionDepth = 0;
         double shadowRaysRoot = 0;
         ComputationalColor backGroundColor = null;
+        boolean ambientEnabled = false;
         int lineNum = 0;
 
         System.out.println("Started parsing scene file " + sceneFileName);
@@ -106,11 +107,14 @@ public class RayTracer {
                     backGroundColor = parseColor(params, 0, 1, 2);
                     shadowRaysRoot = Double.parseDouble(params[3]);
                     maxRecursionDepth = Integer.parseInt(params[4]);
+                    if (params.length > 5) {
+                        ambientEnabled = Boolean.parseBoolean(params[5]);
+                    }
                     System.out.println(String.format("Parsed general settings (line %d)", lineNum));
                     break;
 
                 case "mtl":
-                    materials.add(parseMaterial(params, lineNum));
+                    materials.add(parseMaterial(params, lineNum, ambientEnabled));
                     System.out.println(String.format("Parsed material (line %d)", lineNum));
                     break;
 
@@ -143,7 +147,7 @@ public class RayTracer {
 		Viewport viewPort = new Viewport(imageWidth, imageHeight, camera);
 		buffRead.close();
         System.out.println("Finished parsing scene file " + sceneFileName);
-		return new Scene(camera, viewPort, backGroundColor, lights, surfaces, shadowRaysRoot, maxRecursionDepth);
+		return new Scene(camera, viewPort, backGroundColor, lights, surfaces, shadowRaysRoot, maxRecursionDepth, ambientEnabled);
 
 	}
 
@@ -192,16 +196,26 @@ public class RayTracer {
         return new Camera(position, lookAt, up, focalLength, screenWidth, fisheye, fisheyeCoeff);
     }
 
-    private Material parseMaterial(String[] params, int lineNum) throws RayTracerException {
-        if (params.length < 11) {
+    private Material parseMaterial(String[] params, int lineNum, boolean ambientEnabled) throws RayTracerException {
+        
+        // Size constants for material length
+        final int defaultLength = 11;
+        final int ambientLength = 14;
+        int requiredLength = ambientEnabled ? ambientLength : defaultLength;
+
+        if (params.length < requiredLength) {
             throw new RayTracerException(String.format("Not enough parameters were given for material (line %d)", lineNum));
         }
         ComputationalColor diffuse = parseColor(params, 0, 1, 2);
         ComputationalColor specular = parseColor(params, 3, 4, 5);
         ComputationalColor reflection = parseColor(params, 6, 7, 8);
+        ComputationalColor ambient = null;
         double phongCoeff = Double.parseDouble(params[9]);
         double transparency = Double.parseDouble(params[10]);
-        return new Material(diffuse, specular, reflection, phongCoeff, transparency);
+        if (ambientEnabled) {
+            ambient = parseColor(params, 11, 12, 13);
+        }
+        return new Material(diffuse, specular, reflection, phongCoeff, transparency, ambient);
     }
 
     private Sphere parseSphere(String[] params, int lineNum, List<Material> materials) throws RayTracerException {
