@@ -98,8 +98,6 @@ public class ComputationalColor {
         return 0xFF000000 | r | g | b; //0xFF000000 for 100% Alpha. Bitwise OR everything together.
     }
 
-
-
     /** TODO inplace
      *
      * Clips colors values to be a floating point number between 0 and 1
