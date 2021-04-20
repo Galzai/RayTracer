@@ -7,8 +7,8 @@ import RayTracer.math.MathUtils;
 import RayTracer.math.Vector3D;
 
 public class Plane implements Surface {
-    private Vector3D normal;
-    private double offset;
+    private Vector3D normal;  // the normal vector to the plane
+    private double offset;  // the offset value of the plane
     private Vector3D p0; // closest point on the plane to origin
     private Material material;
 
@@ -32,7 +32,7 @@ public class Plane implements Surface {
         double denominator = this.normal.dotProduct(ray.direction());
         if (Math.abs(denominator) > MathUtils.EPSILON) {
             double t = this.normal.dotProduct(this.p0.subtract(ray.origin())) / denominator;
-            if(t < 0){
+            if (t < 0) {
                 return null;
             }
             Vector3D intersectionPoint = ray.at(t);

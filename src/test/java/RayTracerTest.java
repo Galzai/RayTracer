@@ -69,8 +69,8 @@ public class RayTracerTest {
     @Test
     public void parseBoxSceneTest() throws IOException, RayTracer.RayTracerException {
         RayTracer tracer = new RayTracer();
-        Scene scene = tracer.parseScene(TestUtils.SCENES_PATH + "Box2.txt");
-        tracer.renderScene(scene,TestUtils.OUTPUT_PATH + "Box2.png");
+        Scene scene = tracer.parseScene(TestUtils.SCENES_PATH + "star.txt");
+        tracer.renderScene(scene,TestUtils.OUTPUT_PATH + "star.png");
 
     }
     @Test

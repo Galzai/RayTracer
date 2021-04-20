@@ -1,5 +1,9 @@
 # RayTracer.RayTracer
 Ray tracing homework for Tel Aviv university's computer graphic course
+
+## Shadow-Transparency bonus
+
+
 ## Ambient bonus
 ### To enable ambient lighthing you need to add another boolean as true in the settings section of the scene file: 
     Settings: 	bgr  	bgg  	bgb	sh_rays	rec_max ambient_enbaled  

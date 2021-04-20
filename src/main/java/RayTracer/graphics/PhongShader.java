@@ -3,7 +3,6 @@ package RayTracer.graphics;
 import RayTracer.math.Vector3D;
 
 public class PhongShader {
-
     private Scene scene;
 
     public PhongShader(Scene scene) {
@@ -25,8 +24,9 @@ public class PhongShader {
 
     /**
      * Calculates the percentage of light rays coming from the light source that hit the intersection.
+     *
      * @param intersection
-     * @param light light source
+     * @param light        light source
      * @return Percentage of light rays coming from the light source that hit the intersection
      */
     private double calcLightPercentage(Intersection intersection, Light light) {
@@ -38,6 +38,7 @@ public class PhongShader {
      * calculates the intensity of the lights that is casted upon the intersection, with soft shadows computations and
      * shadow intensity adjustments regarding to transparent objects.
      * * @param intersection
+     *
      * @param light
      * @return
      */
@@ -56,7 +57,7 @@ public class PhongShader {
      */
     public ComputationalColor shadeDiffuseSpecular(Intersection intersection, Ray ray) {
         // our results
-        ComputationalColor diffuseSpecular = new ComputationalColor(0,0,0);
+        ComputationalColor diffuseSpecular = new ComputationalColor(0, 0, 0);
         Material material = intersection.getSurface().getMaterial();
         // Check effect of each light in scene
         for (Light light : scene.getLights()) {
@@ -68,7 +69,7 @@ public class PhongShader {
 
             Vector3D lightDirection = light.getPosition().subtract(intersection.getIntersectionPoint()).normalize();
             // 2 * ( L dot N) * N
-            Vector3D reflectionNormal = intersection.getNormal().scalarMult(2.0 *lightDirection.dotProduct(intersection.getNormal()));
+            Vector3D reflectionNormal = intersection.getNormal().scalarMult(2.0 * lightDirection.dotProduct(intersection.getNormal()));
             // R = 2 * ( V dot N) * N - L
             Vector3D reflectionDirection = reflectionNormal.subtract(lightDirection);
 
@@ -85,7 +86,7 @@ public class PhongShader {
         return diffuseSpecular;
     }
 
-        /**
+    /**
      * Calculates the results of light contribution to surface shading
      *
      * @param intersection intersection results
@@ -133,8 +134,8 @@ public class PhongShader {
             ComputationalColor transparentColor = shade(nextIntersection, newRay, recursionDepth).scale(transparency);
             result = result.add(transparentColor);
         }
-        // add ambient contribuiton if its enabled
-        if(this.scene.isAmbientEnabled()) {
+        // add ambient contribution if its enabled
+        if (this.scene.isAmbientEnabled()) {
             result = result.add(this.scene.getAmbientLightIntensity().mult(material.getAmbientColor()));
         }
         return result;

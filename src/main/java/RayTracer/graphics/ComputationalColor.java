@@ -7,12 +7,10 @@ import java.awt.*;
 /**
  * represent RGB color
  */
-
-//TODO add verifiers to the constructors (check if the parameters are in the correct range)
 public class ComputationalColor {
     private Vector3D rgb;
     public static final double RGB_MAX = 255;
-    public static final ComputationalColor BLACK = new ComputationalColor(0,0,0);
+    public static final ComputationalColor BLACK = new ComputationalColor(0, 0, 0);
 
     public ComputationalColor(double red, double green, double blue) {
         this.rgb = new Vector3D(red, green, blue);
@@ -24,6 +22,7 @@ public class ComputationalColor {
 
     /**
      * Copy constructor
+     *
      * @param color ComputationalColor object
      */
     public ComputationalColor(ComputationalColor color) {
@@ -36,11 +35,13 @@ public class ComputationalColor {
 
     /**
      * Copy constructor
+     *
      * @param color java.awt.Color object
      */
     public ComputationalColor(Color color) {
         this(color.getRed(), color.getGreen(), color.getBlue());
     }
+
     public double getRed() {
         return this.rgb.getFirst();
     }
@@ -64,8 +65,6 @@ public class ComputationalColor {
     }
 
     /**
-     *TODO inplace!
-     *
      * @param scaleFactor the scale factor of the output color
      * @return ComputationalColor with scaled rgb values
      */
@@ -77,7 +76,6 @@ public class ComputationalColor {
     }
 
     /**
-     *
      * @return java.awt.Color object
      */
     public Color toColor() {
@@ -87,27 +85,28 @@ public class ComputationalColor {
     }
 
     /**
-     *
      * @return the int value of the color
      */
     public int getRGB() {
-        int [] intRgb = getIntRepresentation();
+        int[] intRgb = getIntRepresentation();
         int r = (intRgb[0] << 16) & 0x00FF0000; //Shift red 16-bits and mask out other stuff
         int g = (intRgb[1] << 8) & 0x0000FF00; //Shift Green 8-bits and mask out other stuff
         int b = intRgb[2] & 0x000000FF; //Mask out anything not blue.
         return 0xFF000000 | r | g | b; //0xFF000000 for 100% Alpha. Bitwise OR everything together.
     }
 
-    /** TODO inplace
-     *
+    /**
      * Clips colors values to be a floating point number between 0 and 1
+     *
+     * @return clipped color
      */
     public ComputationalColor clipColor() {
-        return new ComputationalColor(Math.min(getRed(), 1.0),Math.min(getGreen(), 1.0), Math.min(getBlue(), 1.0));
+        return new ComputationalColor(Math.min(getRed(), 1.0), Math.min(getGreen(), 1.0), Math.min(getBlue(), 1.0));
     }
 
     /**
-     *  Multiply colors component by component
+     * Multiply colors component by component
+     *
      * @param otherColor
      * @return
      */
@@ -115,8 +114,9 @@ public class ComputationalColor {
         return new ComputationalColor(rgb.componentMult(otherColor.rgb));
     }
 
-     /**
-     *  add colors component by component
+    /**
+     * add colors component by component
+     *
      * @param otherColor
      * @return
      */
@@ -124,9 +124,9 @@ public class ComputationalColor {
         return new ComputationalColor(rgb.add(otherColor.rgb));
     }
 
-     /**TODO inplace
-      *
-     *  Multiplies color by scale
+    /**
+     * Multiplies color by scale
+     *
      * @return
      */
     public ComputationalColor scale(Double scale) {

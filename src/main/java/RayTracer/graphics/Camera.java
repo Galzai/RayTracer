@@ -14,9 +14,6 @@ public class Camera {
     private boolean fisheye;
     private double fisheyeCoeff;
     private double screenWidth;
-    private Viewport viewport;
-    
-
 
 
     /**
@@ -38,7 +35,7 @@ public class Camera {
         this.screenWidth = screenWidth;
     }
 
-    public Camera(Vector3D position, Vector3D lookAtPoint, Vector3D up, double focalLength, double screenWidth,  boolean fisheye) {
+    public Camera(Vector3D position, Vector3D lookAtPoint, Vector3D up, double focalLength, double screenWidth, boolean fisheye) {
         this(position, lookAtPoint, up, focalLength, screenWidth, fisheye, 0.5);
     }
 
@@ -78,7 +75,4 @@ public class Camera {
         return this.fisheyeCoeff;
     }
 
-    void setViewport(Viewport viewport) {
-        this.viewport = viewport;
-    }
 }

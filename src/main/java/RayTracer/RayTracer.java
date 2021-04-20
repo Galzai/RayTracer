@@ -80,9 +80,6 @@ public class RayTracer {
         boolean ambientEnabled = false;
         int lineNum = 0;
 
-        System.out.println("Started parsing scene file " + sceneFileName);
-
-
         while ((line = buffRead.readLine()) != null) {
             line = line.trim();
             ++lineNum;
@@ -97,7 +94,6 @@ public class RayTracer {
             switch (code) {
                 case "cam":
                     camera = parseCamera(params, lineNum);
-                    System.out.println(String.format("Parsed camera parameters (line %d)", lineNum));
                     break;
 
                 case "set":
@@ -110,32 +106,26 @@ public class RayTracer {
                     if (params.length > 5) {
                         ambientEnabled = Boolean.parseBoolean(params[5]);
                     }
-                    System.out.println(String.format("Parsed general settings (line %d)", lineNum));
                     break;
 
                 case "mtl":
                     materials.add(parseMaterial(params, lineNum, ambientEnabled));
-                    System.out.println(String.format("Parsed material (line %d)", lineNum));
                     break;
 
                 case "sph":
                     surfaces.add(parseSphere(params, lineNum, materials));
-                    System.out.println(String.format("Parsed sphere (line %d)", lineNum));
                     break;
 
                 case "pln":
                     surfaces.add(parsePlane(params, lineNum, materials));
-                    System.out.println(String.format("Parsed plane (line %d)", lineNum));
                     break;
 
                 case "box":
                     surfaces.add(parseBox(params, lineNum, materials));
-                    System.out.println(String.format("Parsed Box (line %d)", lineNum));
                     break;
 
                 case "lgt":
                     lights.add(parseLight(params, lineNum));
-                    System.out.println(String.format("Parsed light (line %d)", lineNum));
                     break;
 
                 default:
@@ -143,12 +133,9 @@ public class RayTracer {
             }
 
         }
-        // TODO maybe move construction of viewPort inside of camera
 		Viewport viewPort = new Viewport(imageWidth, imageHeight, camera);
 		buffRead.close();
-        System.out.println("Finished parsing scene file " + sceneFileName);
 		return new Scene(camera, viewPort, backGroundColor, lights, surfaces, shadowRaysRoot, maxRecursionDepth, ambientEnabled);
-
 	}
 
     /**

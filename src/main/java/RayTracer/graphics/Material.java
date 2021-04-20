@@ -5,9 +5,8 @@ public class Material {
     private ComputationalColor specularColor;
     private ComputationalColor reflectionColor;
     private ComputationalColor ambientColor;
-
-    double phongSpecularityCoeff;
-    double transparency;
+    private double phongSpecularityCoeff;
+    private double transparency;
 
     public Material(ComputationalColor diffuseColor, ComputationalColor specularColor, ComputationalColor reflectionColor, double phongSpecularityCoeff, double transparency, ComputationalColor ambientColor) {
         this.diffuseColor = diffuseColor;
@@ -16,6 +15,10 @@ public class Material {
         this.phongSpecularityCoeff = phongSpecularityCoeff;
         this.transparency = transparency;
         this.ambientColor = ambientColor;
+    }
+
+    public Material(ComputationalColor diffuseColor, ComputationalColor specularColor, ComputationalColor reflectionColor, double phongSpecularityCoeff, double transparency) {
+        this(diffuseColor, specularColor, reflectionColor, phongSpecularityCoeff, transparency, null);
     }
 
     public ComputationalColor getDiffuseColor() {
