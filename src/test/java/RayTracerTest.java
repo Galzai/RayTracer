@@ -69,7 +69,7 @@ public class RayTracerTest {
     @Test
     public void parseBoxSceneTest() throws IOException, RayTracer.RayTracerException {
         RayTracer tracer = new RayTracer();
-        Scene scene = tracer.parseScene(TestUtils.SCENES_PATH + "star.txt");
+        Scene scene = tracer.parseScene(TestUtils.SCENES_PATH + "chess.txt");
         tracer.renderScene(scene,TestUtils.OUTPUT_PATH + "star.png");
 
     }
@@ -81,5 +81,12 @@ public class RayTracerTest {
         assertEquals(scene.getSurfaces().size(), 7);
         assertEquals(scene.getLights().size(), 5);
         tracer.renderScene(scene, TestUtils.OUTPUT_PATH + "PoolAmbient.png");
+    }
+
+    @Test
+    public void parseChessTest() throws IOException, RayTracer.RayTracerException {
+        RayTracer tracer = new RayTracer(1000, 1000);
+        Scene scene = tracer.parseScene(TestUtils.SCENES_PATH + "chess.txt");
+        tracer.renderScene(scene, TestUtils.OUTPUT_PATH + "chess.png");
     }
 }
