@@ -34,8 +34,7 @@ public class AxisAlignedBox implements Surface {
             if (Math.abs(s) < MathUtils.EPSILON) {
                 t0 = r + this.halfScales.get(i) > 0 ? Double.POSITIVE_INFINITY : Double.NEGATIVE_INFINITY;
                 t1 = r - this.halfScales.get(i) > 0 ? Double.POSITIVE_INFINITY : Double.NEGATIVE_INFINITY;
-            }
-            else {
+            } else {
                 t0 = (r + this.halfScales.get(i)) / s;
                 t1 = (r - this.halfScales.get(i)) / s;
             }

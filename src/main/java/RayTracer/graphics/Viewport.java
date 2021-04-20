@@ -3,7 +3,6 @@ package RayTracer.graphics;
 import RayTracer.math.Vector3D;
 
 public class Viewport {
-
     // Screen dimensions
     private Double width;
     private Double aspectRatio;
@@ -22,14 +21,13 @@ public class Viewport {
 
     Vector3D rightNormalized;
     Vector3D upNormalized;
-    Vector3D w;
 
     public Viewport(int imageWidth, int imageHeight, Camera camera) {
 
         // Dimensions
         this.width = camera.screenWidth();
         this.aspectRatio = (double) imageWidth / imageHeight;
-        this.height =  width / aspectRatio;
+        this.height = width / aspectRatio;
 
         // Pixel dimensions
         this.imageWidth = imageWidth;
@@ -46,8 +44,6 @@ public class Viewport {
         this.right = this.rightNormalized.scalarMult(width / imageWidth);
         this.up = this.upNormalized.scalarMult(height / imageHeight);
 
-
-        camera.setViewport(this);
     }
 
     /**
@@ -58,7 +54,7 @@ public class Viewport {
      * @return point on the screen corresponding to pixel
      */
     public Vector3D pixelToScreenPoint(int widthPixel, int heightPixel) {
-        // u and v already scaled
+        // right and up already scaled
         return this.lowerLeftVec.add(this.right.scalarMult(widthPixel)).add(this.up.scalarMult(heightPixel));
     }
 
@@ -66,7 +62,7 @@ public class Viewport {
         screenPoint = screenPoint.subtract(this.lowerLeftVec);
         double projRight = rightNormalized.findProjection(screenPoint).euclideanNorm();
         double projUp = upNormalized.findProjection(screenPoint).euclideanNorm();
-        return new int[]{(int)(projRight * imageWidth), (int)(projUp * imageHeight)};
+        return new int[]{(int) (projRight * imageWidth), (int) (projUp * imageHeight)};
     }
 
     public Integer getImageWidth() {
@@ -75,10 +71,6 @@ public class Viewport {
 
     public Integer getImageHeight() {
         return this.imageWidth;
-    }
-
-    public Vector3D getLowerLeftVec() {
-        return this.lowerLeftVec;
     }
 
     public Vector3D getScreenCenter() {

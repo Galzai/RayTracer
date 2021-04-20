@@ -2,25 +2,21 @@ package RayTracer.graphics;
 
 import RayTracer.geometry.Surface;
 import RayTracer.math.Vector3D;
-
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class Scene {
-
     private Camera camera;
     private Viewport viewport;
     private ComputationalColor backgroundColor;
     private PhongShader shader;
-
     private List<Light> lights;
-    public List<Surface> surfaces;
+    private List<Surface> surfaces;
     private double shadowRaysRoot;
     private int maxRecursionDepth;
     private boolean ambientEnabled = false;
-
     private ComputationalColor ambientLightIntensity;
 
     /**
@@ -35,7 +31,6 @@ public class Scene {
      */
     public Scene(Camera camera, Viewport viewport, ComputationalColor backgroundColor,
                  List<Light> lights, List<Surface> surfaces, double shadowRaysRoot, int maxRecursionDepth, boolean ambientEnabled) {
-
         this.camera = camera;
         this.viewport = viewport;
         this.backgroundColor = backgroundColor;
@@ -121,6 +116,7 @@ public class Scene {
     public boolean isAmbientEnabled() {
         return this.ambientEnabled;
     }
+
     /**
      * Finds the closest surface that intersects with the ray and its intersection
      *
@@ -155,7 +151,6 @@ public class Scene {
         double minRayVal = Double.MAX_VALUE;
         Intersection minIntersection = null;
         Intersection curIntersection = null;
-
         for (Surface surface : surfaces) {
             if (surface == ignoreSurface) {
                 continue;
@@ -307,7 +302,6 @@ public class Scene {
      * @param light
      * @return returns list with light's positions across the lights area
      */
-
     private List<Vector3D> getLightPoints(Ray ray, Light light) {
         Random random = new Random();
         double unit = light.getRadius() / this.shadowRaysRoot;
@@ -332,8 +326,6 @@ public class Scene {
     }
 
     /**
-     * TODO: This will need to be expanded and modified
-     *
      * @param intersection
      * @param ray
      * @return
@@ -369,7 +361,7 @@ public class Scene {
      * @return ray after changing to effective radius
      */
     private Ray calculateFisheyeRay(Vector3D direction, Vector3D screenPoint) {
-        // Get what angle is required to recieve the effective radius
+        // Get what angle is required to receive the effective radius
         double theta = calculateEffectiveTheta(screenPoint.subtract(this.viewport.getScreenCenter()).euclideanNorm());
         // We cant see behind or horizontal to the sensor
         if ((theta >= Math.PI / 2) || (theta <= -1 * Math.PI / 2)) {
@@ -388,6 +380,7 @@ public class Scene {
     /**
      * Return the ambient light intensity as the average of all the colors in the scenes
      * Each color per light gets intensified in relation to its shadow intensity
+     *
      * @return
      */
     private ComputationalColor estimateAmbientIntensity() {
@@ -395,7 +388,7 @@ public class Scene {
         for (Light light : this.lights) {
             ambientLightIntensity = ambientLightIntensity.add(light.getColor());
         }
-        return ambientLightIntensity.scale(1.0 / lights.size());    
+        return ambientLightIntensity.scale(1.0 / lights.size());
     }
 
     /**

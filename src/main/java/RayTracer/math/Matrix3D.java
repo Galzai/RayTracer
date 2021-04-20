@@ -1,11 +1,13 @@
 package RayTracer.math;
 
+import java.awt.*;
+
 public class Matrix3D {
     public static final int DIMENSION = 3;
     public static final Vector3D xAxis = new Vector3D(1, 0, 0);
     public static final Vector3D yAxis = new Vector3D(0, 1, 0);
     public static final Vector3D zAxis = new Vector3D(0, 0, 1);
-    private Double[][] matrixInner;
+    private double[][] matrixInner;
 
     /**
      * Construct a new 3D matrix
@@ -13,8 +15,8 @@ public class Matrix3D {
      * @param matrix
      * @throws IllegalArgumentException
      */
-    public Matrix3D(Double[][] matrix) throws IllegalArgumentException {
-        if (matrix.length != 3 || matrix[0].length != 3)
+    public Matrix3D(double[][] matrix) throws IllegalArgumentException {
+        if (matrix.length != DIMENSION || matrix[0].length != DIMENSION)
             throw new IllegalArgumentException("Invalid matrix dimensions");
         this.matrixInner = matrix;
     }
@@ -26,11 +28,11 @@ public class Matrix3D {
      * @return result of multplication
      */
     public Vector3D vecMult(Vector3D vector) {
-        Double first =
+        double first =
                 matrixInner[0][0] * vector.getFirst() + matrixInner[0][1] * vector.getSecond() + matrixInner[0][2] * vector.getThird();
-        Double second =
+        double second =
                 matrixInner[1][0] * vector.getFirst() + matrixInner[1][1] * vector.getSecond() + matrixInner[1][2] * vector.getThird();
-        Double third =
+        double third =
                 matrixInner[2][0] * vector.getFirst() + matrixInner[2][1] * vector.getSecond() + matrixInner[2][2] * vector.getThird();
 
         return new Vector3D(first, second, third);
@@ -45,7 +47,7 @@ public class Matrix3D {
      * @return transformation matrix
      */
     public static Matrix3D createTransformationMatrix(Vector3D u, Vector3D v, Vector3D w) {
-        Double[][] matrix = new Double[3][3];
+        double[][] matrix = new double[DIMENSION][DIMENSION];
         matrix[0][0] = u.getFirst();
         matrix[0][1] = v.getFirst();
         matrix[0][2] = w.getFirst();
@@ -68,7 +70,7 @@ public class Matrix3D {
      * @return new transposed matrix
      */
     public static Matrix3D transposeMatrix(Matrix3D matrix) {
-        Double[][] transpose = new Double[3][3];
+        double[][] transpose = new double[DIMENSION][DIMENSION];
         transpose[0][0] = matrix.matrixInner[0][0];
         transpose[0][1] = matrix.matrixInner[1][0];
         transpose[0][2] = matrix.matrixInner[2][0];
@@ -91,7 +93,7 @@ public class Matrix3D {
      * @return rotation matrix around the x-axis clockwise (in left coordinates system)
      */
     public static Matrix3D createXRotationMatrix(double angle) {
-        Double[][] matrix = new Double[3][3];
+        double[][] matrix = new double[DIMENSION][DIMENSION];
         matrix[0][0] = 1.0;
         matrix[0][1] = 0.0;
         matrix[0][2] = 0.0;
@@ -115,7 +117,7 @@ public class Matrix3D {
      * @return rotation matrix around the y-axis clockwise (in left coordinates system)
      */
     public static Matrix3D createYRotationMatrix(double angle) {
-        Double[][] matrix = new Double[3][3];
+        double[][] matrix = new double[DIMENSION][DIMENSION];
         matrix[0][0] = Math.cos(angle);
         matrix[0][1] = 0.0;
         matrix[0][2] = -Math.sin(angle);
@@ -139,7 +141,7 @@ public class Matrix3D {
      * @return rotation matrix around the z-axis clockwise (in left coordinates system)
      */
     public static Matrix3D createZRotationMatrix(double angle) {
-        Double[][] matrix = new Double[3][3];
+        double[][] matrix = new double[DIMENSION][DIMENSION];
         matrix[0][0] = Math.cos(angle);
         matrix[0][1] = Math.sin(angle);
         matrix[0][2] = 0.0;
@@ -153,8 +155,5 @@ public class Matrix3D {
         matrix[2][2] = 1.0;
 
         return new Matrix3D(matrix);
-
     }
-
-
 }

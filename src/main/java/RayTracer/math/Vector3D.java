@@ -4,7 +4,7 @@ public class Vector3D {
     private double first;
     private double second;
     private double third;
-    double norm;
+    private double norm;
 
     /**
      * construct a new 3D vector
@@ -14,20 +14,6 @@ public class Vector3D {
      * @param third  third member
      */
     public Vector3D(double first, double second, double third) {
-        this.first = first;
-        this.second = second;
-        this.third = third;
-        this.norm = calculateEuclideanNorm();
-    }
-
-    /**
-     * construct a new 3D vector
-     *
-     * @param first  first member
-     * @param second second member
-     * @param third  third member
-     */
-    public Vector3D(int first, int second, int third) {
         this.first = first;
         this.second = second;
         this.third = third;
@@ -134,7 +120,6 @@ public class Vector3D {
     public Vector3D scalarMult(double scalar) {
         return new Vector3D(this.first * scalar, this.second * scalar, this.third * scalar);
     }
-
 
     /**
      * Returns the dot product of this vector with another vector

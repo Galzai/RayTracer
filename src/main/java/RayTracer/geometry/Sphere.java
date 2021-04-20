@@ -30,9 +30,9 @@ public class Sphere implements Surface {
         double delta = Math.pow(b, 2) - 4 * c;
         if (delta > 0) {
             double t1 = (-b + Math.sqrt(delta)) / 2;
-            double t2 = (- b - Math.sqrt(delta)) / 2;
+            double t2 = (-b - Math.sqrt(delta)) / 2;
             if (t1 > 0 && t2 > 0) {
-                double t = Math.min(t1,t2);
+                double t = Math.min(t1, t2);
                 Vector3D intersectionPoint = ray.at(t);
                 Vector3D normal = intersectionPoint.subtract(center).normalize();
                 return new Intersection(intersectionPoint, normal, this, t);
