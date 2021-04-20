@@ -12,6 +12,7 @@
 
 # Package Files #
 *.jar
+!/jar/RayTrace.jar
 *.war
 *.nar
 *.ear
