@@ -15,14 +15,14 @@ public class RayTracerTest {
         assertEquals(scene.getLights().size(), 5);
         assertEquals(scene.getSurfaces().size(), 7);
         assertEquals(scene.getLights().size(), 5);
-        tracer.renderScene(scene, TestUtils.OUTPUT_PATH + "pool.png");
+        tracer.renderScene(scene, TestUtils.OUTPUT_PATH + "Pool.png");
     }
 
     @Test
     public void parsePoolFisheyeSceneTest() throws IOException, RayTracer.RayTracerException {
         RayTracer tracer = new RayTracer();
         Scene scene = tracer.parseScene(TestUtils.SCENES_PATH + "Pool_fish.txt");
-        tracer.renderScene(scene, TestUtils.OUTPUT_PATH + "pool_fish.png");
+        tracer.renderScene(scene, TestUtils.OUTPUT_PATH + "Pool_fish.png");
 
     }
     @Test
@@ -65,14 +65,6 @@ public class RayTracerTest {
 
     }
 
-
-    @Test
-    public void parseBoxSceneTest() throws IOException, RayTracer.RayTracerException {
-        RayTracer tracer = new RayTracer();
-        Scene scene = tracer.parseScene(TestUtils.SCENES_PATH + "chess.txt");
-        tracer.renderScene(scene,TestUtils.OUTPUT_PATH + "star.png");
-
-    }
     @Test
     public void parseAmbientPoolSceneTest() throws IOException, RayTracer.RayTracerException {
         RayTracer tracer = new RayTracer();
@@ -86,7 +78,7 @@ public class RayTracerTest {
     @Test
     public void parseChessTest() throws IOException, RayTracer.RayTracerException {
         RayTracer tracer = new RayTracer(1000, 1000);
-        Scene scene = tracer.parseScene(TestUtils.SCENES_PATH + "chess.txt");
-        tracer.renderScene(scene, TestUtils.OUTPUT_PATH + "chess.png");
+        Scene scene = tracer.parseScene(TestUtils.SCENES_PATH + "fisheye_scene.txt");
+        tracer.renderScene(scene, TestUtils.OUTPUT_PATH + "fisheye_scene.png");
     }
 }
